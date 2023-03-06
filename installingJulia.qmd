@@ -1,0 +1,48 @@
+# Installing Julia
+
+Julia can be installed on any computer, even if you do not have administrator rights.
+
+## Installation on Windows
+
+For Windows users, Julia is available from the Microsoft App Store. Simply open the app store and search for Julia^[Look for the distinctive three coloured dot icon.] and install it. This will use the Julia Updater to install Julia in the user's home folder, so no administrator rights are needed^[This makes this method of installation ideal for university computers.].
+
+## Installation on MacOS and Linux
+
+Go to the [JuliaUp github page](https://github.com/JuliaLang/juliaup) and follow the instructions there.
+
+If you do not believe in reading the documentation of software you are going to install, this should do it^[No guarantees! If your computer breaks, don't blame me.]:
+
+```sh
+curl -fsSL https://install.julialang.org | sh
+```
+
+## Starting the REPL
+
+In Windows, start the REPL from the *Start* menu, in Linux, open a terminal and type:
+
+```sh 
+julia
+```
+
+## Installing packages
+
+Julia has it's own package manager which makes it easy to install packages and resolve dependencies.
+
+The easiest way to install these is interactively, using the Julia REPL:
+
+In the REPL, press the `]` key, which will bring up the package manager prompt^[Press the `Left Arrow` key to return to the Julia prompt.]. Then type the install command:
+
+```julia
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.9.0-beta4 (2023-02-07)
+ _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
+|__/                   |
+
+(@v1.9) pkg> add DifferentialEquations
+```
+
+This will install the package `DifferentialEquations` in the default environment (`@v1.9`)^[At the time of writing that is version 1.9.]. You can also create project environments to make your research fully reproducible by ensuring that the packages used, e.g., in a publication are the same as the ones used later, when you revisit the problem.
+

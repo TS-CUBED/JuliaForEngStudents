@@ -1,0 +1,35 @@
+# Julia Features for Scientic Computing
+
+While the question "What's the best programming language?" is impossible to answer^[and the answer will be different for different applications.], Julia has some specific features that make it particularly well suited for scientific computing:
+
+- **just-in-time (JIT) compilation**, which allows performance that is on the same level as Fortran or C code.
+
+- **multiple dispatch**, a programming paradigm, which, while a functional paradigm, brings some of the possibilities usually associated with object-oriented (OO) programming^[Julia is not an OO language, which some may see as a disadvantage. Personally I never found OO to be useful for the kind of scientific programming I do.].
+
+- **1-based indexing**^[Julia supports arbitrary indexing, but 1-based is the standard.], which makes the code more closely resemble much of the mathematical concept we want to express^[Some, coming from C or Python may see 1-based indexing as a negative.].
+
+- **Matlab similar syntax**: coming from Matlab, Julia's syntax will be familar enough to allow a quick transition^[My first experience with Julia was, indeed, porting an ODE problem from Matlab to Julia. And most of the work was replacing two function calls and switching square for round brackets.]. 
+
+## Just-In-Time Compilation and the *Two Language Problem*
+
+Many scientific models are developed in *prototyping* languages like Python (or Matlab), since they are interactive, i.e., they run in an "read-eval-print-loop" (REPL), which offers immediate feedback and results, encouraging experimentation and "playing" with the code. This is a key feature for many scientists, as opposed to software developers, since it allows for quick development of a working model.
+
+The problem with these interactive languages is, that they tend to be *interpreted*, and this much slower than *compiled* languages. We will see later that, e.g., Python can be up to 3 orders of magnitude slower than a compiled language, which also has huge implications on energy efficiency of scientific computing, as a contributor to climate change [@Pereira2017; @Pereira2021].
+
+So with any interpreted language scientific computing will arrive at the point where the performance of the developed code is no longer sufficient. Usually the next step in these cases is either
+
+a. abandonment of the model.
+
+b. re-implementation of the model in a compiled language like Fortran or C.
+
+This is what is called the **"Two Language Problem"**.
+
+The two-language-problem is particularly concerning for scientific computing, since most engineers and natural scientists are not computer-scientists or software developers, or coders. Many of us do not readily speak a compiled language which would require writing code on a much lower abstraction level than most of us are comfortable with^[I do know how to write Fortran, but it is a much more daunting prospect than doing the same thing in Julia (or Matlab or Python).].
+
+Julia can overcome this problem by virtue of being "just-in-time" compiled. This means that on the surface it looks like an interpreted language, while, behind the scenes and completely transparent to the user, the code is compiled to machine code and then executed. The Julia developers coined the phrase:
+
+> "Feels like Python, runs like C."
+
+With only little effort, we can write Julia code that runs at the same speed as optimised Fortran or C code^[In fact, Julia is the only dynamically typed language that has managed to [join the exclusive Petaflop Club](https://www.hpcwire.com/off-the-wire/julia-joins-petaflop-club/) of peak performance of greater than one petaflops (10<sup>15</sup> floating point operations per second), scaling to over 1 million threads.].
+
+

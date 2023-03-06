@@ -1,0 +1,4 @@
+# Julia Basics
+
+I don't want to give a full introduction to Julia. There are other, better resources for that (see @sec-resources).
+
