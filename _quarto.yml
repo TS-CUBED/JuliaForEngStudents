@@ -1,0 +1,75 @@
+project:
+  type: book
+  preview:
+    port: 4200
+
+book:
+  title: "Julia for Engineering Students"
+  author: "Dr. Torsten Schenkel"
+  # affiliation: "Department of Engineering and Mathematics, Sheffield Hallam University"
+  # date: "03/04/2023"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - juliaFeatures.qmd
+    - part: juliaBasics.qmd
+      chapters:
+        - installingJulia.qmd
+        - basicSyntax.qmd
+        - comparisonMatlab.qmd
+    - part: examples.qmd
+      chapters:
+        - ODEsolver.qmd
+    - references.qmd
+  appendices:
+    - resources.qmd
+
+  downloads:
+    - epub
+    - pdf
+  license: CC-BY-4.0
+  # page-footer:
+  #     - text: "About"
+  #       href: about.qmd
+  #     - text: "License"
+  #       href: license.qmd
+
+bibliography: references.bib
+
+date-format: long
+papersize: a4
+
+filters:
+  - quarto
+  - noteout-write-notebooks
+
+format:
+  html:
+    # cap-location: margin
+    # reference-location: margin
+    # citation-location: margin
+    theme: cosmo
+    html-math-method: mathjax
+    comments:
+      hypothesis: true
+  pdf:
+    include-in-header:
+      text: |
+        \usepackage{amsmath, amssymb}
+    cap-location: margin
+    reference-location: margin
+    citation-location: margin
+    documentclass: scrreprt
+  epub:
+    html-math-method: mathml
+
+noteout:
+  nb-format: ipynb
+
+jupyter: julia-1.9
+keep-ipynb: true
+
+execute:
+  cache: true
+  daemon: 3600
+  freeze: auto

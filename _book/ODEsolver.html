@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.220">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Julia for Engineering Students - 6&nbsp; Solving ODEs and ODE systems</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./examples.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./examples.html">Examples</a></li><li class="breadcrumb-item"><a href="./ODEsolver.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Solving ODEs and ODE systems</span></a></li></ol></nav>
+      <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Julia for Engineering Students</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Julia-for-Engineering-Students.epub">
+              <i class="bi bi-bi-journal pe-1"></i>
+            Download ePub
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="./Julia-for-Engineering-Students.pdf">
+              <i class="bi bi-bi-file-pdf pe-1"></i>
+            Download PDF
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./juliaFeatures.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Julia Features for Scientic Computing</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./juliaBasics.html" class="sidebar-item-text sidebar-link">Julia Basics</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installingJulia.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Installing Julia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basicSyntax.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Julia Syntax</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./comparisonMatlab.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparison to Matlab</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./examples.html" class="sidebar-item-text sidebar-link">Examples</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ODEsolver.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Solving ODEs and ODE systems</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Appendices</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./resources.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Julia Resources</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#example-4-element-windkessel-model" id="toc-example-4-element-windkessel-model" class="nav-link active" data-scroll-target="#example-4-element-windkessel-model"><span class="toc-section-number">6.1</span>  Example: 4-Element Windkessel Model</a>
+  <ul class="collapse">
+  <li><a href="#sec-odePM" id="toc-sec-odePM" class="nav-link" data-scroll-target="#sec-odePM"><span class="toc-section-number">6.1.1</span>  Comparison to Python and Matlab</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Solving ODEs and ODE systems</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Solving Ordinary Differential Equations is one of the most common use cases for scientific computing in engineering applications.</p>
+<p>The Julia package <a href="https://docs.sciml.ai/DiffEqDocs/stable/">DifferentialEquations.jl</a> is one of the biggest selling points of the language. It offers an unparalled range of solvers, all using the same interface<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<section id="example-4-element-windkessel-model" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="example-4-element-windkessel-model"><span class="header-section-number">6.1</span> Example: 4-Element Windkessel Model</h2>
+<p><a href="#dnldts29961" onclick="fetch('data:text/plain;base64,ewogImNlbGxzIjogWwogIHsKICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICJpZCI6ICI0MTIwNDA5YSIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAic291cmNlIjogWwogICAgIiMgU29sdmluZyBPREVzIGFuZCBPREUgc3lzdGVtc1xuIiwKICAgICJcbiIsCiAgICAiU29sdmluZyBPcmRpbmFyeSBEaWZmZXJlbnRpYWwgRXF1YXRpb25zIGlzIG9uZSBvZiB0aGUgbW9zdCBjb21tb24gdXNlIGNhc2VzIGZvciBzY2llbnRpZmljIGNvbXB1dGluZyBpbiBlbmdpbmVlcmluZyBhcHBsaWNhdGlvbnMuIFxuIiwKICAgICJcbiIsCiAgICAiVGhlIEp1bGlhIHBhY2thZ2UgW0RpZmZlcmVudGlhbEVxdWF0aW9ucy5qbF0oaHR0cHM6Ly9kb2NzLnNjaW1sLmFpL0RpZmZFcURvY3Mvc3RhYmxlLykgaXMgb25lIG9mIHRoZSBiaWdnZXN0IHNlbGxpbmcgcG9pbnRzIG9mIHRoZSBsYW5ndWFnZS4gSXQgb2ZmZXJzIGFuIHVucGFyYWxsZWQgcmFuZ2Ugb2Ygc29sdmVycywgYWxsIHVzaW5nIHRoZSBzYW1lIGludGVyZmFjZV5bU28gY2hhbmdpbmcgdGhlIHNvbHZlciBkb2VzIG5vdCByZXF1aXJlIGFueSBjaGFuZ2VzIGluIHRoZSBkZWZpbml0aW9uIG9mIHRoZSBwcm9ibGVtLCBldmVuIHdoZW4gbW92aW5nIGJldHdlZW4gT0RFcywgREFFcyBhbmQgU0RBRXMuXS5cbiIsCiAgICAiXG4iLAogICAgIiMjIEV4YW1wbGU6IDQtRWxlbWVudCBXaW5ka2Vzc2VsIE1vZGVsXG4iLAogICAgIlxuIiwKICAgICJcbiIsCiAgICAiXG4iLAogICAgIlxuIiwKICAgICJ7ezwgZG93bmxvYWR0aGlzIE9ERXNvbHZlci5pcHluYiBkbmFtZT1PREVzb2x2ZXIgbGFiZWw9XCJEb3dubG9hZCBKdXB5dGVyIE5vdGVib29rXCIgPn19XG4iLAogICAgIlxuIiwKICAgICJcbiIsCiAgICAiXG4iLAogICAgIlxuIiwKICAgICJcbiIsCiAgICAiXG4iLAogICAgIlxuIiwKICAgICJUaGUgd2luZGtlc3NlbCBtb2RlbCBpcyBhIGNvbW1vbiBtb2RlbCBmb3IgdGhlIHByZXNzdXJlIHJlc3BvbnNlIG9mIHRoZSB2YXNjdWxhciBzeXN0ZW0gKGJsb29kIGNpcmN1bGF0aW9uKSB0byBhIHBlcmlvZGljLCBwdWxzaW5nIGZsb3cgd2F2ZWZvcm0gW0BXZXN0ZXJob2YyMDE5XS5cbiIsCiAgICAiXG4iLAogICAgIkhlcmUgd2UgYXJlIGdvaW5nIHRvIHdvcmsgd2l0aCB0aGUgNC1FbGVtZW50IHdpbmRrZXNzZWwgbW9kZWwgW0BTdGVyZ2lvcHVsb3MxOTk5XSwgY29tcHJpc2luZyBhIGZsb3cgc291cmNlICh0aW1lIGRlcGVuZGVudCBmbG93IHJhdGUpLCB0d28gcmVzaXN0b3JzIGZvciBjaGFyYWN0ZXJpc3RpYyBSZXNpc3RhbmNlIG9mIHRoZSBuZWFyIHZlc3NlbCAoYW9ydGEpLCAkUl97Y30kLCBhbmQgc3lzdGVtaWMgKHBlcmlwaGVyYWwpIHJlc2lzdGFuY2UsICRSX3twfSQsIGEgY29tcGxpYW5jZSAoY2FwYWNpdGFuY2UpICRDJCwgcmVwcmVzZW50aW5nIHRoZSBibG9vZCBzdG9yYWdlIGNhcGFjaXR5IG9mIHRoZSBwZXJpcGhlcmFsIHZlc3NlbHMsIGFuZCBhbiBpbmR1Y3RhbmNlICRMX3AkLCByZXByZXNlbnRpbmcgdGhlIGluZXJ0aWEgaW4gdGhlIHByb3hpbWFsLCBsYXJnZSB2ZXNzZWwsIGUuZy4sIHRoZSBhb3J0YS5cbiIsCiAgICAiXG4iLAogICAgIlRoZSBwcmVzc3VyZXMgaW4gdGhpcyBjaXJjdWl0IC0gJHBfezF9JCBiZWZvcmUsIGFuZCAkcF97Mn0kIGFmdGVyIHRoZSBwcm94aW1hbCBMLVIgZWxlbWVudCAtIGFyZSBkZXNjcmliZWQgYnkgdGhlIHN5c3RlbSBvZiBPREVzOlxuIiwKICAgICJcbiIsCiAgICAiJCRcbiIsCiAgICAiXFxmcmFje2QgcF97MX19e2QgdH0gID0gIC0gXFxmcmFje1Jfe2N9fXtMX3twfX0gcF97MX0gKyBcXGxlZnQoIFxcZnJhY3tSX3tjfX17TF97cH19IC0gXFxmcmFjezF9e1Jfe3B9IEN9IFxccmlnaHQpIHBfezJ9IFxcXFxcbiIsCiAgICAiKyBSX3tjfSBcXGZyYWN7ZCBJKHQpfXtkIHR9ICsgXFxmcmFje0kodCl9e0N9IFxuIiwKICAgICIkJCB7I2VxLXdrNC0xfVxuIiwKICAgICJcbiIsCiAgICAiJCRcbiIsCiAgICAiXFxmcmFje2QgcF97Mn19e2QgdH0gID0gIC0gXFxmcmFjezF9e1Jfe3B9IEN9IHBfezJ9ICsgXFxmcmFje0kodCl9e0N9IFxuIiwKICAgICIkJCB7I2VxLXdrNC0yfVxuIiwKICAgICJcbiIsCiAgICAiPCEtLSBTb3VyY2U6IGZpbGU6Ly8vaG9tZS90aG9yL0RvY3VtZW50cy9SZXNlYXJjaC9TYXh0b25QaEQvMEQtTW9kZWxsaW5nSW5KdWxpYV9maWxlcy9pbWFnZXMvd2s0LmRyYXdpby5wbmcsIGFjY2Vzc2VkOiBTdW4gTWFyICA1IDE2OjAxOjAxIDIwMjMgLS0+XG4iLAogICAgIiFbNC1FbGVtZW50IFdpbmRrZXNzZWwgTW9kZWxdKC4vaW1hZ2VzL2ltYWdlc19mb3JfT0RFc29sdmVyLnFtZC93azQuZHJhd2lvLnBuZyl7I2ZpZy00d2t9XG4iLAogICAgIlxuIiwKICAgICJJbiBvcmRlciB0byBpbXBsZW1lbnQgdGhpcyBtb2RlbCwgd2UgbmVlZCB0byBsb2FkIHRoZSByZXF1aXJlZCBtb2R1bGVzLiBXZSB1c2UgYERpZmZlcmVudGlhbEVxdWF0aW9uc2AsIGBQbG90c2AsIGFuZCBgRm9yd2FyZERpZmZgIGZvciB0aGUgdGltZS1kZXJpdmF0aXZlICRcXGZyYWN7XFxwYXJ0aWFsIEl9e1xccGFydGlhbCB0fSQ6XG4iCiAgIF0KICB9LAogIHsKICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgImV4ZWN1dGlvbl9jb3VudCI6IDIsCiAgICJpZCI6ICI2ZTY4M2U4NiIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAib3V0cHV0cyI6IFtdLAogICAic291cmNlIjogWwogICAgInVzaW5nIERpZmZlcmVudGlhbEVxdWF0aW9ucywgRm9yd2FyZERpZmYsIFBsb3RzIgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICJleGVjdXRpb25fY291bnQiOiAzLAogICAiaWQiOiAiYzRhYTAxNTUiLAogICAibWV0YWRhdGEiOiB7fSwKICAgIm91dHB1dHMiOiBbXSwKICAgInNvdXJjZSI6IFsKICAgICIjfCBlY2hvOiBmYWxzZVxuIiwKICAgICIjfCBvdXRwdXQ6IGZhbHNlXG4iLAogICAgIlxuIiwKICAgICJwbG90bHlqcygpOyIKICAgXQogIH0sCiAgewogICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgImlkIjogIjQ3MTkwYjJhIiwKICAgIm1ldGFkYXRhIjoge30sCiAgICJzb3VyY2UiOiBbCiAgICAiVGhlIGlucHV0IHdhdmVmb3JtIGlzIGEgZ2VuZXJpYyBoYWxmLXBlcmlvZCBvZiBhIHNpbmUtd2F2ZSB3aXRoIGEgc3lzdG9saWMgKGVqZWN0aW9uKSB0aW1lIG9mICR0X3tzeXN0fSA9IDAuNCBUJCwgd2l0aCAkVD0xXFwgXFxtYXRocm17c30kIHBlcmlvZC10aW1lICg2MCBiZWF0cyBwZXIgbWludXRlKS4gVGhlIGRpY3JvdGljIG5vdGNoIGlzIG1vZGVsbGVkIGJ5IHJ1bm5pbmcgdGhlIHNpbmUgaW50byB0aGUgbmVnYXRpdmUgZm9yICR0X3tkaWNyfSA9IDAuMDNcXCBcXG1hdGhybXtzfSQ6XG4iLAogICAgIlxuIiwKICAgICJcXGJlZ2lue2VxdWF0aW9ufVxuIiwKICAgICIgICAgSSA9IFxuIiwKICAgICIgICAgXFxiZWdpbntjYXNlc31cbiIsCiAgICAiICAgICAgICBJX3ttaW59ICsgKElfe21heH0gLSBJX3ttaW59KSAgXFxzaW4gXFxsZWZ0KFxcZnJhY3tcXHBpfXt0X3tzeXN0fX0gdCBcXHJpZ2h0KSAmIFxcdGV4dHtpZiB9IHQgXFxsdCAodF97c3lzdH0gKyB0X3tkaWNyfSlcXFxcXG4iLAogICAgIiAgICAgICAgSV97bWlufSAmIFxcdGV4dHtlbHNlfSBcbiIsCiAgICAiICAgIFxcZW5ke2Nhc2VzfVxuIiwKICAgICJcXGVuZHtlcXVhdGlvbn1cbiIsCiAgICAiXG4iLAogICAgIlxuIiwKICAgICJJbiBKdWxpYSwgdGhpcyBmdW5jdGlvbiBpcyBpbXBsZW1lbnRlZCBhc15bTm90ZSB0aGF0IHdlIHVzZSBgY29uc3RgIGhlcmUgdG8gZGVmaW5lIHRoZSBwYXJhbWV0ZXJzLiBKdWxpYSBkb2VzIHN1ZmZlciBpbiBwZXJmb3JtYW5jZSwgd2hlbiBnbG9iYWwgdmFyaWFibGVzIGFyZSB1c2VkLCBzaW5jZSB0aGVzZSBicmVhayB0eXBlIHN0YWJpbGl0eSBpbiB0aGUgbXVsdGlwbGUgZGlzcGF0Y2guIE1ha2luZyB0aGVzZSBwYXJhbWV0ZXIgY29uc3RhbnQgZml4ZXMgdGhlaXIgdHlwZS4gV2Ugc2hvdWxkIHJlYWxseSBiZSB1c2luZyB0aGVzZSBwYXJhbWV0ZXJzIGluIHRoZSBmdW5jdGlvbiBkZWZpbml0aW9uLCBvciB1c2UgYSBsYW1iZGEgZnVuY3Rpb24gaGVyZS5dOlxuIgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICJleGVjdXRpb25fY291bnQiOiA0LAogICAiaWQiOiAiYmRmOTkzMzgiLAogICAibWV0YWRhdGEiOiB7fSwKICAgIm91dHB1dHMiOiBbCiAgICB7CiAgICAgImRhdGEiOiB7CiAgICAgICJ0ZXh0L3BsYWluIjogWwogICAgICAgIkkgKGdlbmVyaWMgZnVuY3Rpb24gd2l0aCAxIG1ldGhvZCkiCiAgICAgIF0KICAgICB9LAogICAgICJleGVjdXRpb25fY291bnQiOiAxNSwKICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAib3V0cHV0X3R5cGUiOiAiZXhlY3V0ZV9yZXN1bHQiCiAgICB9CiAgIF0sCiAgICJzb3VyY2UiOiBbCiAgICAiI3wgb3V0cHV0OiBmYWxzZVxuIiwKICAgICIgXG4iLAogICAgIiMgbWF4IGFuZCBtaW4gdm9sdW1lIGZsb3cgaW4gbWwvc1xuIiwKICAgICJjb25zdCBtYXhfaSA9IDQyNVxuIiwKICAgICJjb25zdCBtaW5faSA9IDAuMFxuIiwKICAgICJcbiIsCiAgICAiIyBwZXJpb2QgdGltZVxuIiwKICAgICJjb25zdCBUID0gMS4wXG4iLAogICAgIlxuIiwKICAgICIjIFN5c3QuIFRpbWUgaW4gc1xuIiwKICAgICJjb25zdCBzeXN0VGltZSA9IDIgLyA1ICogVFxuIiwKICAgICJcbiIsCiAgICAiIyBEaWNyb3RpYyBub3RjaCB0aW1lIGluIHNcbiIsCiAgICAiY29uc3QgZGljclRpbWUgPSAwLjAzXG4iLAogICAgIlxuIiwKICAgICJmdW5jdGlvbiBJKHQpXG4iLAogICAgIiAgICAjIGltcGxpY2l0IGNvbmRpdGlvbmFsIHVzaW5nIGJvb2xlYW4gbXVsdGlwbGljYXRvclxuIiwKICAgICIgICAgIyBzaW5lIHdhdmVmb3JtXG4iLAogICAgIiAgICB0ID0gdCAtIFQgKiAodCDDtyBUKVxuIiwKICAgICJcbiIsCiAgICAiICAgIHJldHVybiAoKG1heF9pIC0gbWluX2kpICogc2luKHBpIC8gc3lzdFRpbWUgKiAodCkpXG4iLAogICAgIiAgICAgICAgICAgICogKHQgPCAoc3lzdFRpbWUgKyBkaWNyVGltZSkgKVxuIiwKICAgICIgICAgICAgICAgICArIG1pbl9pKVxuIiwKICAgICJlbmQiCiAgIF0KICB9LAogIHsKICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICJpZCI6ICI3ODdmNGFiYiIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAic291cmNlIjogWwogICAgIldlIGNhbiBxdWlja2x5IHBsb3QgdGhpcyBmdW5jdGlvbiBpbiBAZmlnLWlnZW4uXG4iCiAgIF0KICB9LAogIHsKICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgImV4ZWN1dGlvbl9jb3VudCI6IDUsCiAgICJpZCI6ICJmaWctaWdlbiIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAib3V0cHV0cyI6IFsKICAgIHsKICAgICAiZGF0YSI6IHsKICAgICAgImltYWdlL3N2Zyt4bWwiOiBbCiAgICAgICAiPHN2ZyBjbGFzcz1cIm1haW4tc3ZnXCIgeG1sbnM9XCJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Z1wiIHhtbG5zOnhsaW5rPVwiaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGlua1wiIHdpZHRoPVwiNzAwXCIgaGVpZ2h0PVwiNTAwXCIgc3R5bGU9XCJcIiB2aWV3Qm94PVwiMCAwIDcwMCA1MDBcIj48cmVjdCB4PVwiMFwiIHk9XCIwXCIgd2lkdGg9XCI3MDBcIiBoZWlnaHQ9XCI1MDBcIiBzdHlsZT1cImZpbGw6IHJnYigyNTUsIDI1NSwgMjU1KTsgZmlsbC1vcGFjaXR5OiAxO1wiLz48ZGVmcyBpZD1cImRlZnMtOGUzZmIwXCI+PGcgY2xhc3M9XCJjbGlwc1wiPjxjbGlwUGF0aCBpZD1cImNsaXA4ZTNmYjB4eXBsb3RcIiBjbGFzcz1cInBsb3RjbGlwXCI+PHJlY3Qgd2lkdGg9XCI1NTUuNTE5MjMxOTcxMDAzNlwiIGhlaWdodD1cIjM2Mi4xNjEzODk5ODI1MDIxNlwiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBjbGFzcz1cImF4ZXNjbGlwXCIgaWQ9XCJjbGlwOGUzZmIweFwiPjxyZWN0IHg9XCI5MC45NjU1ODI0MjcxOTY2MVwiIHk9XCIwXCIgd2lkdGg9XCI1NTUuNTE5MjMxOTcxMDAzNlwiIGhlaWdodD1cIjUwMFwiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBjbGFzcz1cImF4ZXNjbGlwXCIgaWQ9XCJjbGlwOGUzZmIweVwiPjxyZWN0IHg9XCIwXCIgeT1cIjYzLjE5ODgxODg5NzYzNzgxXCIgd2lkdGg9XCI3MDBcIiBoZWlnaHQ9XCIzNjIuMTYxMzg5OTgyNTAyMTZcIi8+PC9jbGlwUGF0aD48Y2xpcFBhdGggY2xhc3M9XCJheGVzY2xpcFwiIGlkPVwiY2xpcDhlM2ZiMHh5XCI+PHJlY3QgeD1cIjkwLjk2NTU4MjQyNzE5NjYxXCIgeT1cIjYzLjE5ODgxODg5NzYzNzgxXCIgd2lkdGg9XCI1NTUuNTE5MjMxOTcxMDAzNlwiIGhlaWdodD1cIjM2Mi4xNjEzODk5ODI1MDIxNlwiLz48L2NsaXBQYXRoPjwvZz48ZyBjbGFzcz1cImdyYWRpZW50c1wiLz48L2RlZnM+PGcgY2xhc3M9XCJiZ2xheWVyXCIvPjxnIGNsYXNzPVwibGF5ZXItYmVsb3dcIj48ZyBjbGFzcz1cImltYWdlbGF5ZXJcIi8+PGcgY2xhc3M9XCJzaGFwZWxheWVyXCIvPjwvZz48ZyBjbGFzcz1cImNhcnRlc2lhbmxheWVyXCI+PGcgY2xhc3M9XCJzdWJwbG90IHh5XCI+PGcgY2xhc3M9XCJsYXllci1zdWJwbG90XCI+PGcgY2xhc3M9XCJzaGFwZWxheWVyXCIvPjxnIGNsYXNzPVwiaW1hZ2VsYXllclwiLz48L2c+PGcgY2xhc3M9XCJncmlkbGF5ZXJcIj48ZyBjbGFzcz1cInhcIj48cGF0aCBjbGFzcz1cInhncmlkIGNyaXNwXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDEwNi42ODU1ODI0MjcxOTY2MSwwKVwiIGQ9XCJNMCw2My4xOTg4MTg4OTc2Mzc4MXYzNjIuMTYxMzg5OTgyNTAyMTZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48cGF0aCBjbGFzcz1cInhncmlkIGNyaXNwXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDIzNy43MDU1ODI0MjcxOTY2MiwwKVwiIGQ9XCJNMCw2My4xOTg4MTg4OTc2Mzc4MXYzNjIuMTYxMzg5OTgyNTAyMTZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48cGF0aCBjbGFzcz1cInhncmlkIGNyaXNwXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDM2OC43MjU1ODI0MjcxOTY2LDApXCIgZD1cIk0wLDYzLjE5ODgxODg5NzYzNzgxdjM2Mi4xNjEzODk5ODI1MDIxNlwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAwLjE7IHN0cm9rZS13aWR0aDogMC41cHg7XCIvPjxwYXRoIGNsYXNzPVwieGdyaWQgY3Jpc3BcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoNDk5Ljc0NTU4MjQyNzE5NjYsMClcIiBkPVwiTTAsNjMuMTk4ODE4ODk3NjM3ODF2MzYyLjE2MTM4OTk4MjUwMjE2XCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDAuMTsgc3Ryb2tlLXdpZHRoOiAwLjVweDtcIi8+PHBhdGggY2xhc3M9XCJ4Z3JpZCBjcmlzcFwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSg2MzAuNzY1NTgyNDI3MTk2NiwwKVwiIGQ9XCJNMCw2My4xOTg4MTg4OTc2Mzc4MXYzNjIuMTYxMzg5OTgyNTAyMTZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48L2c+PGcgY2xhc3M9XCJ5XCI+PHBhdGggY2xhc3M9XCJ5Z3JpZCBjcmlzcFwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDM2MC43Mzg4MTg4OTc2Mzc4KVwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1NTUuNTE5MjMxOTcxMDAzNlwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAwLjE7IHN0cm9rZS13aWR0aDogMC41cHg7XCIvPjxwYXRoIGNsYXNzPVwieWdyaWQgY3Jpc3BcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwyOTMuMTI4ODE4ODk3NjM3OClcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNTU1LjUxOTIzMTk3MTAwMzZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48cGF0aCBjbGFzcz1cInlncmlkIGNyaXNwXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsMjI1LjUyODgxODg5NzYzNzgyKVwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1NTUuNTE5MjMxOTcxMDAzNlwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAwLjE7IHN0cm9rZS13aWR0aDogMC41cHg7XCIvPjxwYXRoIGNsYXNzPVwieWdyaWQgY3Jpc3BcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwxNTcuOTE4ODE4ODk3NjM3OClcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNTU1LjUxOTIzMTk3MTAwMzZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48cGF0aCBjbGFzcz1cInlncmlkIGNyaXNwXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsOTAuMzA4ODE4ODk3NjM3OClcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNTU1LjUxOTIzMTk3MTAwMzZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48L2c+PC9nPjxnIGNsYXNzPVwiemVyb2xpbmVsYXllclwiLz48cGF0aCBjbGFzcz1cInhsaW5lcy1iZWxvd1wiLz48cGF0aCBjbGFzcz1cInlsaW5lcy1iZWxvd1wiLz48ZyBjbGFzcz1cIm92ZXJsaW5lcy1iZWxvd1wiLz48ZyBjbGFzcz1cInhheGlzbGF5ZXItYmVsb3dcIi8+PGcgY2xhc3M9XCJ5YXhpc2xheWVyLWJlbG93XCIvPjxnIGNsYXNzPVwib3ZlcmF4ZXMtYmVsb3dcIi8+PGcgY2xhc3M9XCJwbG90XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDkwLjk2NTU4MjQyNzE5NjYxLDYzLjE5ODgxODg5NzYzNzgxKVwiIGNsaXAtcGF0aD1cInVybCgnI2NsaXA4ZTNmYjB4eXBsb3QnKVwiPjxnIGNsYXNzPVwic2NhdHRlcmxheWVyIG1sYXllclwiPjxnIGNsYXNzPVwidHJhY2Ugc2NhdHRlciB0cmFjZWFkYjJiNlwiIHN0eWxlPVwic3Ryb2tlLW1pdGVybGltaXQ6IDI7IG9wYWNpdHk6IDE7XCI+PGcgY2xhc3M9XCJmaWxsc1wiLz48ZyBjbGFzcz1cImVycm9yYmFyc1wiLz48ZyBjbGFzcz1cImxpbmVzXCI+PHBhdGggY2xhc3M9XCJqcy1saW5lXCIgZD1cIk0xNS43MiwyOTcuNTRMNDIuMTksMTg2LjUzTDQ3LjQ4LDE2NS44OEw1OC4wNywxMjcuMThMNjMuMzcsMTA5LjM4TDczLjk1LDc3LjQzTDc5LjI1LDYzLjQ5TDg5LjgzLDQwLjFMOTUuMTMsMzAuOEwxMDAuNDIsMjMuMTdMMTA1LjcxLDE3LjI3TDExMS4wMSwxMy4xNEwxMTYuMywxMC43OUwxMjEuNiwxMC4yNUwxMjYuODksMTEuNTFMMTMyLjE4LDE0LjU4TDEzNy40OCwxOS40MkwxNDIuNzcsMjYuMDJMMTQ4LjA2LDM0LjMyTDE1My4zNiw0NC4yN0wxNTguNjUsNTUuODNMMTY5LjI0LDgzLjRMMTc0LjUzLDk5LjI2TDE4NS4xMiwxMzQuNjFMMTkwLjQxLDE1My44N0wyMDYuMjksMjE2LjU5TDIxMS41OSwyMzguNjlMMjM4LjA2LDM1MS45MUwyNDMuMzUsMjk3LjU0TDUzOS44LDI5Ny41NFwiIHN0eWxlPVwidmVjdG9yLWVmZmVjdDogbm9uLXNjYWxpbmctc3Ryb2tlOyBmaWxsOiBub25lOyBzdHJva2U6IHJnYigwLCAxNTQsIDI1MCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDsgb3BhY2l0eTogMTtcIi8+PC9nPjxnIGNsYXNzPVwicG9pbnRzXCIvPjxnIGNsYXNzPVwidGV4dFwiLz48L2c+PC9nPjwvZz48ZyBjbGFzcz1cIm92ZXJwbG90XCIvPjxwYXRoIGNsYXNzPVwieGxpbmVzLWFib3ZlIGNyaXNwXCIgZD1cIk04OS45NjU1ODI0MjcxOTY2MSw0MjUuODYwMjA4ODgwMTM5OTZINjQ2LjQ4NDgxNDM5ODIwMDJcIiBzdHlsZT1cImZpbGw6IG5vbmU7IHN0cm9rZS13aWR0aDogMXB4OyBzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7XCIvPjxwYXRoIGNsYXNzPVwieWxpbmVzLWFib3ZlIGNyaXNwXCIgZD1cIk05MC40NjU1ODI0MjcxOTY2MSw2My4xOTg4MTg4OTc2Mzc4MVY0MjUuMzYwMjA4ODgwMTM5OTZcIiBzdHlsZT1cImZpbGw6IG5vbmU7IHN0cm9rZS13aWR0aDogMXB4OyBzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7XCIvPjxnIGNsYXNzPVwib3ZlcmxpbmVzLWFib3ZlXCIvPjxnIGNsYXNzPVwieGF4aXNsYXllci1hYm92ZVwiPjxwYXRoIGNsYXNzPVwieHRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTAsNDI1LjM2MDIwODg4MDEzOTk2di01XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDEwNi42ODU1ODI0MjcxOTY2MSwwKVwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PHBhdGggY2xhc3M9XCJ4dGljayB0aWNrcyBjcmlzcFwiIGQ9XCJNMCw0MjUuMzYwMjA4ODgwMTM5OTZ2LTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMjM3LjcwNTU4MjQyNzE5NjYyLDApXCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4O1wiLz48cGF0aCBjbGFzcz1cInh0aWNrIHRpY2tzIGNyaXNwXCIgZD1cIk0wLDQyNS4zNjAyMDg4ODAxMzk5NnYtNVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgzNjguNzI1NTgyNDI3MTk2NiwwKVwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PHBhdGggY2xhc3M9XCJ4dGljayB0aWNrcyBjcmlzcFwiIGQ9XCJNMCw0MjUuMzYwMjA4ODgwMTM5OTZ2LTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoNDk5Ljc0NTU4MjQyNzE5NjYsMClcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxwYXRoIGNsYXNzPVwieHRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTAsNDI1LjM2MDIwODg4MDEzOTk2di01XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDYzMC43NjU1ODI0MjcxOTY2LDApXCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4O1wiLz48ZyBjbGFzcz1cInh0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJtaWRkbGVcIiB4PVwiMFwiIHk9XCI0MzkuNTYwMjA4ODgwMTM5OTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMTA2LjY4NTU4MjQyNzE5NjYxLDApXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj4wLjAwPC90ZXh0PjwvZz48ZyBjbGFzcz1cInh0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJtaWRkbGVcIiB4PVwiMFwiIHk9XCI0MzkuNTYwMjA4ODgwMTM5OTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMjM3LjcwNTU4MjQyNzE5NjYyLDApXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj4wLjI1PC90ZXh0PjwvZz48ZyBjbGFzcz1cInh0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJtaWRkbGVcIiB4PVwiMFwiIHk9XCI0MzkuNTYwMjA4ODgwMTM5OTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMzY4LjcyNTU4MjQyNzE5NjYsMClcIiBzdHlsZT1cImZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IGZpbGw6IHJnYigwLCAwLCAwKTsgZmlsbC1vcGFjaXR5OiAxOyB3aGl0ZS1zcGFjZTogcHJlO1wiPjAuNTA8L3RleHQ+PC9nPjxnIGNsYXNzPVwieHRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cIm1pZGRsZVwiIHg9XCIwXCIgeT1cIjQzOS41NjAyMDg4ODAxMzk5NVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSg0OTkuNzQ1NTgyNDI3MTk2NiwwKVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDE7IHdoaXRlLXNwYWNlOiBwcmU7XCI+MC43NTwvdGV4dD48L2c+PGcgY2xhc3M9XCJ4dGlja1wiPjx0ZXh0IHRleHQtYW5jaG9yPVwibWlkZGxlXCIgeD1cIjBcIiB5PVwiNDM5LjU2MDIwODg4MDEzOTk1XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDYzMC43NjU1ODI0MjcxOTY2LDApXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj4xLjAwPC90ZXh0PjwvZz48L2c+PGcgY2xhc3M9XCJ5YXhpc2xheWVyLWFib3ZlXCI+PHBhdGggY2xhc3M9XCJ5dGljayB0aWNrcyBjcmlzcFwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsMzYwLjczODgxODg5NzYzNzgpXCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4O1wiLz48cGF0aCBjbGFzcz1cInl0aWNrIHRpY2tzIGNyaXNwXCIgZD1cIk05MC45NjU1ODI0MjcxOTY2MSwwaDVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwyOTMuMTI4ODE4ODk3NjM3OClcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxwYXRoIGNsYXNzPVwieXRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDIyNS41Mjg4MTg4OTc2Mzc4MilcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxwYXRoIGNsYXNzPVwieXRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDE1Ny45MTg4MTg4OTc2Mzc4KVwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PHBhdGggY2xhc3M9XCJ5dGljayB0aWNrcyBjcmlzcFwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsOTAuMzA4ODE4ODk3NjM3OClcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxnIGNsYXNzPVwieXRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cImVuZFwiIHg9XCI4Ny43NjU1ODI0MjcxOTY2XCIgeT1cIjMuODQ5OTk5OTk5OTk5OTk5NlwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDM2MC43Mzg4MTg4OTc2Mzc4KVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDE7IHdoaXRlLXNwYWNlOiBwcmU7XCI+MDwvdGV4dD48L2c+PGcgY2xhc3M9XCJ5dGlja1wiPjx0ZXh0IHRleHQtYW5jaG9yPVwiZW5kXCIgeD1cIjg3Ljc2NTU4MjQyNzE5NjZcIiB5PVwiMy44NDk5OTk5OTk5OTk5OTk2XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsMjkzLjEyODgxODg5NzYzNzgpXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj4xMDA8L3RleHQ+PC9nPjxnIGNsYXNzPVwieXRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cImVuZFwiIHg9XCI4Ny43NjU1ODI0MjcxOTY2XCIgeT1cIjMuODQ5OTk5OTk5OTk5OTk5NlwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDIyNS41Mjg4MTg4OTc2Mzc4MilcIiBzdHlsZT1cImZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IGZpbGw6IHJnYigwLCAwLCAwKTsgZmlsbC1vcGFjaXR5OiAxOyB3aGl0ZS1zcGFjZTogcHJlO1wiPjIwMDwvdGV4dD48L2c+PGcgY2xhc3M9XCJ5dGlja1wiPjx0ZXh0IHRleHQtYW5jaG9yPVwiZW5kXCIgeD1cIjg3Ljc2NTU4MjQyNzE5NjZcIiB5PVwiMy44NDk5OTk5OTk5OTk5OTk2XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsMTU3LjkxODgxODg5NzYzNzgpXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj4zMDA8L3RleHQ+PC9nPjxnIGNsYXNzPVwieXRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cImVuZFwiIHg9XCI4Ny43NjU1ODI0MjcxOTY2XCIgeT1cIjMuODQ5OTk5OTk5OTk5OTk5NlwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDkwLjMwODgxODg5NzYzNzgpXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj40MDA8L3RleHQ+PC9nPjwvZz48ZyBjbGFzcz1cIm92ZXJheGVzLWFib3ZlXCIvPjwvZz48L2c+PGcgY2xhc3M9XCJwb2xhcmxheWVyXCIvPjxnIGNsYXNzPVwidGVybmFyeWxheWVyXCIvPjxnIGNsYXNzPVwiZ2VvbGF5ZXJcIi8+PGcgY2xhc3M9XCJmdW5uZWxhcmVhbGF5ZXJcIi8+PGcgY2xhc3M9XCJwaWVsYXllclwiLz48ZyBjbGFzcz1cInRyZWVtYXBsYXllclwiLz48ZyBjbGFzcz1cInN1bmJ1cnN0bGF5ZXJcIi8+PGcgY2xhc3M9XCJnbGltYWdlc1wiLz48ZGVmcyBpZD1cInRvcGRlZnMtOGUzZmIwXCI+PGcgY2xhc3M9XCJjbGlwc1wiLz48Y2xpcFBhdGggaWQ9XCJsZWdlbmQ4ZTNmYjBcIj48cmVjdCB3aWR0aD1cIjgzXCIgaGVpZ2h0PVwiMjlcIiB4PVwiMVwiIHk9XCIxXCIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsYXNzPVwibGF5ZXItYWJvdmVcIj48ZyBjbGFzcz1cImltYWdlbGF5ZXJcIi8+PGcgY2xhc3M9XCJzaGFwZWxheWVyXCIvPjwvZz48ZyBjbGFzcz1cImluZm9sYXllclwiPjxnIGNsYXNzPVwibGVnZW5kXCIgcG9pbnRlci1ldmVudHM9XCJhbGxcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoNTY1LDYwKVwiPjxyZWN0IGNsYXNzPVwiYmdcIiBzaGFwZS1yZW5kZXJpbmc9XCJjcmlzcEVkZ2VzXCIgd2lkdGg9XCI4NFwiIGhlaWdodD1cIjMwXCIgeD1cIjAuNVwiIHk9XCIwLjVcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgZmlsbDogcmdiKDI1NSwgMjU1LCAyNTUpOyBmaWxsLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4O1wiLz48ZyBjbGFzcz1cInNjcm9sbGJveFwiIHRyYW5zZm9ybT1cIlwiIGNsaXAtcGF0aD1cInVybCgnI2xlZ2VuZDhlM2ZiMCcpXCI+PGcgY2xhc3M9XCJncm91cHNcIj48ZyBjbGFzcz1cInRyYWNlc1wiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgxLDE1LjUpXCIgc3R5bGU9XCJvcGFjaXR5OiAxO1wiPjx0ZXh0IGNsYXNzPVwibGVnZW5kdGV4dFwiIHRleHQtYW5jaG9yPVwic3RhcnRcIiB4PVwiNDBcIiB5PVwiNC4yOVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDE7IHdoaXRlLXNwYWNlOiBwcmU7XCI+T3V0ZmxvdzwvdGV4dD48ZyBjbGFzcz1cImxheWVyc1wiIHN0eWxlPVwib3BhY2l0eTogMTtcIj48ZyBjbGFzcz1cImxlZ2VuZGZpbGxcIi8+PGcgY2xhc3M9XCJsZWdlbmRsaW5lc1wiPjxwYXRoIGNsYXNzPVwianMtbGluZVwiIGQ9XCJNNSwwaDMwXCIgc3R5bGU9XCJmaWxsOiBub25lOyBzdHJva2U6IHJnYigwLCAxNTQsIDI1MCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PC9nPjxnIGNsYXNzPVwibGVnZW5kc3ltYm9sc1wiPjxnIGNsYXNzPVwibGVnZW5kcG9pbnRzXCIvPjwvZz48L2c+PHJlY3QgY2xhc3M9XCJsZWdlbmR0b2dnbGVcIiB4PVwiMFwiIHk9XCItOS41XCIgd2lkdGg9XCI3Ny4zNTkzNzVcIiBoZWlnaHQ9XCIxOVwiIHN0eWxlPVwiZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDA7XCIvPjwvZz48L2c+PC9nPjxyZWN0IGNsYXNzPVwic2Nyb2xsYmFyXCIgcng9XCIyMFwiIHJ5PVwiM1wiIHdpZHRoPVwiMFwiIGhlaWdodD1cIjBcIiB4PVwiMFwiIHk9XCIwXCIgc3R5bGU9XCJmaWxsOiByZ2IoMTI4LCAxMzksIDE2NCk7IGZpbGwtb3BhY2l0eTogMTtcIi8+PC9nPjxnIGNsYXNzPVwiZy1ndGl0bGVcIi8+PGcgY2xhc3M9XCJnLXh0aXRsZVwiPjx0ZXh0IGNsYXNzPVwieHRpdGxlXCIgeD1cIjM2OC43MjUxOTg0MTI2OTg0M1wiIHk9XCI0NjcuMDYyNVwiIHRleHQtYW5jaG9yPVwibWlkZGxlXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IG9wYWNpdHk6IDE7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IHdoaXRlLXNwYWNlOiBwcmU7XCI+dCBbc108L3RleHQ+PC9nPjxnIGNsYXNzPVwiZy15dGl0bGVcIj48dGV4dCBjbGFzcz1cInl0aXRsZVwiIHRyYW5zZm9ybT1cInJvdGF0ZSgtOTAsNDMuOTA2MjUsMjQ0LjI3OTUxMzg4ODg4ODg5KVwiIHg9XCI0My45MDYyNVwiIHk9XCIyNDQuMjc5NTEzODg4ODg4ODlcIiB0ZXh0LWFuY2hvcj1cIm1pZGRsZVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTVweDsgZmlsbDogcmdiKDAsIDAsIDApOyBvcGFjaXR5OiAxOyBmb250LXdlaWdodDogbm9ybWFsOyB3aGl0ZS1zcGFjZTogcHJlO1wiPkkgW21sL3NdPC90ZXh0PjwvZz48L2c+PC9zdmc+IgogICAgICBdCiAgICAgfSwKICAgICAiZXhlY3V0aW9uX2NvdW50IjogMTYsCiAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgIm91dHB1dF90eXBlIjogImV4ZWN1dGVfcmVzdWx0IgogICAgfQogICBdLAogICAic291cmNlIjogWwogICAgIiN8IGxhYmVsOiBmaWctaWdlblxuIiwKICAgICIjfCBmaWctY2FwOiAnR2VuZXJpYyB3YXZlZm9ybSwgcmVwcmVzZW50aW5nIGVqZWN0aW9uIG9mIGJsb29kIGZyb20gbGVmdCB2ZW50cmljbGUgaW4gdGhlIGFvcnRhLCBpbmNsdWRpbmcgZGljcm90aWMgbm90Y2ggKGJhY2tmbG93IGF0IHZhbHZlIGNsb3N1cmUpLidcbiIsCiAgICAiXG4iLAogICAgInBsb3RUaW1lID0gTGluUmFuZ2UoMCwxLDEwMClcbiIsCiAgICAiXG4iLAogICAgInBsb3QocGxvdFRpbWUsIEkuKHBsb3RUaW1lKSxcbiIsCiAgICAiICAgICB4bGFiZWwgPSBcInQgW3NdXCIsIHlsYWJlbCA9IFwiSSBbbWwvc11cIiwgbGFiZWwgPSBcIk91dGZsb3dcIikgIgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAiaWQiOiAiODZjODhjZWIiLAogICAibWV0YWRhdGEiOiB7fSwKICAgInNvdXJjZSI6IFsKICAgICJUaGUgZGVmaW5pdGlvbiBvZiB0aGUgT0RFcyBAZXEtd2s0LTEgYW5kIEBlcS13azQtMiBpcyBkb25lIGFzIGEgZnVuY3Rpb24gd2l0aCBwYXJhbWV0ZXJzIGBkUGAgYW5kIGBQYCwgZm9yICRcXGZyYWN7ZCBwX3sxLDJ9fXtkIHR9JCwgYW5kICRwX3sxLDJ9JCwgcmVzcGVjdGl2ZWx5XltgUGAgaXMgYSB2ZWN0b3Igb2YgdmFsdWVzLCBhY3R1YWxseSwgYXMgaXMgYGRQYC5dIFxuIgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICJleGVjdXRpb25fY291bnQiOiA2LAogICAiaWQiOiAiNjMyMGViNzEiLAogICAibWV0YWRhdGEiOiB7fSwKICAgIm91dHB1dHMiOiBbCiAgICB7CiAgICAgImRhdGEiOiB7CiAgICAgICJ0ZXh0L3BsYWluIjogWwogICAgICAgIndrNCAoZ2VuZXJpYyBmdW5jdGlvbiB3aXRoIDEgbWV0aG9kKSIKICAgICAgXQogICAgIH0sCiAgICAgImV4ZWN1dGlvbl9jb3VudCI6IDE3LAogICAgICJtZXRhZGF0YSI6IHt9LAogICAgICJvdXRwdXRfdHlwZSI6ICJleGVjdXRlX3Jlc3VsdCIKICAgIH0KICAgXSwKICAgInNvdXJjZSI6IFsKICAgICIjfCBvdXRwdXQ6IGZhbHNlIFxuIiwKICAgICJmdW5jdGlvbiB3azQoZFAsIFAsIHBhcmFtcywgdClcbiIsCiAgICAiXG4iLAogICAgIiAgICBSYywgUnAsIEMsIExwID0gcGFyYW1zXG4iLAogICAgIlxuIiwKICAgICIgICAgZFBbMV0gPSAoXG4iLAogICAgIiAgICAgICAgLVJjIC8gTHAgKiBQWzFdXG4iLAogICAgIiAgICAgICAgKyAoUmMgLyBMcCAtIDEgLyBScCAvIEMpICogUFsyXVxuIiwKICAgICIgICAgICAgICsgUmMgKiBGb3J3YXJkRGlmZi5kZXJpdmF0aXZlKEksIHQpXG4iLAogICAgIiAgICAgICAgKyBJKHQpIC8gQ1xuIiwKICAgICIgICAgICAgIClcbiIsCiAgICAiXG4iLAogICAgIiAgICBkUFsyXSA9IC0xIC8gUnAgLyBDICogUFsyXSArIEkodCkgLyBDXG4iLAogICAgIlxuIiwKICAgICIgICAgcmV0dXJuIGRQWzFdLCBkUFsyXVxuIiwKICAgICJcbiIsCiAgICAiZW5kIgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAiaWQiOiAiODI4OWI5NjUiLAogICAibWV0YWRhdGEiOiB7fSwKICAgInNvdXJjZSI6IFsKICAgICJXZSBkZWZpbmUgdGhlIHBhcmFtZXRlcnMsIGluaXRpYWwgY29uZGl0aW9ucywgYW5kIHRpbWUgc3BhbiBmb3IgdGhlIGludGVncmF0aW9uOlxuIgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICJleGVjdXRpb25fY291bnQiOiA3LAogICAiaWQiOiAiNDAyOTMxZGIiLAogICAibWV0YWRhdGEiOiB7fSwKICAgIm91dHB1dHMiOiBbCiAgICB7CiAgICAgImRhdGEiOiB7CiAgICAgICJ0ZXh0L3BsYWluIjogWwogICAgICAgIjItZWxlbWVudCBWZWN0b3J7RmxvYXQ2NH06XG4iLAogICAgICAgIiAwLjBcbiIsCiAgICAgICAiIDAuMCIKICAgICAgXQogICAgIH0sCiAgICAgImV4ZWN1dGlvbl9jb3VudCI6IDE4LAogICAgICJtZXRhZGF0YSI6IHt9LAogICAgICJvdXRwdXRfdHlwZSI6ICJleGVjdXRlX3Jlc3VsdCIKICAgIH0KICAgXSwKICAgInNvdXJjZSI6IFsKICAgICJSYyA9IDAuMDNcbiIsCiAgICAiUnAgPSAxLjBcbiIsCiAgICAiQyAgPSAyLjBcbiIsCiAgICAiTHAgPSAwLjAyXG4iLAogICAgIlxuIiwKICAgICJ0c3BhbiA9ICgwLCAxMClcbiIsCiAgICAiXG4iLAogICAgInBhcmFtcyA9IFtSYywgUnAsIEMsIExwXVxuIiwKICAgICJcbiIsCiAgICAiUDAgPSB6ZXJvcygyKSIKICAgXQogIH0sCiAgewogICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgImlkIjogIjJjMmM0OGYyIiwKICAgIm1ldGFkYXRhIjoge30sCiAgICJzb3VyY2UiOiBbCiAgICAiQW5kIGRlZmluZSB0aGUgT0RFIHByb2JsZW0gYW5kIHNvbHZlIGl0XltXZSB1c2UgdGhlIERvcm1hbmQtUHJpbmNlIHNvbHZlciBgRFA1YCBoZXJlLCBiZWNhdXNlIHRoYXQgaXMgdGhlIHNhbWUgYWxnb3JpdGhtIHRoYXQgTWF0bGFiJ3MgYG9kZTQ1YCB1c2VzLiBEaWZmZXJlbnRpYWxFcXVhdGlvbnMuamwgaGFzIGEgbXVsdGl0dWRlIG9mIG90aGVyIHNvbHZlcnMgdGhhdCBtYXkgcGVyZm9ybSBiZXR0ZXIuIFBsYXkgYXJvdW5kIHdpdGggdGhlc2UuXS4gV2Ugd2lsbCB0aW1lIHRoZSBydW4gdXNpbmcgdGhlIGBAdGltZWAgbWFjcm86XG4iCiAgIF0KICB9LAogIHsKICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgImV4ZWN1dGlvbl9jb3VudCI6IDgsCiAgICJpZCI6ICIzOTlkYTgyZSIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAib3V0cHV0cyI6IFsKICAgIHsKICAgICAibmFtZSI6ICJzdGRvdXQiLAogICAgICJvdXRwdXRfdHlwZSI6ICJzdHJlYW0iLAogICAgICJ0ZXh0IjogWwogICAgICAiICAwLjE3NzAzOSBzZWNvbmRzICgyNDkuMjggayBhbGxvY2F0aW9uczogMTYuMzE2IE1pQiwgOTkuNTklIGNvbXBpbGF0aW9uIHRpbWU6IDEwMCUgb2Ygd2hpY2ggd2FzIHJlY29tcGlsYXRpb24pXG4iCiAgICAgXQogICAgfQogICBdLAogICAic291cmNlIjogWwogICAgInByb2IgPSBPREVQcm9ibGVtKHdrNCwgUDAsIHRzcGFuLCBwYXJhbXMpXG4iLAogICAgIlxuIiwKICAgICJAdGltZSBzb2wgPSBzb2x2ZShwcm9iLCBEUDUoKSwgcmVsdG9sPTFlLTkpOyIKICAgXQogIH0sCiAgewogICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgImlkIjogImYxZTRmYWM1IiwKICAgIm1ldGFkYXRhIjoge30sCiAgICJzb3VyY2UiOiBbCiAgICAiTG9va2luZyBhdCB0aGlzIHJ1biB0aW1lLCB3ZSBzZWUgdGhhdCB0aGUgcnVuIGlzIHNsb3dlciB0aGFuIHRoZSBNYXRsYWIgcnVuXltTZWUgYmVsb3cuIFdoYXQgaGFwcGVuZWQgaGVyZT8gRG9lc24ndCBldmVyeWJvZHkgc2F5IGhvdyBtdWNoIGZhc3RlciBKdWxpYSBpcyB0aGFuIE1hdGxhYj9dLiBMb29raW5nIGF0IHRoZSBkZXRhaWxzIG9mIHRoZSBiZW5jaG1hcmsgdGltZXMsIHdlIHNlZSB0aGF0IG1vc3Qgb2YgdGhhdCB0aW1lIGhhcyBiZWVuIHVzZWQgb24gY29tcGlsYXRpb24uIFNvIHdoZW4gd2UgcmUtcnVuIHRoZSBzb2x2ZXIsIGl0IHNob3VsZCB0YWtlIGxlc3MgdGltZTpcbiIKICAgXQogIH0sCiAgewogICAiY2VsbF90eXBlIjogImNvZGUiLAogICAiZXhlY3V0aW9uX2NvdW50IjogOSwKICAgImlkIjogImFkNjQzNjcyIiwKICAgIm1ldGFkYXRhIjoge30sCiAgICJvdXRwdXRzIjogWwogICAgewogICAgICJuYW1lIjogInN0ZG91dCIsCiAgICAgIm91dHB1dF90eXBlIjogInN0cmVhbSIsCiAgICAgInRleHQiOiBbCiAgICAgICIgIDAuMDAwNzI5IHNlY29uZHMgKDIuOTUgayBhbGxvY2F0aW9uczogMjUyLjc2NiBLaUIpXG4iCiAgICAgXQogICAgfQogICBdLAogICAic291cmNlIjogWwogICAgIkB0aW1lIHNvbCA9IHNvbHZlKHByb2IsIERQNSgpLCByZWx0b2w9MWUtOSk7IgogICBdCiAgfSwKICB7CiAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAiaWQiOiAiZWI2YzJhNWUiLAogICAibWV0YWRhdGEiOiB7fSwKICAgInNvdXJjZSI6IFsKICAgICJBbmQgaW5kZWVkLCB0aGUgcnVuIHRpbWUgaXMgbm93IG9uZSBvcmRlciBvZiBtYWduaXR1ZGUgZmFzdGVyIHRoYW4gdGhlIE1hdGxhYiB0aW1lcyBzaG93biBpbiBAc2VjLW9kZVBNLlxuIiwKICAgICJcbiIsCiAgICAiV2UgY2FuIHBsb3QgdGhlIHNvbHV0aW9uIGluIEBmaWctd2s0LXNvbCB1c2luZyB0aGUgc3BlY2lhbCBwbG90IHJlY2lwZSBmb3IgT0RFIHNvbHV0aW9uczpcbiIKICAgXQogIH0sCiAgewogICAiY2VsbF90eXBlIjogImNvZGUiLAogICAiZXhlY3V0aW9uX2NvdW50IjogMTAsCiAgICJpZCI6ICJmaWctd2s0LXNvbCIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAib3V0cHV0cyI6IFsKICAgIHsKICAgICAiZGF0YSI6IHsKICAgICAgImltYWdlL3N2Zyt4bWwiOiBbCiAgICAgICAiPHN2ZyBjbGFzcz1cIm1haW4tc3ZnXCIgeG1sbnM9XCJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Z1wiIHhtbG5zOnhsaW5rPVwiaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGlua1wiIHdpZHRoPVwiNzAwXCIgaGVpZ2h0PVwiNTAwXCIgc3R5bGU9XCJcIiB2aWV3Qm94PVwiMCAwIDcwMCA1MDBcIj48cmVjdCB4PVwiMFwiIHk9XCIwXCIgd2lkdGg9XCI3MDBcIiBoZWlnaHQ9XCI1MDBcIiBzdHlsZT1cImZpbGw6IHJnYigyNTUsIDI1NSwgMjU1KTsgZmlsbC1vcGFjaXR5OiAxO1wiLz48ZGVmcyBpZD1cImRlZnMtODYxZGFmXCI+PGcgY2xhc3M9XCJjbGlwc1wiPjxjbGlwUGF0aCBpZD1cImNsaXA4NjFkYWZ4eXBsb3RcIiBjbGFzcz1cInBsb3RjbGlwXCI+PHJlY3Qgd2lkdGg9XCI1NTUuNTE5MjMxOTcxMDAzNlwiIGhlaWdodD1cIjM2Mi4xNjEzODk5ODI1MDIxNlwiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBjbGFzcz1cImF4ZXNjbGlwXCIgaWQ9XCJjbGlwODYxZGFmeFwiPjxyZWN0IHg9XCI5MC45NjU1ODI0MjcxOTY2MVwiIHk9XCIwXCIgd2lkdGg9XCI1NTUuNTE5MjMxOTcxMDAzNlwiIGhlaWdodD1cIjUwMFwiLz48L2NsaXBQYXRoPjxjbGlwUGF0aCBjbGFzcz1cImF4ZXNjbGlwXCIgaWQ9XCJjbGlwODYxZGFmeVwiPjxyZWN0IHg9XCIwXCIgeT1cIjYzLjE5ODgxODg5NzYzNzgxXCIgd2lkdGg9XCI3MDBcIiBoZWlnaHQ9XCIzNjIuMTYxMzg5OTgyNTAyMTZcIi8+PC9jbGlwUGF0aD48Y2xpcFBhdGggY2xhc3M9XCJheGVzY2xpcFwiIGlkPVwiY2xpcDg2MWRhZnh5XCI+PHJlY3QgeD1cIjkwLjk2NTU4MjQyNzE5NjYxXCIgeT1cIjYzLjE5ODgxODg5NzYzNzgxXCIgd2lkdGg9XCI1NTUuNTE5MjMxOTcxMDAzNlwiIGhlaWdodD1cIjM2Mi4xNjEzODk5ODI1MDIxNlwiLz48L2NsaXBQYXRoPjwvZz48ZyBjbGFzcz1cImdyYWRpZW50c1wiLz48L2RlZnM+PGcgY2xhc3M9XCJiZ2xheWVyXCIvPjxnIGNsYXNzPVwibGF5ZXItYmVsb3dcIj48ZyBjbGFzcz1cImltYWdlbGF5ZXJcIi8+PGcgY2xhc3M9XCJzaGFwZWxheWVyXCIvPjwvZz48ZyBjbGFzcz1cImNhcnRlc2lhbmxheWVyXCI+PGcgY2xhc3M9XCJzdWJwbG90IHh5XCI+PGcgY2xhc3M9XCJsYXllci1zdWJwbG90XCI+PGcgY2xhc3M9XCJzaGFwZWxheWVyXCIvPjxnIGNsYXNzPVwiaW1hZ2VsYXllclwiLz48L2c+PGcgY2xhc3M9XCJncmlkbGF5ZXJcIj48ZyBjbGFzcz1cInhcIj48cGF0aCBjbGFzcz1cInhncmlkIGNyaXNwXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDIyOS44NDU1ODI0MjcxOTY2LDApXCIgZD1cIk0wLDYzLjE5ODgxODg5NzYzNzgxdjM2Mi4xNjEzODk5ODI1MDIxNlwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAwLjE7IHN0cm9rZS13aWR0aDogMC41cHg7XCIvPjxwYXRoIGNsYXNzPVwieGdyaWQgY3Jpc3BcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMzY4LjcyNTU4MjQyNzE5NjYsMClcIiBkPVwiTTAsNjMuMTk4ODE4ODk3NjM3ODF2MzYyLjE2MTM4OTk4MjUwMjE2XCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDAuMTsgc3Ryb2tlLXdpZHRoOiAwLjVweDtcIi8+PHBhdGggY2xhc3M9XCJ4Z3JpZCBjcmlzcFwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSg1MDcuNjA1NTgyNDI3MTk2NiwwKVwiIGQ9XCJNMCw2My4xOTg4MTg4OTc2Mzc4MXYzNjIuMTYxMzg5OTgyNTAyMTZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48L2c+PGcgY2xhc3M9XCJ5XCI+PHBhdGggY2xhc3M9XCJ5Z3JpZCBjcmlzcFwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDM4Mi4wOTg4MTg4OTc2Mzc4KVwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1NTUuNTE5MjMxOTcxMDAzNlwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAwLjE7IHN0cm9rZS13aWR0aDogMC41cHg7XCIvPjxwYXRoIGNsYXNzPVwieWdyaWQgY3Jpc3BcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwyOTEuNzM4ODE4ODk3NjM3NzcpXCIgZD1cIk05MC45NjU1ODI0MjcxOTY2MSwwaDU1NS41MTkyMzE5NzEwMDM2XCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDAuMTsgc3Ryb2tlLXdpZHRoOiAwLjVweDtcIi8+PHBhdGggY2xhc3M9XCJ5Z3JpZCBjcmlzcFwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDIwMS4zNzg4MTg4OTc2Mzc4KVwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1NTUuNTE5MjMxOTcxMDAzNlwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAwLjE7IHN0cm9rZS13aWR0aDogMC41cHg7XCIvPjxwYXRoIGNsYXNzPVwieWdyaWQgY3Jpc3BcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwxMTEuMDI4ODE4ODk3NjM3OClcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNTU1LjUxOTIzMTk3MTAwMzZcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMC4xOyBzdHJva2Utd2lkdGg6IDAuNXB4O1wiLz48L2c+PC9nPjxnIGNsYXNzPVwiemVyb2xpbmVsYXllclwiLz48cGF0aCBjbGFzcz1cInhsaW5lcy1iZWxvd1wiLz48cGF0aCBjbGFzcz1cInlsaW5lcy1iZWxvd1wiLz48ZyBjbGFzcz1cIm92ZXJsaW5lcy1iZWxvd1wiLz48ZyBjbGFzcz1cInhheGlzbGF5ZXItYmVsb3dcIi8+PGcgY2xhc3M9XCJ5YXhpc2xheWVyLWJlbG93XCIvPjxnIGNsYXNzPVwib3ZlcmF4ZXMtYmVsb3dcIi8+PGcgY2xhc3M9XCJwbG90XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDkwLjk2NTU4MjQyNzE5NjYxLDYzLjE5ODgxODg5NzYzNzgxKVwiIGNsaXAtcGF0aD1cInVybCgnI2NsaXA4NjFkYWZ4eXBsb3QnKVwiPjxnIGNsYXNzPVwic2NhdHRlcmxheWVyIG1sYXllclwiPjxnIGNsYXNzPVwidHJhY2Ugc2NhdHRlciB0cmFjZTJlYmU0YlwiIHN0eWxlPVwic3Ryb2tlLW1pdGVybGltaXQ6IDI7IG9wYWNpdHk6IDE7XCI+PGcgY2xhc3M9XCJmaWxsc1wiLz48ZyBjbGFzcz1cImVycm9yYmFyc1wiLz48ZyBjbGFzcz1cImxpbmVzXCI+PHBhdGggY2xhc3M9XCJqcy1saW5lXCIgZD1cIk0wLDM1MS45MUw1LjQxLDM0NS45NUw1LjUyLDM0NS44MUwxMS42MiwzMzcuNTVMMTEuNzMsMzM3LjM4TDE4LjQxLDMyNi42MkwxOC41MiwzMjYuNDJMMjUuNTQsMzEzLjNMMjUuNjUsMzEzLjA3TDMzLjU5LDI5Ni4yNUwzMy43MSwyOTUuOTlMNTEuMTksMjUzLjAzTDUxLjMxLDI1Mi43Mkw4MS42OCwxNjcuOTdMODEuNzksMTY3LjY0TDExMi4yOCw4Ni45NUwxMTIuMzksODYuNjhMMTI0LjcsNTkuOEwxMjQuODIsNTkuNThMMTMyLjQxLDQ1LjQ0TDEzMi41Miw0NS4yNEwxNDQuNDksMjcuNDJMMTQ0LjYsMjcuMjhMMTUxLjg1LDE5LjQxTDE1MS45NywxOS4zTDE1OC43NSwxNC4xTDE1OC44NywxNC4wM0wxNjUuNjUsMTEuMDRMMTY1Ljc3LDExLjAxTDE3MS42NCwxMC4yNUwxNzEuNzUsMTAuMjVMMTc3LjYyLDExLjI0TDE3Ny43MywxMS4yOEwxODIuOTEsMTMuNjJMMTgzLjAzLDEzLjY4TDE4OS4yNCwxOC4zMkwxODkuMzUsMTguNDJMMTk0LjE4LDIzLjRMMTk0LjMsMjMuNTNMMjAzLjUsMzYuM0wyMDMuNjIsMzYuNDlMMjEzLjYzLDU1LjEzTDIxMy43NCw1NS4zOEwyMjAuMTgsNjkuOUwyMjAuMyw3MC4xOEwyMzEsOTguMzlMMjMxLjExLDk4LjcyTDIzOS45NywxMjIuOTlMMjQwLjA4LDEyMy4wOEwyOTQuOTYsMTY1LjA4TDI5NS4wNywxNjUuMTZMMzc4LjcxLDIyN0wzNzguODIsMjI3LjA4TDQxNy40NywyNTQuNzJMNDE3LjU5LDI1NC44TDQ0Mi43OCwyNzIuNDlMNDQyLjksMjcyLjU3TDUxMC41NCwzMTguNzJMNTEwLjY1LDMxOC43OUw1MzcuOCwzMzYuNzdMNTM3LjkyLDMzNi44NEw1NTUuNTIsMzQ4LjMyXCIgc3R5bGU9XCJ2ZWN0b3ItZWZmZWN0OiBub24tc2NhbGluZy1zdHJva2U7IGZpbGw6IG5vbmU7IHN0cm9rZTogcmdiKDAsIDE1NCwgMjUwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4OyBvcGFjaXR5OiAxO1wiLz48L2c+PGcgY2xhc3M9XCJwb2ludHNcIi8+PGcgY2xhc3M9XCJ0ZXh0XCIvPjwvZz48ZyBjbGFzcz1cInRyYWNlIHNjYXR0ZXIgdHJhY2U4MTRkMDFcIiBzdHlsZT1cInN0cm9rZS1taXRlcmxpbWl0OiAyOyBvcGFjaXR5OiAxO1wiPjxnIGNsYXNzPVwiZmlsbHNcIi8+PGcgY2xhc3M9XCJlcnJvcmJhcnNcIi8+PGcgY2xhc3M9XCJsaW5lc1wiPjxwYXRoIGNsYXNzPVwianMtbGluZVwiIGQ9XCJNMCwzMjAuMzFMNS45OCwzMjMuOEw2LjEsMzIzLjg1TDExLjczLDMyNS41TDExLjg1LDMyNS41MUwxNi45MSwzMjUuNjZMMTcuMDMsMzI1LjY0TDIyLjQzLDMyNC40M0wyMi41NSwzMjQuMzlMMjkuMjIsMzIxTDI5LjMzLDMyMC45MkwzNS41NSwzMTUuOTdMMzUuNjYsMzE1Ljg2TDQyLjIyLDMwOC44NEw0Mi4zMywzMDguNzFMNDkuMTIsMjk5LjY0TDQ5LjI0LDI5OS40N0w2MC40LDI4MC45Nkw2MC41MSwyODAuNzVMNjcuOTksMjY2LjE2TDY4LjEsMjY1LjkyTDc3Ljc3LDI0NC45MUw3Ny44OCwyNDQuNjVMODYuODUsMjIzLjQzTDg2Ljk3LDIyMy4xNUwxMzcuMjQsOTcuMDVMMTM3LjM2LDk2Ljc5TDE0Ny41OSw3NC41TDE0Ny43MSw3NC4yNkwxNTcuNDksNTUuNTNMMTU3LjYsNTUuMzNMMTY5LjgsMzYuMjdMMTY5LjkxLDM2LjEyTDE4MC4xNSwyNC40TDE4MC4yNiwyNC4zTDE4Ny41MSwxOC42M0wxODcuNjMsMTguNTZMMTk0LjE4LDE1LjQ0TDE5NC4zLDE1LjRMMjAwLjUxLDE0LjI4TDIwMC42MywxNC4yN0wyMDYuOTUsMTUuMDFMMjA3LjA3LDE1LjA0TDIxMi40OCwxNy4yTDIxMi41OSwxNy4yNkwyMTkuMTUsMjEuOEwyMTkuMjYsMjEuOUwyMjUuMTMsMjcuNzVMMjI1LjI0LDI3Ljg4TDIzMC44OCwzNS4wN0wyMzEsMzUuMjNMMjQxLjI0LDUwLjE0TDI0MS4zNSw1MC4yNUwyNjIuNTIsNzAuNjdMMjYyLjYzLDcwLjc4TDM1OC4zNCwxNTguMzhMMzU4LjQ2LDE1OC40OEw0MTcuNywyMDkuMDRMNDE3LjgyLDIwOS4xM0w0MzkuMSwyMjYuNjVMNDM5LjIyLDIyNi43NEw0NzcuOTgsMjU3Ljc5TDQ3OC4xLDI1Ny44OEw1MzYuNDIsMzAyLjU5TDUzNi41NCwzMDIuNjdMNTU1LjUyLDMxNi43MlwiIHN0eWxlPVwidmVjdG9yLWVmZmVjdDogbm9uLXNjYWxpbmctc3Ryb2tlOyBmaWxsOiBub25lOyBzdHJva2U6IHJnYigyMjcsIDExMSwgNzEpOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7IG9wYWNpdHk6IDE7XCIvPjwvZz48ZyBjbGFzcz1cInBvaW50c1wiLz48ZyBjbGFzcz1cInRleHRcIi8+PC9nPjwvZz48L2c+PGcgY2xhc3M9XCJvdmVycGxvdFwiLz48cGF0aCBjbGFzcz1cInhsaW5lcy1hYm92ZSBjcmlzcFwiIGQ9XCJNODkuOTY1NTgyNDI3MTk2NjEsNDI1Ljg2MDIwODg4MDEzOTk2SDY0Ni40ODQ4MTQzOTgyMDAyXCIgc3R5bGU9XCJmaWxsOiBub25lOyBzdHJva2Utd2lkdGg6IDFweDsgc3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxO1wiLz48cGF0aCBjbGFzcz1cInlsaW5lcy1hYm92ZSBjcmlzcFwiIGQ9XCJNOTAuNDY1NTgyNDI3MTk2NjEsNjMuMTk4ODE4ODk3NjM3ODFWNDI1LjM2MDIwODg4MDEzOTk2XCIgc3R5bGU9XCJmaWxsOiBub25lOyBzdHJva2Utd2lkdGg6IDFweDsgc3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxO1wiLz48ZyBjbGFzcz1cIm92ZXJsaW5lcy1hYm92ZVwiLz48ZyBjbGFzcz1cInhheGlzbGF5ZXItYWJvdmVcIj48cGF0aCBjbGFzcz1cInh0aWNrIHRpY2tzIGNyaXNwXCIgZD1cIk0wLDQyNS4zNjAyMDg4ODAxMzk5NnYtNVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgyMjkuODQ1NTgyNDI3MTk2NiwwKVwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PHBhdGggY2xhc3M9XCJ4dGljayB0aWNrcyBjcmlzcFwiIGQ9XCJNMCw0MjUuMzYwMjA4ODgwMTM5OTZ2LTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMzY4LjcyNTU4MjQyNzE5NjYsMClcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxwYXRoIGNsYXNzPVwieHRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTAsNDI1LjM2MDIwODg4MDEzOTk2di01XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDUwNy42MDU1ODI0MjcxOTY2LDApXCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4O1wiLz48ZyBjbGFzcz1cInh0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJtaWRkbGVcIiB4PVwiMFwiIHk9XCI0MzkuNTYwMjA4ODgwMTM5OTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoOTAuOTY1NTgyNDI3MTk2NjEsMClcIiBzdHlsZT1cImZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IGZpbGw6IHJnYigwLCAwLCAwKTsgZmlsbC1vcGFjaXR5OiAxOyB3aGl0ZS1zcGFjZTogcHJlO1wiPjkuMDA8L3RleHQ+PC9nPjxnIGNsYXNzPVwieHRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cIm1pZGRsZVwiIHg9XCIwXCIgeT1cIjQzOS41NjAyMDg4ODAxMzk5NVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgyMjkuODQ1NTgyNDI3MTk2NiwwKVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDE7IHdoaXRlLXNwYWNlOiBwcmU7XCI+OS4yNTwvdGV4dD48L2c+PGcgY2xhc3M9XCJ4dGlja1wiPjx0ZXh0IHRleHQtYW5jaG9yPVwibWlkZGxlXCIgeD1cIjBcIiB5PVwiNDM5LjU2MDIwODg4MDEzOTk1XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDM2OC43MjU1ODI0MjcxOTY2LDApXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj45LjUwPC90ZXh0PjwvZz48ZyBjbGFzcz1cInh0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJtaWRkbGVcIiB4PVwiMFwiIHk9XCI0MzkuNTYwMjA4ODgwMTM5OTVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoNTA3LjYwNTU4MjQyNzE5NjYsMClcIiBzdHlsZT1cImZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IGZpbGw6IHJnYigwLCAwLCAwKTsgZmlsbC1vcGFjaXR5OiAxOyB3aGl0ZS1zcGFjZTogcHJlO1wiPjkuNzU8L3RleHQ+PC9nPjxnIGNsYXNzPVwieHRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cIm1pZGRsZVwiIHg9XCIwXCIgeT1cIjQzOS41NjAyMDg4ODAxMzk5NVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSg2NDYuNDg1NTgyNDI3MTk2NiwwKVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDE7IHdoaXRlLXNwYWNlOiBwcmU7XCI+MTAuMDA8L3RleHQ+PC9nPjwvZz48ZyBjbGFzcz1cInlheGlzbGF5ZXItYWJvdmVcIj48cGF0aCBjbGFzcz1cInl0aWNrIHRpY2tzIGNyaXNwXCIgZD1cIk05MC45NjU1ODI0MjcxOTY2MSwwaDVcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwzODIuMDk4ODE4ODk3NjM3OClcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxwYXRoIGNsYXNzPVwieXRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDI5MS43Mzg4MTg4OTc2Mzc3NylcIiBzdHlsZT1cInN0cm9rZTogcmdiKDAsIDAsIDApOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxwYXRoIGNsYXNzPVwieXRpY2sgdGlja3MgY3Jpc3BcIiBkPVwiTTkwLjk2NTU4MjQyNzE5NjYxLDBoNVwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDIwMS4zNzg4MTg4OTc2Mzc4KVwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PHBhdGggY2xhc3M9XCJ5dGljayB0aWNrcyBjcmlzcFwiIGQ9XCJNOTAuOTY1NTgyNDI3MTk2NjEsMGg1XCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDAsMTExLjAyODgxODg5NzYzNzgpXCIgc3R5bGU9XCJzdHJva2U6IHJnYigwLCAwLCAwKTsgc3Ryb2tlLW9wYWNpdHk6IDE7IHN0cm9rZS13aWR0aDogMXB4O1wiLz48ZyBjbGFzcz1cInl0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJlbmRcIiB4PVwiODcuNzY1NTgyNDI3MTk2NlwiIHk9XCIzLjg0OTk5OTk5OTk5OTk5OTZcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwzODIuMDk4ODE4ODk3NjM3OClcIiBzdHlsZT1cImZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IGZpbGw6IHJnYigwLCAwLCAwKTsgZmlsbC1vcGFjaXR5OiAxOyB3aGl0ZS1zcGFjZTogcHJlO1wiPjkwPC90ZXh0PjwvZz48ZyBjbGFzcz1cInl0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJlbmRcIiB4PVwiODcuNzY1NTgyNDI3MTk2NlwiIHk9XCIzLjg0OTk5OTk5OTk5OTk5OTZcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwyOTEuNzM4ODE4ODk3NjM3NzcpXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj4xMDA8L3RleHQ+PC9nPjxnIGNsYXNzPVwieXRpY2tcIj48dGV4dCB0ZXh0LWFuY2hvcj1cImVuZFwiIHg9XCI4Ny43NjU1ODI0MjcxOTY2XCIgeT1cIjMuODQ5OTk5OTk5OTk5OTk5NlwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSgwLDIwMS4zNzg4MTg4OTc2Mzc4KVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTFweDsgZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDE7IHdoaXRlLXNwYWNlOiBwcmU7XCI+MTEwPC90ZXh0PjwvZz48ZyBjbGFzcz1cInl0aWNrXCI+PHRleHQgdGV4dC1hbmNob3I9XCJlbmRcIiB4PVwiODcuNzY1NTgyNDI3MTk2NlwiIHk9XCIzLjg0OTk5OTk5OTk5OTk5OTZcIiB0cmFuc2Zvcm09XCJ0cmFuc2xhdGUoMCwxMTEuMDI4ODE4ODk3NjM3OClcIiBzdHlsZT1cImZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOyBmb250LXNpemU6IDExcHg7IGZpbGw6IHJnYigwLCAwLCAwKTsgZmlsbC1vcGFjaXR5OiAxOyB3aGl0ZS1zcGFjZTogcHJlO1wiPjEyMDwvdGV4dD48L2c+PC9nPjxnIGNsYXNzPVwib3ZlcmF4ZXMtYWJvdmVcIi8+PC9nPjwvZz48ZyBjbGFzcz1cInBvbGFybGF5ZXJcIi8+PGcgY2xhc3M9XCJ0ZXJuYXJ5bGF5ZXJcIi8+PGcgY2xhc3M9XCJnZW9sYXllclwiLz48ZyBjbGFzcz1cImZ1bm5lbGFyZWFsYXllclwiLz48ZyBjbGFzcz1cInBpZWxheWVyXCIvPjxnIGNsYXNzPVwidHJlZW1hcGxheWVyXCIvPjxnIGNsYXNzPVwic3VuYnVyc3RsYXllclwiLz48ZyBjbGFzcz1cImdsaW1hZ2VzXCIvPjxkZWZzIGlkPVwidG9wZGVmcy04NjFkYWZcIj48ZyBjbGFzcz1cImNsaXBzXCIvPjxjbGlwUGF0aCBpZD1cImxlZ2VuZDg2MWRhZlwiPjxyZWN0IHdpZHRoPVwiNThcIiBoZWlnaHQ9XCI0OFwiIHg9XCIxXCIgeT1cIjFcIi8+PC9jbGlwUGF0aD48L2RlZnM+PGcgY2xhc3M9XCJsYXllci1hYm92ZVwiPjxnIGNsYXNzPVwiaW1hZ2VsYXllclwiLz48ZyBjbGFzcz1cInNoYXBlbGF5ZXJcIi8+PC9nPjxnIGNsYXNzPVwiaW5mb2xheWVyXCI+PGcgY2xhc3M9XCJsZWdlbmRcIiBwb2ludGVyLWV2ZW50cz1cImFsbFwiIHRyYW5zZm9ybT1cInRyYW5zbGF0ZSg1OTAsNjApXCI+PHJlY3QgY2xhc3M9XCJiZ1wiIHNoYXBlLXJlbmRlcmluZz1cImNyaXNwRWRnZXNcIiB3aWR0aD1cIjU5XCIgaGVpZ2h0PVwiNDlcIiB4PVwiMC41XCIgeT1cIjAuNVwiIHN0eWxlPVwic3Ryb2tlOiByZ2IoMCwgMCwgMCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBmaWxsOiByZ2IoMjU1LCAyNTUsIDI1NSk7IGZpbGwtb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjxnIGNsYXNzPVwic2Nyb2xsYm94XCIgdHJhbnNmb3JtPVwiXCIgY2xpcC1wYXRoPVwidXJsKCcjbGVnZW5kODYxZGFmJylcIj48ZyBjbGFzcz1cImdyb3Vwc1wiPjxnIGNsYXNzPVwidHJhY2VzXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDEsMTUuNSlcIiBzdHlsZT1cIm9wYWNpdHk6IDE7XCI+PHRleHQgY2xhc3M9XCJsZWdlbmR0ZXh0XCIgdGV4dC1hbmNob3I9XCJzdGFydFwiIHg9XCI0MFwiIHk9XCI0LjI5XCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj5wMTwvdGV4dD48ZyBjbGFzcz1cImxheWVyc1wiIHN0eWxlPVwib3BhY2l0eTogMTtcIj48ZyBjbGFzcz1cImxlZ2VuZGZpbGxcIi8+PGcgY2xhc3M9XCJsZWdlbmRsaW5lc1wiPjxwYXRoIGNsYXNzPVwianMtbGluZVwiIGQ9XCJNNSwwaDMwXCIgc3R5bGU9XCJmaWxsOiBub25lOyBzdHJva2U6IHJnYigwLCAxNTQsIDI1MCk7IHN0cm9rZS1vcGFjaXR5OiAxOyBzdHJva2Utd2lkdGg6IDFweDtcIi8+PC9nPjxnIGNsYXNzPVwibGVnZW5kc3ltYm9sc1wiPjxnIGNsYXNzPVwibGVnZW5kcG9pbnRzXCIvPjwvZz48L2c+PHJlY3QgY2xhc3M9XCJsZWdlbmR0b2dnbGVcIiB4PVwiMFwiIHk9XCItOS41XCIgd2lkdGg9XCI1Mi4yNVwiIGhlaWdodD1cIjE5XCIgc3R5bGU9XCJmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMDtcIi8+PC9nPjxnIGNsYXNzPVwidHJhY2VzXCIgdHJhbnNmb3JtPVwidHJhbnNsYXRlKDEsMzQuNSlcIiBzdHlsZT1cIm9wYWNpdHk6IDE7XCI+PHRleHQgY2xhc3M9XCJsZWdlbmR0ZXh0XCIgdGV4dC1hbmNob3I9XCJzdGFydFwiIHg9XCI0MFwiIHk9XCI0LjI5XCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxMXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IGZpbGwtb3BhY2l0eTogMTsgd2hpdGUtc3BhY2U6IHByZTtcIj5wMjwvdGV4dD48ZyBjbGFzcz1cImxheWVyc1wiIHN0eWxlPVwib3BhY2l0eTogMTtcIj48ZyBjbGFzcz1cImxlZ2VuZGZpbGxcIi8+PGcgY2xhc3M9XCJsZWdlbmRsaW5lc1wiPjxwYXRoIGNsYXNzPVwianMtbGluZVwiIGQ9XCJNNSwwaDMwXCIgc3R5bGU9XCJmaWxsOiBub25lOyBzdHJva2U6IHJnYigyMjcsIDExMSwgNzEpOyBzdHJva2Utb3BhY2l0eTogMTsgc3Ryb2tlLXdpZHRoOiAxcHg7XCIvPjwvZz48ZyBjbGFzcz1cImxlZ2VuZHN5bWJvbHNcIj48ZyBjbGFzcz1cImxlZ2VuZHBvaW50c1wiLz48L2c+PC9nPjxyZWN0IGNsYXNzPVwibGVnZW5kdG9nZ2xlXCIgeD1cIjBcIiB5PVwiLTkuNVwiIHdpZHRoPVwiNTIuMjVcIiBoZWlnaHQ9XCIxOVwiIHN0eWxlPVwiZmlsbDogcmdiKDAsIDAsIDApOyBmaWxsLW9wYWNpdHk6IDA7XCIvPjwvZz48L2c+PC9nPjxyZWN0IGNsYXNzPVwic2Nyb2xsYmFyXCIgcng9XCIyMFwiIHJ5PVwiM1wiIHdpZHRoPVwiMFwiIGhlaWdodD1cIjBcIiB4PVwiMFwiIHk9XCIwXCIgc3R5bGU9XCJmaWxsOiByZ2IoMTI4LCAxMzksIDE2NCk7IGZpbGwtb3BhY2l0eTogMTtcIi8+PC9nPjxnIGNsYXNzPVwiZy1ndGl0bGVcIi8+PGcgY2xhc3M9XCJnLXh0aXRsZVwiPjx0ZXh0IGNsYXNzPVwieHRpdGxlXCIgeD1cIjM2OC43MjUxOTg0MTI2OTg0M1wiIHk9XCI0NjcuMDYyNVwiIHRleHQtYW5jaG9yPVwibWlkZGxlXCIgc3R5bGU9XCJmb250LWZhbWlseTogc2Fucy1zZXJpZjsgZm9udC1zaXplOiAxNXB4OyBmaWxsOiByZ2IoMCwgMCwgMCk7IG9wYWNpdHk6IDE7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IHdoaXRlLXNwYWNlOiBwcmU7XCI+dCBbc108L3RleHQ+PC9nPjxnIGNsYXNzPVwiZy15dGl0bGVcIj48dGV4dCBjbGFzcz1cInl0aXRsZVwiIHRyYW5zZm9ybT1cInJvdGF0ZSgtOTAsNDMuOTA2MjUsMjQ0LjI3OTUxMzg4ODg4ODg5KVwiIHg9XCI0My45MDYyNVwiIHk9XCIyNDQuMjc5NTEzODg4ODg4ODlcIiB0ZXh0LWFuY2hvcj1cIm1pZGRsZVwiIHN0eWxlPVwiZm9udC1mYW1pbHk6IHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTVweDsgZmlsbDogcmdiKDAsIDAsIDApOyBvcGFjaXR5OiAxOyBmb250LXdlaWdodDogbm9ybWFsOyB3aGl0ZS1zcGFjZTogcHJlO1wiPnAgW21tSGddPC90ZXh0PjwvZz48L2c+PC9zdmc+IgogICAgICBdCiAgICAgfSwKICAgICAiZXhlY3V0aW9uX2NvdW50IjogMjEsCiAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgIm91dHB1dF90eXBlIjogImV4ZWN1dGVfcmVzdWx0IgogICAgfQogICBdLAogICAic291cmNlIjogWwogICAgIiN8IGxhYmVsOiBmaWctd2s0LXNvbFxuIiwKICAgICIjfCBmaWctY2FwOiBTb2x1dGlvbiBvZiA0LWVsZW1lbnQgd2luZGtlc3NlbCBtb2RlbCB1c2luZyBKdWxpYSdzIERpZmZlcmVudGlhbEVxdWF0aW9ucy5qbFxuIiwKICAgICJwbG90KHNvbCxcbiIsCiAgICAiICAgICBsYWJlbCA9IFtcInAxXCIgXCJwMlwiXSxcbiIsCiAgICAiICAgICB4bGFiZWwgPSBcInQgW3NdXCIsXG4iLAogICAgIiAgICAgeWxhYmVsID0gXCJwIFttbUhnXVwiLFxuIiwKICAgICIgICAgIHRzcGFuPSg5LDEwKSkiCiAgIF0KICB9LAogIHsKICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICJpZCI6ICJiNWRhY2VlMyIsCiAgICJtZXRhZGF0YSI6IHt9LAogICAic291cmNlIjogWwogICAgIiMjIyBDb21wYXJpc29uIHRvIFB5dGhvbiBhbmQgTWF0bGFiIHsjc2VjLW9kZVBNfVxuIiwKICAgICJcbiIsCiAgICAiRm9yIHRob3NlIGNvbWluZyBmcm9tIFB5dGhvbiBvciBNYXRsYWIsIGxldCdzIGhhdmUgYSBsb29rIGF0IGhvdyB0aGlzIHByb2JsZW0gY2FuIGJlIHNvbHZlZCBpbiB0aGVzZSB0d28gbGFuZ3VhZ2VzIGFuZCBjb21wYXJlIHRvIHRoZSBKdWxpYSB2ZXJzaW9uLlxuIiwKICAgICJcbiIsCiAgICAiU3dpdGNoIGJldHdlZW4gdGhlIGxhbmd1YWdlcyB1c2luZyB0aGUgdGFicyBiZWxvdzpcbiIsCiAgICAiXG4iLAogICAgIjo6OiB7LnBhbmVsLXRhYnNldH1cbiIsCiAgICAiIyMjIFB5dGhvblxuIiwKICAgICJcbiIsCiAgICAiXG4iLAogICAgImBgYHB5dGhvblxuIiwKICAgICJpbXBvcnQgc2NpcHkgYXMgc3BcbiIsCiAgICAiZnJvbSBzY2lweSBpbXBvcnQgaW50ZWdyYXRlXG4iLAogICAgImZyb20gc2NpcHkubWlzYyBpbXBvcnQgZGVyaXZhdGl2ZVxuIiwKICAgICJcbiIsCiAgICAiaW1wb3J0IG51bXB5IGFzIG5wXG4iLAogICAgIlxuIiwKICAgICJpbXBvcnQgdGltZVxuIiwKICAgICJcbiIsCiAgICAiZGVmIHdrNCh0LCB5LCBJLCBSYywgUnAsIEMsIExwLCBkdCk6XG4iLAogICAgIlxuIiwKICAgICIgICAgZHAxZHQgPSAoXG4iLAogICAgIiAgICAgICAgLVJjIC8gTHAgKiB5WzBdXG4iLAogICAgIiAgICAgICAgKyAoUmMgLyBMcCAtIDEgLyBScCAvIEMpICogeVsxXVxuIiwKICAgICIgICAgICAgICsgUmMgKiBkZXJpdmF0aXZlKEksIHQsIGR4PWR0KVxuIiwKICAgICIgICAgICAgICsgSSh0KSAvIENcbiIsCiAgICAiICAgIClcbiIsCiAgICAiXG4iLAogICAgIiAgICBkcDJkdCA9IC0xIC8gUnAgLyBDICogeVsxXSArIEkodCkgLyBDXG4iLAogICAgIlxuIiwKICAgICIgICAgcmV0dXJuIFtkcDFkdCwgZHAyZHRdXG4iLAogICAgIlxuIiwKICAgICJ0aW1lX3N0YXJ0ID0gMFxuIiwKICAgICJ0aW1lX2VuZCA9IDEwXG4iLAogICAgIlxuIiwKICAgICJSYyA9IDAuMlxuIiwKICAgICJScCA9IDEuMFxuIiwKICAgICJDID0gMS4wXG4iLAogICAgIkxwID0gMWUtMlxuIiwKICAgICJcbiIsCiAgICAiZHQgPSAxZS02XG4iLAogICAgIlxuIiwKICAgICJ5MCA9IG5wLnplcm9zKDIpXG4iLAogICAgIlxuIiwKICAgICIjIEdlbmVyaWMgSW5wdXQgV2F2ZWZvcm1cbiIsCiAgICAiIyBtYXggdm9sdW1lIGZsb3cgaW4gbWwvc1xuIiwKICAgICJtYXhfaSA9IDQyNVxuIiwKICAgICJcbiIsCiAgICAiIyBtaW4gdm9sdW1lIGZsb3cgaW4gbV4zL3NcbiIsCiAgICAibWluX2kgPSAwLjBcbiIsCiAgICAiXG4iLAogICAgIiMgUGVyaW9kIHRpbWUgaW4gc1xuIiwKICAgICJUID0gMC45XG4iLAogICAgIlxuIiwKICAgICIjIFN5c3QuIFRpbWUgaW4gc1xuIiwKICAgICJzeXN0VGltZSA9IDIgLyA1ICogVFxuIiwKICAgICJcbiIsCiAgICAiIyBEaWNyb3RpYyBub3RjaCB0aW1lXG4iLAogICAgImRpY3JUaW1lID0gMC4wM1xuIiwKICAgICJcbiIsCiAgICAiZGVmIEkodCk6XG4iLAogICAgIiAgICAjIGltcGxpY2l0IGNvbmRpdGlvbmFsIHVzaW5nIGJvb2xlYW4gbXVsdGlwbGljYXRvclxuIiwKICAgICIgICAgIyBzaW5lIHdhdmVmb3JtXG4iLAogICAgIiAgICBJID0gKFxuIiwKICAgICIgICAgICAgIChtYXhfaSAtIG1pbl9pKSAqIG5wLnNpbihucC5waSAvIHN5c3RUaW1lICogKHQgJSBUKSlcbiIsCiAgICAiICAgICAgICAqKHQgJSBUIDwgKHN5c3RUaW1lICsgZGljclRpbWUpKSArIG1pbl9pXG4iLAogICAgIiAgICApXG4iLAogICAgIlxuIiwKICAgICIgICAgcmV0dXJuIElcbiIsCiAgICAiXG4iLAogICAgInRpYyA9IHRpbWUucGVyZl9jb3VudGVyKClcbiIsCiAgICAiXG4iLAogICAgInNvbCA9IHNwLmludGVncmF0ZS5zb2x2ZV9pdnAoXG4iLAogICAgIiAgICBsYW1iZGEgdCwgeTogd2s0KHQsIHksIEksIFJjLCBScCwgQywgTHAsIGR0KSxcbiIsCiAgICAiICAgICh0aW1lX3N0YXJ0LCB0aW1lX2VuZCksXG4iLAogICAgIiAgICB5MCxcbiIsCiAgICAiICAgIG1ldGhvZD1cIlJLNDVcIixcbiIsCiAgICAiICAgIHJ0b2w9MWUtOSxcbiIsCiAgICAiICAgIHZlY3Rvcml6ZWQ9VHJ1ZSwpIFxuIiwKICAgICJcbiIsCiAgICAidG9jID0gdGltZS5wZXJmX2NvdW50ZXIoKVxuIiwKICAgICJcbiIsCiAgICAicHJpbnQoZlwiVGltZSBlbGFwc2VkOiB7dG9jIC0gdGljOjAuNGZ9IHNlY29uZHNcIilcbiIsCiAgICAiYGBgXG4iLAogICAgIlxuIiwKICAgICJSdW50aW1lIGZvciB0aGlzIGNvZGUgaXMgKHRpbWVkIHVzaW5nIGAlJXRpbWVgIGluIEp1cHl0ZXIpOlxuIiwKICAgICJcbiIsCiAgICAiYGBgcHl0aG9uXG4iLAogICAgIlRpbWUgZWxhcHNlZDogMC43ODcyIHNlY29uZHNcbiIsCiAgICAiYGBgXG4iLAogICAgIlxuIiwKICAgICIjIyMgTUFUTEFCXG4iLAogICAgIlxuIiwKICAgICJgYGBvY3RhdmVcbiIsCiAgICAiZnVuY3Rpb24gZFAgPSBSSFNfZGVmbih0LFAsUmMsUnAsQyxMcClcbiIsCiAgICAiXG4iLAogICAgImRQICAgID0gemVyb3MoMiwxKTtcbiIsCiAgICAiXG4iLAogICAgImRQKDEpID0gLVJjIC8gTHAgKiBQKDEpIC4uLlxuIiwKICAgICIgICAgICAgICsgKFJjIC8gTHAgLSAxIC8gUnAgLyBDKSAqIFAoMikgLi4uXG4iLAogICAgIiAgICAgICAgKyBSYyAqIGRpZHQodCkgKyBpKHQpIC8gQztcbiIsCiAgICAiXG4iLAogICAgImRQKDIpID0gLTEgLyBScCAvIEMgKiBQKDIpICsgaSh0KSAvIEM7XG4iLAogICAgIlxuIiwKICAgICJlbmRcbiIsCiAgICAiXG4iLAogICAgImZ1bmN0aW9uIGRpZHQgPSBkaWR0KGksIHQpXG4iLAogICAgImR0ID0gMWUtMztcbiIsCiAgICAiZGlkdCA9IChpKHQrZHQpIC0gaSh0LWR0KSkgLyAoMiAqIGR0KTtcbiIsCiAgICAiZW5kXG4iLAogICAgIlxuIiwKICAgICJmdW5jdGlvbiBpID0gaSh0KVxuIiwKICAgICJcbiIsCiAgICAibWF4X2kgPSA0MjU7XG4iLAogICAgIm1pbl9pID0gMC4wO1xuIiwKICAgICJUID0gMC45O1xuIiwKICAgICJcbiIsCiAgICAic3lzdFRpbWUgPSAyIC8gNSAqIFQ7XG4iLAogICAgImRpY3JUaW1lID0gMC4wMztcbiIsCiAgICAiXG4iLAogICAgImkgPSAoKG1heF9pIC0gbWluX2kpICogc2luKHBpIC8gc3lzdFRpbWUgKiAobW9kKHQsVCkpKSAuLi5cbiIsCiAgICAiICAgICAqKG1vZCh0LFQpIDwgKHN5c3RUaW1lICsgZGljclRpbWUpKSAuLi5cbiIsCiAgICAiICAgICArIG1pbl9pKTtcbiIsCiAgICAiZW5kXG4iLAogICAgIlxuIiwKICAgICJSYyA9IDAuMDNcbiIsCiAgICAiUnAgPSAxLjBcbiIsCiAgICAiQyAgPSAyLjBcbiIsCiAgICAiTHAgPSAwLjAyXG4iLAogICAgIlxuIiwKICAgICJvcHRpb25zID0gb2Rlc2V0KCdSZWx0b2wnLDFlLTkpO1xuIiwKICAgICJcbiIsCiAgICAidGljXG4iLAogICAgIlt0LCBQXSA9IG9kZTQ1KEAodCxQKSBSSFNfZGVmbih0LFAsUmMsUnAsQyxMcyxMcCksIHRzcGFuLCBQMCwgb3B0aW9ucyk7XG4iLAogICAgInRvY1xuIiwKICAgICJgYGBcbiIsCiAgICAiXG4iLAogICAgIlJ1bnRpbWUgZm9yIHRoaXMgY29kZSBpcyAodGltZWQgdXNpbmcgYHRpY2AgYHRvY2AgaW4gTWF0bGFiKV5bU2FtZSBjb2RlIGluIE9jdGF2ZSwgdGhlIGZyZWUgb3Blbi1zb3VyY2UgdmVyc2lvbiBvZiBNYXRsYWIgcnVucyBpbiAzIHNlY29uZHMuIEN1cnJlbnQgdmVyc2lvbnMgb2YgTWF0bGFiIGhhdmUgaW1wcm92ZWQgcnVudGltZSBieSBwYXJ0aWFsIGp1c3QtaW4tdGltZSBjb21waWxhdGlvbi4gTm90ZSB0aGF0IHRoZSBmaXJzdCBydW4gaW4gTWF0bGFiIGlzIGFsc28gc2xpZ2h0bHkgbG9uZ2VyIHdpdGggMC4wMzUgc2Vjb25kcywgd2hpY2ggaXMgbW9zdCBsaWtlbHkgZHVlIHRvIE1hdGxhYiBvcHRpbWlzaW5nIHRoZSBzb2x2ZXIgdG8gdGhlIHByb2JsZW0uXSwgd2hpY2ggaXMgYSBiaXQgbW9yZSB0aGFuIGFuIG9yZGVyIG9mIG1hZ25pdHVkZSBzbG93ZXIgdGhhbiBKdWxpYTpcbiIsCiAgICAiXG4iLAogICAgImBgYG9jdGF2ZVxuIiwKICAgICJFbGFwc2VkIHRpbWUgaXMgMC4wMTgxNzIgc2Vjb25kcy5cbiIsCiAgICAiYGBgXG4iLAogICAgIjo6OlxuIiwKICAgICJcbiIsCiAgICAiU28gaW4gdGhpcyBjYXNlLCBKdWxpYSBpcyBvbmUgb3JkZXIgb2YgbWFnaXR1ZGUgZmFzdGVyIHRoYW4gTWF0bGFiIGFuZCBhcm91bmQgNTAweCBmYXN0ZXIgdGhhbiBQeXRob25eW0kgaGF2ZSB0cmllZCB1c2luZyBQeVB5IGFuZCBDeXRob24gaW4gb3RoZXIgY2FzZXMgYW5kIGZvdW5kIHRoYXQgdGhleSBzcGVlZCB1cCBQeXRob24gY29uc2lkZXJhYmx5LiBVbmZvcnR1bmF0ZWx5IHRoaXMgd2FzIG5vdCB0aGUgY2FzZSB3aGVuIHVzaW5nIFNjaVB5IGFuZCBOdW1weSwgd2hpY2ggbWFkZSB0aGUgY29tcGlsZWQgUHl0aG9uIHZlcnNpb24gb25lIG9yZGVyIG9mIG1hZ25pdHVkZSAqKnNsb3dlcioqIHRoYW4gaW50ZXJwcmV0ZWQuIFRoZXJlIHNlZW1zIHRvIGJlIGEgcHJvYmxlbSB3aXRoIEMtY2FsbHMgZnJvbSBQeVB5Ll0gc29sdmluZyBPREVzLlxuIiwKICAgICJcbiIsCiAgICAiUGVyc29uYWxseSwgSSBmaW5kIHRoZSBNYXRsYWIgY29kZSBhbmQsIGluIHBhcnRpY3VsYXIsIHRoZSBKdWxpYSBjb2RlIGVhc2llciB0byByZWFkLlxuIgogICBdCiAgfQogXSwKICJtZXRhZGF0YSI6IHsKICAia2VybmVsc3BlYyI6IHsKICAgImRpc3BsYXlfbmFtZSI6ICJKdWxpYSAxLjkuMC1iZXRhNCIsCiAgICJsYW5ndWFnZSI6ICJqdWxpYSIsCiAgICJuYW1lIjogImp1bGlhLTEuOSIKICB9CiB9LAogIm5iZm9ybWF0IjogNCwKICJuYmZvcm1hdF9taW5vciI6IDUKfQo=').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'ODEsolver.ipynb'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts29961"><i class="bi bi-download"></i> Download Jupyter Notebook </button></a></p>
+<p>The windkessel model is a common model for the pressure response of the vascular system (blood circulation) to a periodic, pulsing flow waveform <span class="citation" data-cites="Westerhof2019">(<a href="references.html#ref-Westerhof2019" role="doc-biblioref">Westerhof et al. 2019</a>)</span>.</p>
+<p>Here we are going to work with the 4-Element windkessel model <span class="citation" data-cites="Stergiopulos1999">(<a href="references.html#ref-Stergiopulos1999" role="doc-biblioref">Stergiopulos, Westerhof, and Westerhof 1999</a>)</span>, comprising a flow source (time dependent flow rate), two resistors for characteristic Resistance of the near vessel (aorta), <span class="math inline">\(R_{c}\)</span>, and systemic (peripheral) resistance, <span class="math inline">\(R_{p}\)</span>, a compliance (capacitance) <span class="math inline">\(C\)</span>, representing the blood storage capacity of the peripheral vessels, and an inductance <span class="math inline">\(L_p\)</span>, representing the inertia in the proximal, large vessel, e.g., the aorta.</p>
+<p>The pressures in this circuit - <span class="math inline">\(p_{1}\)</span> before, and <span class="math inline">\(p_{2}\)</span> after the proximal L-R element - are described by the system of ODEs:</p>
+<p><span id="eq-wk4-1"><span class="math display">\[
+\frac{d p_{1}}{d t}  =  - \frac{R_{c}}{L_{p}} p_{1} + \left( \frac{R_{c}}{L_{p}} - \frac{1}{R_{p} C} \right) p_{2} \\
++ R_{c} \frac{d I(t)}{d t} + \frac{I(t)}{C}
+\tag{6.1}\]</span></span></p>
+<p><span id="eq-wk4-2"><span class="math display">\[
+\frac{d p_{2}}{d t}  =  - \frac{1}{R_{p} C} p_{2} + \frac{I(t)}{C}
+\tag{6.2}\]</span></span></p>
+<!-- Source: file:///home/thor/Documents/Research/SaxtonPhD/0D-ModellingInJulia_files/images/wk4.drawio.png, accessed: Sun Mar  5 16:01:01 2023 -->
+<div id="fig-4wk" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/images_for_ODEsolver.qmd/wk4.drawio.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6.1: 4-Element Windkessel Model</figcaption><p></p>
+</figure>
+</div>
+<p>In order to implement this model, we need to load the required modules. We use <code>DifferentialEquations</code>, <code>Plots</code>, and <code>ForwardDiff</code> for the time-derivative <span class="math inline">\(\frac{\partial I}{\partial t}\)</span>:</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DifferentialEquations</span>, <span class="bu">ForwardDiff</span>, <span class="bu">Plots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The input waveform is a generic half-period of a sine-wave with a systolic (ejection) time of <span class="math inline">\(t_{syst} = 0.4 T\)</span>, with <span class="math inline">\(T=1\ \mathrm{s}\)</span> period-time (60 beats per minute). The dicrotic notch is modelled by running the sine into the negative for <span class="math inline">\(t_{dicr} = 0.03\ \mathrm{s}\)</span>:</p>
+<p><span class="math display">\[\begin{equation}
+    I =
+    \begin{cases}
+        I_{min} + (I_{max} - I_{min})  \sin \left(\frac{\pi}{t_{syst}} t \right) &amp; \text{if } t \lt (t_{syst} + t_{dicr})\\
+        I_{min} &amp; \text{else}
+    \end{cases}
+\end{equation}\]</span></p>
+<p>In Julia, this function is implemented as<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># max and min volume flow in ml/s</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> max_i <span class="op">=</span> <span class="fl">425</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> min_i <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># period time</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> T <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Syst. Time in s</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> systTime <span class="op">=</span> <span class="fl">2</span> <span class="op">/</span> <span class="fl">5</span> <span class="op">*</span> T</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Dicrotic notch time in s</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> dicrTime <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">I</span>(t)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># implicit conditional using boolean multiplicator</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sine waveform</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> t <span class="op">-</span> T <span class="op">*</span> (t <span class="op">÷</span> T)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((max_i <span class="op">-</span> min_i) <span class="op">*</span> <span class="fu">sin</span>(<span class="cn">pi</span> <span class="op">/</span> systTime <span class="op">*</span> (t))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="op">*</span> (t <span class="op">&lt;</span> (systTime <span class="op">+</span> dicrTime) )</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> min_i)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can quickly plot this function in <a href="#fig-igen">Figure&nbsp;<span>6.2</span></a>.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plotTime <span class="op">=</span> <span class="fu">LinRange</span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">100</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plotTime, <span class="fu">I</span>.(plotTime),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     xlabel <span class="op">=</span> <span class="st">"t [s]"</span>, ylabel <span class="op">=</span> <span class="st">"I [ml/s]"</span>, label <span class="op">=</span> <span class="st">"Outflow"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div id="fig-igen" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ODEsolver_files/figure-html/fig-igen-output-1.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6.2: Generic waveform, representing ejection of blood from left ventricle in the aorta, including dicrotic notch (backflow at valve closure).</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The definition of the ODEs <a href="#eq-wk4-1">Equation&nbsp;<span>6.1</span></a> and <a href="#eq-wk4-2">Equation&nbsp;<span>6.2</span></a> is done as a function with parameters <code>dP</code> and <code>P</code>, for <span class="math inline">\(\frac{d p_{1,2}}{d t}\)</span>, and <span class="math inline">\(p_{1,2}\)</span>, respectively<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">wk4</span>(dP, P, params, t)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    Rc, Rp, C, Lp <span class="op">=</span> params</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    dP[<span class="fl">1</span>] <span class="op">=</span> (</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span>Rc <span class="op">/</span> Lp <span class="op">*</span> P[<span class="fl">1</span>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> (Rc <span class="op">/</span> Lp <span class="op">-</span> <span class="fl">1</span> <span class="op">/</span> Rp <span class="op">/</span> C) <span class="op">*</span> P[<span class="fl">2</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> Rc <span class="op">*</span> ForwardDiff.<span class="fu">derivative</span>(I, t)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> <span class="fu">I</span>(t) <span class="op">/</span> C</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    dP[<span class="fl">2</span>] <span class="op">=</span> <span class="op">-</span><span class="fl">1</span> <span class="op">/</span> Rp <span class="op">/</span> C <span class="op">*</span> P[<span class="fl">2</span>] <span class="op">+</span> <span class="fu">I</span>(t) <span class="op">/</span> C</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dP[<span class="fl">1</span>], dP[<span class="fl">2</span>]</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We define the parameters, initial conditions, and time span for the integration:</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Rc <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Rp <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>C  <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>Lp <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>tspan <span class="op">=</span> (<span class="fl">0</span>, <span class="fl">10</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [Rc, Rp, C, Lp]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>P0 <span class="op">=</span> <span class="fu">zeros</span>(<span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>2-element Vector{Float64}:
+ 0.0
+ 0.0</code></pre>
+</div>
+</div>
+<p>And define the ODE problem and solve it<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. We will time the run using the <code>@time</code> macro:</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="fu">ODEProblem</span>(wk4, P0, tspan, params)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> sol <span class="op">=</span> <span class="fu">solve</span>(prob, <span class="fu">DP5</span>(), reltol<span class="op">=</span><span class="fl">1e-9</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  0.177039 seconds (249.28 k allocations: 16.316 MiB, 99.59% compilation time: 100% of which was recompilation)</code></pre>
+</div>
+</div>
+<p>Looking at this run time, we see that the run is slower than the Matlab run<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Looking at the details of the benchmark times, we see that most of that time has been used on compilation. So when we re-run the solver, it should take less time:</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> sol <span class="op">=</span> <span class="fu">solve</span>(prob, <span class="fu">DP5</span>(), reltol<span class="op">=</span><span class="fl">1e-9</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  0.000729 seconds (2.95 k allocations: 252.766 KiB)</code></pre>
+</div>
+</div>
+<p>And indeed, the run time is now one order of magnitude faster than the Matlab times shown in <a href="#sec-odePM"><span>Section&nbsp;6.1.1</span></a>.</p>
+<p>We can plot the solution in <a href="#fig-wk4-sol">Figure&nbsp;<span>6.3</span></a> using the special plot recipe for ODE solutions:</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sol,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     label <span class="op">=</span> [<span class="st">"p1"</span> <span class="st">"p2"</span>],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     xlabel <span class="op">=</span> <span class="st">"t [s]"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     ylabel <span class="op">=</span> <span class="st">"p [mmHg]"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     tspan<span class="op">=</span>(<span class="fl">9</span>,<span class="fl">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div id="fig-wk4-sol" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ODEsolver_files/figure-html/fig-wk4-sol-output-1.svg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6.3: Solution of 4-element windkessel model using Julia’s DifferentialEquations.jl</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="sec-odePM" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="sec-odePM"><span class="header-section-number">6.1.1</span> Comparison to Python and Matlab</h3>
+<p>For those coming from Python or Matlab, let’s have a look at how this problem can be solved in these two languages and compare to the Julia version.</p>
+<p>Switch between the languages using the tabs below:</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">MATLAB</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> integrate</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.misc <span class="im">import</span> derivative</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wk4(t, y, I, Rc, Rp, C, Lp, dt):</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    dp1dt <span class="op">=</span> (</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span>Rc <span class="op">/</span> Lp <span class="op">*</span> y[<span class="dv">0</span>]</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> (Rc <span class="op">/</span> Lp <span class="op">-</span> <span class="dv">1</span> <span class="op">/</span> Rp <span class="op">/</span> C) <span class="op">*</span> y[<span class="dv">1</span>]</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> Rc <span class="op">*</span> derivative(I, t, dx<span class="op">=</span>dt)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> I(t) <span class="op">/</span> C</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    dp2dt <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">/</span> Rp <span class="op">/</span> C <span class="op">*</span> y[<span class="dv">1</span>] <span class="op">+</span> I(t) <span class="op">/</span> C</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [dp1dt, dp2dt]</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>time_start <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>time_end <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>Rc <span class="op">=</span> <span class="fl">0.2</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>Rp <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>Lp <span class="op">=</span> <span class="fl">1e-2</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">1e-6</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> np.zeros(<span class="dv">2</span>)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Generic Input Waveform</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co"># max volume flow in ml/s</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>max_i <span class="op">=</span> <span class="dv">425</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="co"># min volume flow in m^3/s</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>min_i <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Period time in s</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.9</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Syst. Time in s</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>systTime <span class="op">=</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">5</span> <span class="op">*</span> T</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Dicrotic notch time</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>dicrTime <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> I(t):</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># implicit conditional using boolean multiplicator</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sine waveform</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> (</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>        (max_i <span class="op">-</span> min_i) <span class="op">*</span> np.sin(np.pi <span class="op">/</span> systTime <span class="op">*</span> (t <span class="op">%</span> T))</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>        <span class="op">*</span>(t <span class="op">%</span> T <span class="op">&lt;</span> (systTime <span class="op">+</span> dicrTime)) <span class="op">+</span> min_i</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> I</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>tic <span class="op">=</span> time.perf_counter()</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>sol <span class="op">=</span> sp.integrate.solve_ivp(</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> t, y: wk4(t, y, I, Rc, Rp, C, Lp, dt),</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>    (time_start, time_end),</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>    y0,</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"RK45"</span>,</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>    rtol<span class="op">=</span><span class="fl">1e-9</span>,</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>    vectorized<span class="op">=</span><span class="va">True</span>,) </span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>toc <span class="op">=</span> time.perf_counter()</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Time elapsed: </span><span class="sc">{</span>toc <span class="op">-</span> tic<span class="sc">:0.4f}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Runtime for this code is (timed using <code>%%time</code> in Jupyter):</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Time elapsed: <span class="fl">0.7872</span> seconds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="sourceCode" id="cb14"><pre class="sourceCode octave code-with-copy"><code class="sourceCode octave"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> dP <span class="op">=</span> RHS_defn(t<span class="op">,</span>P<span class="op">,</span>Rc<span class="op">,</span>Rp<span class="op">,</span>C<span class="op">,</span>Lp)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dP    <span class="op">=</span> <span class="fu">zeros</span>(<span class="fl">2</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>dP(<span class="fl">1</span>) <span class="op">=</span> <span class="op">-</span>Rc <span class="op">/</span> Lp <span class="op">*</span> P(<span class="fl">1</span>) <span class="op">...</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> (Rc <span class="op">/</span> Lp <span class="op">-</span> <span class="fl">1</span> <span class="op">/</span> Rp <span class="op">/</span> C) <span class="op">*</span> P(<span class="fl">2</span>) <span class="op">...</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> Rc <span class="op">*</span> didt(t) <span class="op">+</span> <span class="fu">i</span>(t) <span class="op">/</span> C<span class="op">;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>dP(<span class="fl">2</span>) <span class="op">=</span> <span class="op">-</span><span class="fl">1</span> <span class="op">/</span> Rp <span class="op">/</span> C <span class="op">*</span> P(<span class="fl">2</span>) <span class="op">+</span> <span class="fu">i</span>(t) <span class="op">/</span> C<span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> didt <span class="op">=</span> didt(<span class="fu">i</span><span class="op">,</span> t)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">1e-3</span><span class="op">;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>didt <span class="op">=</span> (<span class="fu">i</span>(t<span class="op">+</span>dt) <span class="op">-</span> <span class="fu">i</span>(t<span class="op">-</span>dt)) <span class="op">/</span> (<span class="fl">2</span> <span class="op">*</span> dt)<span class="op">;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> <span class="fu">i</span> <span class="op">=</span> <span class="fu">i</span>(t)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>max_i <span class="op">=</span> <span class="fl">425</span><span class="op">;</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>min_i <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">0.9</span><span class="op">;</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>systTime <span class="op">=</span> <span class="fl">2</span> <span class="op">/</span> <span class="fl">5</span> <span class="op">*</span> T<span class="op">;</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>dicrTime <span class="op">=</span> <span class="fl">0.03</span><span class="op">;</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">i</span> <span class="op">=</span> ((max_i <span class="op">-</span> min_i) <span class="op">*</span> <span class="fu">sin</span>(<span class="bu">pi</span> <span class="op">/</span> systTime <span class="op">*</span> (<span class="fu">mod</span>(t<span class="op">,</span>T))) <span class="op">...</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>     <span class="op">*</span>(<span class="fu">mod</span>(t<span class="op">,</span>T) <span class="op">&lt;</span> (systTime <span class="op">+</span> dicrTime)) <span class="op">...</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>     <span class="op">+</span> min_i)<span class="op">;</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>Rc <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>Rp <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>C  <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>Lp <span class="op">=</span> <span class="fl">0.02</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>options <span class="op">=</span> <span class="fu">odeset</span>(<span class="st">'Reltol'</span><span class="op">,</span><span class="fl">1e-9</span>)<span class="op">;</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>[t<span class="op">,</span> P] <span class="op">=</span> <span class="fu">ode45</span>(@(t<span class="op">,</span>P) RHS_defn(t<span class="op">,</span>P<span class="op">,</span>Rc<span class="op">,</span>Rp<span class="op">,</span>C<span class="op">,</span>Ls<span class="op">,</span>Lp)<span class="op">,</span> tspan<span class="op">,</span> P0<span class="op">,</span> options)<span class="op">;</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Runtime for this code is (timed using <code>tic</code> <code>toc</code> in Matlab)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, which is a bit more than an order of magnitude slower than Julia:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode octave code-with-copy"><code class="sourceCode octave"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Elapsed <span class="fu">time</span> is <span class="fl">0.018172</span> seconds.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>So in this case, Julia is one order of magitude faster than Matlab and around 500x faster than Python<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> solving ODEs.</p>
+<p>Personally, I find the Matlab code and, in particular, the Julia code easier to read.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-Stergiopulos1999" class="csl-entry" role="doc-biblioentry">
+Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Total Arterial Inertance as the Fourth Element of the Windkessel Model.”</span> <em>American Journal of Physiology-Heart and Circulatory Physiology</em> 276 (1): H81–88. <a href="https://doi.org/10.1152/ajpheart.1999.276.1.H81">https://doi.org/10.1152/ajpheart.1999.276.1.H81</a>.
+</div>
+<div id="ref-Westerhof2019" class="csl-entry" role="doc-biblioentry">
+Westerhof, Nicolaas, Nikolaos Stergiopulos, Mark I. M. Noble, and Berend E. Westerhof. 2019. <em>Snapshots of <span>Hemodynamics</span>: <span>An Aid</span> for <span>Clinical Research</span> and <span>Graduate Education</span></em>. <span>Cham</span>: <span>Springer International Publishing</span>. <a href="https://doi.org/10.1007/978-3-319-91932-4">https://doi.org/10.1007/978-3-319-91932-4</a>.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>So changing the solver does not require any changes in the definition of the problem, even when moving between ODEs, DAEs and SDAEs.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Note that we use <code>const</code> here to define the parameters. Julia does suffer in performance, when global variables are used, since these break type stability in the multiple dispatch. Making these parameter constant fixes their type. We should really be using these parameters in the function definition, or use a lambda function here.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><code>P</code> is a vector of values, actually, as is <code>dP</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>We use the Dormand-Prince solver <code>DP5</code> here, because that is the same algorithm that Matlab’s <code>ode45</code> uses. DifferentialEquations.jl has a multitude of other solvers that may perform better. Play around with these.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>See below. What happened here? Doesn’t everybody say how much faster Julia is than Matlab?<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Same code in Octave, the free open-source version of Matlab runs in 3 seconds. Current versions of Matlab have improved runtime by partial just-in-time compilation. Note that the first run in Matlab is also slightly longer with 0.035 seconds, which is most likely due to Matlab optimising the solver to the problem.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>I have tried using PyPy and Cython in other cases and found that they speed up Python considerably. Unfortunately this was not the case when using SciPy and Numpy, which made the compiled Python version one order of magnitude <strong>slower</strong> than interpreted. There seems to be a problem with C-calls from PyPy.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./examples.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Examples</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
