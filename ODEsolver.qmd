@@ -50,23 +50,23 @@ The input waveform is a generic half-period of a sine-wave with a systolic (ejec
 \end{equation}
 
 
-In Julia, this function is implemented as^[Note that we use `const` here to define the parameters. Julia does suffer in performance, when global variables are used, since these break type stability in the multiple dispatch. Making these parameter constant fixes their type. We should really be using these parameters in the function definition, or use a lambda function here.]:
+In Julia, this function is implemented as^[Note that we use type specifications to define the parameters. Julia does suffer in performance, when untyped global variables are used, since these break type stability in the multiple dispatch. Making these parameter constant fixes their type. We should really be using these parameters in the function definition, or use a lambda function. But a lambda function is slower than typed variables.]:
 
 ```{julia}
 #| output: false
  
 # max and min volume flow in ml/s
-const max_i = 425
-const min_i = 0.0
+max_i::Float64 = 425
+min_i::Float64 = 0.0
 
 # period time
-const T = 1.0
+T::Float64 = 1.0
 
 # Syst. Time in s
-const systTime = 2 / 5 * T
+systTime::Float64 = 2 / 5 * T
 
 # Dicrotic notch time in s
-const dicrTime = 0.03
+dicrTime::Float64 = 0.03
 
 function I(t)
     # implicit conditional using boolean multiplicator
@@ -76,7 +76,7 @@ function I(t)
     return ((max_i - min_i) * sin(pi / systTime * (t))
             * (t < (systTime + dicrTime) )
             + min_i)
-end
+end 
 ```
 
 We can quickly plot this function in @fig-igen.
@@ -165,6 +165,7 @@ Switch between the languages using the tabs below:
 ::: {.panel-tabset}
 ### Python
 
+{{< downloadthis wk4_python.py dname=wk4_python label="Download Python Code" >}}
 
 ```python
 import scipy as sp
@@ -241,7 +242,7 @@ toc = time.perf_counter()
 print(f"Time elapsed: {toc - tic:0.4f} seconds")
 ```
 
-Runtime for this code is (timed using `%%time` in Jupyter):
+Runtime for this code is (timed using `time.perf.counter` in Python):
 
 ```python
 Time elapsed: 0.7872 seconds
@@ -249,48 +250,59 @@ Time elapsed: 0.7872 seconds
 
 ### MATLAB
 
+{{< downloadthis wk4_matlab.m dname=wk4_matlab label="Download Matlab Code" >}}
+
 ```octave
-function dP = RHS_defn(t,P,Rc,Rp,C,Lp)
+tspan = [0, 10];
+
+Rc = 0.03;
+Rp = 1.0;
+C = 2.0;
+Lp = 1e-2;
+
+P0 = [0, 0];
+
+options        = odeset('Reltol',1e-9);
+
+tic
+[t, P] = ode45(@(t,P) wk4(t,P,Rc,Rp,C,Lp), tspan, P0, options);
+toc
+
+
+
+function dP = wk4(t,P,Rc,Rp,C,Lp)
 
 dP    = zeros(2,1);
 
 dP(1) = -Rc / Lp * P(1) ...
-        + (Rc / Lp - 1 / Rp / C) * P(2) ...
-        + Rc * didt(t) + i(t) / C;
+    + (Rc / Lp - 1 / Rp / C) * P(2) ...
+    + Rc * didt(t) + i(t) / C;
 
 dP(2) = -1 / Rp / C * P(2) + i(t) / C;
 
-end
-
-function didt = didt(i, t)
-dt = 1e-3;
-didt = (i(t+dt) - i(t-dt)) / (2 * dt);
 end
 
 function i = i(t)
 
 max_i = 425;
 min_i = 0.0;
+
 T = 0.9;
 
 systTime = 2 / 5 * T;
+
 dicrTime = 0.03;
 
 i = ((max_i - min_i) * sin(pi / systTime * (mod(t,T))) ...
-     *(mod(t,T) < (systTime + dicrTime)) ...
-     + min_i);
+    *(mod(t,T) < (systTime + dicrTime)) ...
+    + min_i);
+
 end
 
-Rc = 0.03
-Rp = 1.0
-C  = 2.0
-Lp = 0.02
-
-options = odeset('Reltol',1e-9);
-
-tic
-[t, P] = ode45(@(t,P) RHS_defn(t,P,Rc,Rp,C,Ls,Lp), tspan, P0, options);
-toc
+function didt = didt(t)
+dt = 1e-3;
+didt = (i(t+dt) - i(t-dt)) / (2 * dt);
+end
 ```
 
 Runtime for this code is (timed using `tic` `toc` in Matlab)^[Same code in Octave, the free open-source version of Matlab runs in 3 seconds. Current versions of Matlab have improved runtime by partial just-in-time compilation. Note that the first run in Matlab is also slightly longer with 0.035 seconds, which is most likely due to Matlab optimising the solver to the problem.], which is a bit more than an order of magnitude slower than Julia:
@@ -306,3 +318,4 @@ Personally, I find the Matlab code and, in particular, the Julia code easier to 
 
 
 
+tFtF

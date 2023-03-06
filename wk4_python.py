@@ -1,8 +1,4 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
 
 import scipy as sp
 from scipy import integrate
@@ -11,10 +7,6 @@ from scipy.misc import derivative
 import numpy as np
 
 import time
-
-
-# In[2]:
-
 
 def wk4(t, y, I, Rc, Rp, C, Lp, dt):
 
@@ -29,10 +21,6 @@ def wk4(t, y, I, Rc, Rp, C, Lp, dt):
 
     return [dp1dt, dp2dt]
 
-
-# In[3]:
-
-
 time_start = 0
 time_end = 10
 
@@ -44,10 +32,6 @@ Lp = 1e-2
 dt = 1e-6
 
 y0 = np.zeros(2)
-
-
-# In[4]:
-
 
 # Generic Input Waveform
 # max volume flow in ml/s
@@ -75,25 +59,16 @@ def I(t):
 
     return I
 
-
-# In[5]:
-
 tic = time.perf_counter()
-sol = sp.integrate.solve_ivp(lambda t, y: wk4(t, y, I, Rc, Rp, C, Lp, dt), (time_start, time_end), y0, method="RK45", rtol=1e-9, vectorized=True,)
+
+sol = sp.integrate.solve_ivp(
+    lambda t, y: wk4(t, y, I, Rc, Rp, C, Lp, dt),
+    (time_start, time_end),
+    y0,
+    method="RK45",
+    rtol=1e-9,
+    vectorized=True,)
+
 toc = time.perf_counter()
+
 print(f"Time elapsed: {toc - tic:0.4f} seconds")
-
-# In[ ]:
-
-
-
-
-
-
-
-
-# In[ ]:
-
-
-
-
