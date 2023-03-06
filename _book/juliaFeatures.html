@@ -56,10 +56,12 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -84,7 +86,7 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -127,6 +129,7 @@ div.csl-indent {
           </li>
       </ul>
     </div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
       </div>
@@ -227,7 +230,7 @@ div.csl-indent {
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -246,52 +249,38 @@ div.csl-indent {
 
 </header>
 
-<p>While the question “What’s the best programming language?” is impossible to answer<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, Julia has some specific features that make it particularly well suited for scientific computing:</p>
+<div class="page-columns page-full"><p>While the question “What’s the best programming language?” is impossible to answer<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, Julia has some specific features that make it particularly well suited for scientific computing:</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;and the answer will be different for different applications.</p></li></div></div>
 <ul>
 <li><p><strong>just-in-time (JIT) compilation</strong>, which allows performance that is on the same level as Fortran or C code.</p></li>
 <li><p><strong>multiple dispatch</strong>, a programming paradigm, which, while a functional paradigm, brings some of the possibilities usually associated with object-oriented (OO) programming<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p></li>
 <li><p><strong>1-based indexing</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, which makes the code more closely resemble much of the mathematical concept we want to express<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p></li>
 <li><p><strong>Matlab similar syntax</strong>: coming from Matlab, Julia’s syntax will be familar enough to allow a quick transition<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p></li>
 </ul>
-<section id="just-in-time-compilation-and-the-two-language-problem" class="level2" data-number="2.1">
+<div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;Julia is not an OO language, which some may see as a disadvantage. Personally I never found OO to be useful for the kind of scientific programming I do.</p></li><li id="fn3"><p><sup>3</sup>&nbsp;Julia supports arbitrary indexing, but 1-based is the standard.</p></li><li id="fn4"><p><sup>4</sup>&nbsp;Some, coming from C or Python may see 1-based indexing as a negative.</p></li><li id="fn5"><p><sup>5</sup>&nbsp;My first experience with Julia was, indeed, porting an ODE problem from Matlab to Julia. And most of the work was replacing two function calls and switching square for round brackets.</p></li></div><section id="just-in-time-compilation-and-the-two-language-problem" class="level2 page-columns page-full" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="just-in-time-compilation-and-the-two-language-problem"><span class="header-section-number">2.1</span> Just-In-Time Compilation and the <em>Two Language Problem</em></h2>
 <p>Many scientific models are developed in <em>prototyping</em> languages like Python (or Matlab), since they are interactive, i.e., they run in an “read-eval-print-loop” (REPL), which offers immediate feedback and results, encouraging experimentation and “playing” with the code. This is a key feature for many scientists, as opposed to software developers, since it allows for quick development of a working model.</p>
 <p>The problem with these interactive languages is, that they tend to be <em>interpreted</em>, and this much slower than <em>compiled</em> languages. We will see later that, e.g., Python can be up to 3 orders of magnitude slower than a compiled language, which also has huge implications on energy efficiency of scientific computing, as a contributor to climate change <span class="citation" data-cites="Pereira2017 Pereira2021">(<a href="references.html#ref-Pereira2017" role="doc-biblioref">Pereira et al. 2017</a>, <a href="references.html#ref-Pereira2021" role="doc-biblioref">2021</a>)</span>.</p>
-<p>So with any interpreted language scientific computing will arrive at the point where the performance of the developed code is no longer sufficient. Usually the next step in these cases is either</p>
+<div class="no-row-height column-margin column-container"><div id="ref-Pereira2017" class="csl-entry" role="doc-biblioentry">
+Pereira, Rui, Marco Couto, Francisco Ribeiro, Rui Rua, Jácome Cunha, João Paulo Fernandes, and João Saraiva. 2017. <span>“Energy Efficiency Across Programming Languages: How Do Energy, Time, and Memory Relate?”</span> In <em>Proceedings of the 10th <span>ACM SIGPLAN International Conference</span> on <span>Software Language Engineering</span></em>, 256–67. <span>SLE</span> 2017. <span>New York, NY, USA</span>: <span>Association for Computing Machinery</span>. <a href="https://doi.org/10.1145/3136014.3136031">https://doi.org/10.1145/3136014.3136031</a>.
+</div><div id="ref-Pereira2021" class="csl-entry" role="doc-biblioentry">
+———. 2021. <span>“Ranking Programming Languages by Energy Efficiency.”</span> <em>Science of Computer Programming</em> 205 (May): 102609. <a href="https://doi.org/10.1016/j.scico.2021.102609">https://doi.org/10.1016/j.scico.2021.102609</a>.
+</div></div><p>So with any interpreted language scientific computing will arrive at the point where the performance of the developed code is no longer sufficient. Usually the next step in these cases is either</p>
 <ol type="a">
 <li><p>abandonment of the model.</p></li>
 <li><p>re-implementation of the model in a compiled language like Fortran or C.</p></li>
 </ol>
 <p>This is what is called the <strong>“Two Language Problem”</strong>.</p>
-<p>The two-language-problem is particularly concerning for scientific computing, since most engineers and natural scientists are not computer-scientists or software developers, or coders. Many of us do not readily speak a compiled language which would require writing code on a much lower abstraction level than most of us are comfortable with<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
+<div class="page-columns page-full"><p>The two-language-problem is particularly concerning for scientific computing, since most engineers and natural scientists are not computer-scientists or software developers, or coders. Many of us do not readily speak a compiled language which would require writing code on a much lower abstraction level than most of us are comfortable with<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn6"><p><sup>6</sup>&nbsp;I do know how to write Fortran, but it is a much more daunting prospect than doing the same thing in Julia (or Matlab or Python).</p></li></div></div>
 <p>Julia can overcome this problem by virtue of being “just-in-time” compiled. This means that on the surface it looks like an interpreted language, while, behind the scenes and completely transparent to the user, the code is compiled to machine code and then executed. The Julia developers coined the phrase:</p>
 <blockquote class="blockquote">
 <p>“Feels like Python, runs like C.”</p>
 </blockquote>
-<p>With only little effort, we can write Julia code that runs at the same speed as optimised Fortran or C code<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
+<div class="page-columns page-full"><p>With only little effort, we can write Julia code that runs at the same speed as optimised Fortran or C code<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn7"><p><sup>7</sup>&nbsp;In fact, Julia is the only dynamically typed language that has managed to <a href="https://www.hpcwire.com/off-the-wire/julia-joins-petaflop-club/">join the exclusive Petaflop Club</a> of peak performance of greater than one petaflops (10<sup>15</sup> floating point operations per second), scaling to over 1 million threads.</p></li></div></div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
-<div id="ref-Pereira2017" class="csl-entry" role="doc-biblioentry">
-Pereira, Rui, Marco Couto, Francisco Ribeiro, Rui Rua, Jácome Cunha, João Paulo Fernandes, and João Saraiva. 2017. <span>“Energy Efficiency Across Programming Languages: How Do Energy, Time, and Memory Relate?”</span> In <em>Proceedings of the 10th <span>ACM SIGPLAN International Conference</span> on <span>Software Language Engineering</span></em>, 256–67. <span>SLE</span> 2017. <span>New York, NY, USA</span>: <span>Association for Computing Machinery</span>. <a href="https://doi.org/10.1145/3136014.3136031">https://doi.org/10.1145/3136014.3136031</a>.
-</div>
-<div id="ref-Pereira2021" class="csl-entry" role="doc-biblioentry">
-———. 2021. <span>“Ranking Programming Languages by Energy Efficiency.”</span> <em>Science of Computer Programming</em> 205 (May): 102609. <a href="https://doi.org/10.1016/j.scico.2021.102609">https://doi.org/10.1016/j.scico.2021.102609</a>.
-</div>
-</div>
+
 </section>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p>and the answer will be different for different applications.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Julia is not an OO language, which some may see as a disadvantage. Personally I never found OO to be useful for the kind of scientific programming I do.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Julia supports arbitrary indexing, but 1-based is the standard.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>Some, coming from C or Python may see 1-based indexing as a negative.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>My first experience with Julia was, indeed, porting an ODE problem from Matlab to Julia. And most of the work was replacing two function calls and switching square for round brackets.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>I do know how to write Fortran, but it is a much more daunting prospect than doing the same thing in Julia (or Matlab or Python).<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>In fact, Julia is the only dynamically typed language that has managed to <a href="https://www.hpcwire.com/off-the-wire/julia-joins-petaflop-club/">join the exclusive Petaflop Club</a> of peak performance of greater than one petaflops (10<sup>15</sup> floating point operations per second), scaling to over 1 million threads.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -314,6 +303,121 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

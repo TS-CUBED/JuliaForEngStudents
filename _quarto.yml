@@ -45,10 +45,12 @@ filters:
 
 format:
   html:
-    # cap-location: margin
-    # reference-location: margin
-    # citation-location: margin
-    theme: cosmo
+    cap-location: margin
+    reference-location: margin
+    citation-location: margin
+    theme:
+      light: cosmo
+      dark: darkly
     html-math-method: mathjax
     comments:
       hypothesis: true
