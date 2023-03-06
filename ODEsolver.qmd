@@ -15,7 +15,7 @@ Here we are going to work with the 4-Element windkessel model [@Stergiopulos1999
 The pressures in this circuit - $p_{1}$ before, and $p_{2}$ after the proximal L-R element - are described by the system of ODEs:
 
 $$
-\frac{d p_{1}}{d t}  =  - \frac{R_{c}}{L_{p}} p_{1} + \left( \frac{R_{c}}{L_{p}} - \frac{1}{R_{p} C} \right) p_{2} \\
+\frac{d p_{1}}{d t}  =  - \frac{R_{c}}{L_{p}} p_{1} + \left( \frac{R_{c}}{L_{p}} - \frac{1}{R_{p} C} \right) p_{2} 
 + R_{c} \frac{d I(t)}{d t} + \frac{I(t)}{C} 
 $$ {#eq-wk4-1}
 
@@ -44,7 +44,7 @@ The input waveform is a generic half-period of a sine-wave with a systolic (ejec
 \begin{equation}
     I = 
     \begin{cases}
-        I_{min} + (I_{max} - I_{min})  \sin \left(\frac{\pi}{t_{syst}} t \right) & \text{if } t \lt (t_{syst} + t_{dicr})\\
+        I_{min} + (I_{max} - I_{min})  \sin \left(\frac{\pi}{t_{syst}} t \right) & \text{if } t < (t_{syst} + t_{dicr})\\
         I_{min} & \text{else} 
     \end{cases}
 \end{equation}
