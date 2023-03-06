@@ -49,7 +49,7 @@ format:
     reference-location: margin
     citation-location: margin
     theme:
-      light: cosmo
+      light: sandstone
       dark: darkly
     html-math-method: mathjax
     comments:
