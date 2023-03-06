@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Julia for Engineering Students",
     "section": "",
-    "text": "Preface\nThis is a collection of notes I I put together for myself and my students. It may grow into a book some day.\nThis “book” is an incomplete and strongly biased introduction to Julia for students and resesarchers in engineering disciplines. I put it together as a guide for my students and myself and publish it to help colleagues who have shown an interest in using Julia in their own research.\nThis book was created using Quarto, written on Emacs.\nCode is active and the exercises and examples can be downloaded as Jupyter notebooks.\nAll content and examples are published as is and without any guarantee of usefulness or even fitness for purpose1, let alone elegance.\n\n\n\n\n\n\nAlthough I do think that it will be both useful and is fit for purpose.↩︎"
+    "text": "Preface\nThis is a collection of notes I put together for myself and my students. It may grow into a book some day.\nThis “book” is an incomplete and strongly biased introduction to Julia for students and resesarchers in engineering disciplines. I put it together as a guide for my students and myself and publish it to help colleagues who have shown an interest in using Julia in their own research.\nThis book was created using Quarto, written on Emacs.\nCode is active and the exercises and examples can be downloaded as Jupyter notebooks.\nAll content and examples are published as is and without any guarantee of usefulness or even fitness for purpose1, let alone elegance.\n 2023 Torsten Schenkel CC-BY-4.0\n\n\n\n\n\n\nAlthough I do think that it will be both useful and is fit for purpose.↩︎"
   },
   {
     "objectID": "intro.html#what-is-julia",

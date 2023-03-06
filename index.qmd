@@ -1,6 +1,6 @@
 # Preface {.unnumbered}
 
-This is a collection of notes I I put together for myself and my students. It may grow into a book some day.
+This is a collection of notes I put together for myself and my students. It may grow into a book some day.
 
 This "book"  is an incomplete and strongly biased introduction to Julia for students and resesarchers in engineering disciplines. I put it together as a guide for my students and myself and publish it to help colleagues who have shown an interest in using Julia in their own research.
 
@@ -9,3 +9,7 @@ This book was created using [Quarto](https://quarto.org/docs/books), written on 
 Code is active and the exercises and examples can be downloaded as [Jupyter](https://jupyter.org) notebooks.
 
 All content and examples are published as is and without any guarantee of usefulness or even fitness for purpose^[Although I do think that it will be both useful and is fit for purpose.], let alone elegance.
+
+
+\copyright\ 2023 Torsten Schenkel
+[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)
