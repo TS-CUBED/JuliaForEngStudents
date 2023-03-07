@@ -11,5 +11,5 @@ Code is active and the exercises and examples can be downloaded as [Jupyter](htt
 All content and examples are published as is and without any guarantee of usefulness or even fitness for purpose^[Although I do think that it will be both useful and is fit for purpose.], let alone elegance.
 
 
-\copyright\ 2023 Torsten Schenkel
-[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)
+\copyright\ 2023 Torsten Schenkel,  [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)
+

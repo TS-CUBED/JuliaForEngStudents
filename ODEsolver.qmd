@@ -24,7 +24,8 @@ $$
 $$ {#eq-wk4-2}
 
 <!-- Source: file:///home/thor/Documents/Research/SaxtonPhD/0D-ModellingInJulia_files/images/wk4.drawio.png, accessed: Sun Mar  5 16:01:01 2023 -->
-![4-Element Windkessel Model](./images/images_for_ODEsolver.qmd/wk4.drawio.png){#fig-4wk}
+![4-Element Windkessel Model](./images/images_for_ODEsolver.qmd/wk4.drawio.svg){#fig-4wk}
+
 
 In order to implement this model, we need to load the required modules. We use `DifferentialEquations`, `Plots`, and `ForwardDiff` for the time-derivative $\frac{\partial I}{\partial t}$:
 
@@ -88,7 +89,7 @@ We can quickly plot this function in @fig-igen.
 plotTime = LinRange(0,1,100)
 
 plot(plotTime, I.(plotTime),
-     xlabel = "t [s]", ylabel = "I [ml/s]", label = "Outflow") 
+     xlabel = "t [s]", ylabel = "I [ml s<sup>-1</sup>]", label = "Outflow") 
 ``` 
 
 The definition of the ODEs @eq-wk4-1 and @eq-wk4-2 is done as a function with parameters `dP` and `P`, for $\frac{d p_{1,2}}{d t}$, and $p_{1,2}$, respectively^[`P` is a vector of values, actually, as is `dP`.] 
@@ -152,7 +153,7 @@ We can plot the solution in @fig-wk4-sol using the special plot recipe for ODE s
 plot(sol,
      label = ["p1" "p2"],
      xlabel = "t [s]",
-     ylabel = "p [mmHg]",
+     ylabel = "p [mm<sub>Hg</sub>]",
      tspan=(9,10))
 ```
 

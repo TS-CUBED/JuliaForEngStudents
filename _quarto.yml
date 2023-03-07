@@ -27,6 +27,7 @@ book:
   downloads:
     - epub
     - pdf
+
   license: CC-BY-4.0
   # page-footer:
   #     - text: "About"
