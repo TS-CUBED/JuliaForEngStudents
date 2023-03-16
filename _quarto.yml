@@ -17,6 +17,7 @@ book:
         - installingJulia.qmd
         - basicSyntax.qmd
         - comparisonMatlab.qmd
+        - tricks.qmd
     - part: examples.qmd
       chapters:
         - ODEsolver.qmd

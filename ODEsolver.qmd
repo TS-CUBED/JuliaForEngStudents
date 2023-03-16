@@ -316,7 +316,3 @@ Elapsed time is 0.018172 seconds.
 So in this case, Julia is one order of magitude faster than Matlab and around 500x faster than Python^[I have tried using PyPy and Cython in other cases and found that they speed up Python considerably. Unfortunately this was not the case when using SciPy and Numpy, which made the compiled Python version one order of magnitude **slower** than interpreted. There seems to be a problem with C-calls from PyPy.] solving ODEs.
 
 Personally, I find the Matlab code and, in particular, the Julia code easier to read.
-
-
-
-tFtF
