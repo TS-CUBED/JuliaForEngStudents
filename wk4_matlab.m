@@ -1,4 +1,3 @@
-
 tspan = [0, 10];
 
 Rc = 0.03;
@@ -10,6 +9,10 @@ P0 = [0, 0];
 
 options        = odeset('Reltol',1e-9);
 
+% Run once to allow Matlab to optimise
+[t, P] = ode45(@(t,P) wk4(t,P,Rc,Rp,C,Lp), tspan, P0, options);
+
+% Timed run
 tic
 [t, P] = ode45(@(t,P) wk4(t,P,Rc,Rp,C,Lp), tspan, P0, options);
 toc

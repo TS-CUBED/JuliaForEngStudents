@@ -44,6 +44,7 @@ papersize: a4
 filters:
   - quarto
   - noteout-write-notebooks
+  - include-code-files
 
 format:
   html:

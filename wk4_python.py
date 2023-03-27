@@ -71,4 +71,4 @@ sol = sp.integrate.solve_ivp(
 
 toc = time.perf_counter()
 
-print(f"Time elapsed: {toc - tic:0.4f} seconds")
+print(f"Elapsed time is {toc - tic:0.4f} seconds")

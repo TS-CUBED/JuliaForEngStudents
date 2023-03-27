@@ -1,0 +1,9 @@
+# Some Clever Tricks in Julia
+
+
+
+
+## Acknowledgment
+
+Some of these tricks are taken from [Julia Notes](https://m3g.github.io/JuliaNotes.jl/stable).
+
