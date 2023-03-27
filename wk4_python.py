@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import scipy as sp
 from scipy import integrate
 from scipy.misc import derivative

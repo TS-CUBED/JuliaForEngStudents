@@ -179,7 +179,7 @@ Runtime for this code is (timed using `time.perf.counter` in Python):
 
 ```{julia}
 #| echo: false
-run(`./wk4_python.py`);
+run(`python ./wk4_python.py`);
 ```
 
 
