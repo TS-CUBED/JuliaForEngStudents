@@ -1,0 +1,294 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  a4paper,
+  DIV=11,
+  numbers=noendperiod,
+  oneside]{scrreprt}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[left=1in,marginparwidth=2.0in,textwidth=4.0in,marginparsep=0.3in]{geometry}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\usepackage{amsmath, amssymb}
+\KOMAoption{captions}{tablesignature}
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{sidenotes}{}{\usepackage{sidenotes}}
+\@ifpackageloaded{marginnote}{}{\usepackage{marginnote}}
+\makeatother
+\makeatletter
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, interior hidden, borderline west={3pt}{0pt}{shadecolor}, frame hidden, boxrule=0pt, enhanced, sharp corners]}{\end{tcolorbox}}\fi
+
+\hypertarget{julia-features-for-scientic-computing}{%
+\chapter{Julia Features for Scientic
+Computing}\label{julia-features-for-scientic-computing}}
+
+While the question ``What's the best programming language?'' is
+impossible to answer\sidenote{\footnotesize and the answer will be different for
+  different applications.}, Julia has some specific features that make
+it particularly well suited for scientific computing:
+
+\begin{itemize}
+\item
+  \textbf{just-in-time (JIT) compilation}, which allows performance that
+  is on the same level as Fortran or C code.
+\item
+  \textbf{multiple dispatch}, a programming paradigm, which, while a
+  functional paradigm, brings some of the possibilities usually
+  associated with object-oriented (OO) programming\sidenote{\footnotesize Julia is not
+    an OO language, which some may see as a disadvantage. Personally I
+    never found OO to be useful for the kind of scientific programming I
+    do.}.
+\item
+  \textbf{1-based indexing}\sidenote{\footnotesize Julia supports arbitrary indexing,
+    but 1-based is the standard.}, which makes the code more closely
+  resemble much of the mathematical concept we want to
+  express\sidenote{\footnotesize Some, coming from C or Python may see 1-based
+    indexing as a negative.}.
+\item
+  \textbf{Matlab similar syntax}: coming from Matlab, Julia's syntax
+  will be familar enough to allow a quick transition\sidenote{\footnotesize My first
+    experience with Julia was, indeed, porting an ODE problem from
+    Matlab to Julia. And most of the work was replacing two function
+    calls and switching square for round brackets.}.
+\end{itemize}
+
+\hypertarget{just-in-time-compilation-and-the-two-language-problem}{%
+\section{\texorpdfstring{Just-In-Time Compilation and the \emph{Two
+Language
+Problem}}{Just-In-Time Compilation and the Two Language Problem}}\label{just-in-time-compilation-and-the-two-language-problem}}
+
+Many scientific models are developed in \emph{prototyping} languages
+like Python (or Matlab), since they are interactive, i.e., they run in
+an ``read-eval-print-loop'' (REPL), which offers immediate feedback and
+results, encouraging experimentation and ``playing'' with the code. This
+is a key feature for many scientists, as opposed to software developers,
+since it allows for quick development of a working model.
+
+The problem with these interactive languages is, that they tend to be
+\emph{interpreted}, and this much slower than \emph{compiled} languages.
+We will see later that, e.g., Python can be up to 3 orders of magnitude
+slower than a compiled language, which also has huge implications on
+energy efficiency of scientific computing, as a contributor to climate
+change (Pereira et al. 2017,
+2021)\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-Pereira2017}{}}%
+Pereira, Rui, Marco Couto, Francisco Ribeiro, Rui Rua, Jácome Cunha,
+João Paulo Fernandes, and João Saraiva. 2017. {``Energy Efficiency
+Across Programming Languages: How Do Energy, Time, and Memory Relate?''}
+In \emph{Proceedings of the 10th {ACM SIGPLAN International Conference}
+on {Software Language Engineering}}, 256--67. {SLE} 2017. {New York, NY,
+USA}: {Association for Computing Machinery}.
+\url{https://doi.org/10.1145/3136014.3136031}.\vspace{2mm}\par\end{footnotesize}}\marginpar{\begin{footnotesize}\leavevmode\vadjust pre{\protect\hypertarget{ref-Pereira2021}{}}%
+---------. 2021. {``Ranking Programming Languages by Energy
+Efficiency.''} \emph{Science of Computer Programming} 205 (May): 102609.
+\url{https://doi.org/10.1016/j.scico.2021.102609}.\vspace{2mm}\par\end{footnotesize}}.
+
+So with any interpreted language scientific computing will arrive at the
+point where the performance of the developed code is no longer
+sufficient. Usually the next step in these cases is either
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  abandonment of the model.
+\item
+  re-implementation of the model in a compiled language like Fortran or
+  C.
+\end{enumerate}
+
+This is what is called the \textbf{``Two Language Problem''}.
+
+The two-language-problem is particularly concerning for scientific
+computing, since most engineers and natural scientists are not
+computer-scientists or software developers, or coders. Many of us do not
+readily speak a compiled language which would require writing code on a
+much lower abstraction level than most of us are comfortable
+with\sidenote{\footnotesize I do know how to write Fortran, but it is a much more
+  daunting prospect than doing the same thing in Julia (or Matlab or
+  Python).}.
+
+Julia can overcome this problem by virtue of being ``just-in-time''
+compiled. This means that on the surface it looks like an interpreted
+language, while, behind the scenes and completely transparent to the
+user, the code is compiled to machine code and then executed. The Julia
+developers coined the phrase:
+
+\begin{quote}
+``Feels like Python, runs like C.''
+\end{quote}
+
+With only little effort, we can write Julia code that runs at the same
+speed as optimised Fortran or C code\sidenote{\footnotesize In fact, Julia is the only
+  dynamically typed language that has managed to
+  \href{https://www.hpcwire.com/off-the-wire/julia-joins-petaflop-club/}{join
+  the exclusive Petaflop Club} of peak performance of greater than one
+  petaflops (1015 floating point operations per second), scaling to over
+  1 million threads.}.
+
+
+
+
+\end{document}

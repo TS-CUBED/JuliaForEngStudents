@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.290">
+<head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.3.290" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
 
-<title>Julia for Engineering Students - 7&nbsp; Solving ODEs and ODE systems</title>
+<title>Julia for Engineering Students – odesolver</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -75,28 +77,7 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
-
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./examples.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
+<!-- htmldependencies:E3FAD763 -->
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -116,7 +97,7 @@ div.csl-indent {
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script async="" src="https://hypothes.is/embed.js"></script>
+<script async src="https://hypothes.is/embed.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -126,17 +107,22 @@ div.csl-indent {
 
 </head>
 
-<body class="nav-sidebar floating slimcontent">
+<body>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn"
+      data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" 
+      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./examples.html">Examples</a></li><li class="breadcrumb-item"><a href="./ODEsolver.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Solving ODEs and ODE systems</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      <h1 class="quarto-secondary-nav-title"></h1>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" 
+      aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation"
+      onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -150,25 +136,10 @@ div.csl-indent {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Julia for Engineering Students</a> 
+      <a href="/">
+      Julia for Engineering Students
+      </a> 
         <div class="sidebar-tools-main">
-    <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
-      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="./Julia-for-Engineering-Students.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
-            Download ePub
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item sidebar-tools-main-item" href="./Julia-for-Engineering-Students.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
-            Download PDF
-            </a>
-          </li>
-      </ul>
-    </div>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
     </div>
@@ -180,28 +151,10 @@ div.csl-indent {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preface</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./juliaFeatures.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Julia Features for Scientic Computing</span></span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./juliaBasics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Julia Basics</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Home</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -209,34 +162,22 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./installingJulia.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Installing Julia</span></span></a>
+  <a href="/intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./basicSyntax.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Basic Julia Syntax</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./comparisonMatlab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Comparison to Matlab</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./tricks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Some Clever Tricks in Julia</span></span></a>
+  <a href="/juliaFeatures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Julia Features for Scientic Computing</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./examples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Examples</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Basics</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -244,22 +185,40 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ODEsolver.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Solving ODEs and ODE systems</span></span></a>
+  <a href="/juliaBasics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Julia Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/installingJulia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing Julia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/basicSyntax.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic Julia Syntax</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/comparisonMatlab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Comparison to Matlab</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="/tricks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Some Clever Tricks in Julia</span></a>
   </div>
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
+ <span class="menu-text">Examples</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -267,8 +226,8 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./resources.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Julia Resources</span></span></a>
+  <a href="/ODEsolver.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Solving ODEs and ODE systems</span></a>
   </div>
 </li>
       </ul>
@@ -276,26 +235,17 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" ></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#example-4-element-windkessel-model" id="toc-example-4-element-windkessel-model" class="nav-link active" data-scroll-target="#example-4-element-windkessel-model"><span class="header-section-number">7.1</span> Example: 4-Element Windkessel Model</a>
-  <ul class="collapse">
-  <li><a href="#sec-odePM" id="toc-sec-odePM" class="nav-link" data-scroll-target="#sec-odePM"><span class="header-section-number">7.1.1</span> Comparison to Python and Matlab</a></li>
-  </ul></li>
-  </ul>
-</nav>
+        <div id="quarto-toc-target"></div>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Solving ODEs and ODE systems</span></h1>
+<h1 class="title">Solving ODEs and ODE systems</h1>
 </div>
 
 
@@ -311,10 +261,10 @@ div.csl-indent {
 </header>
 
 <p>Solving Ordinary Differential Equations is one of the most common use cases for scientific computing in engineering applications.</p>
-<div class="page-columns page-full"><p>The Julia package <a href="https://docs.sciml.ai/DiffEqDocs/stable/">DifferentialEquations.jl</a> is one of the biggest selling points of the language. It offers an unparalled range of solvers, all using the same interface<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;So changing the solver does not require any changes in the definition of the problem, even when moving between ODEs, DAEs and SDAEs.</p></li></div></div>
-<section id="example-4-element-windkessel-model" class="level2 page-columns page-full" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="example-4-element-windkessel-model"><span class="header-section-number">7.1</span> Example: 4-Element Windkessel Model</h2>
-<p><a href="#dnldts57202" onclick="fetch('data:text/plain;base64,ewogICJjZWxscyI6IFsKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjIFNvbHZpbmcgT0RFcyBhbmQgT0RFIHN5c3RlbXNcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiU29sdmluZyBPcmRpbmFyeSBEaWZmZXJlbnRpYWwgRXF1YXRpb25zIGlzIG9uZSBvZiB0aGUgbW9zdCBjb21tb24gdXNlIGNhc2VzIGZvciBzY2llbnRpZmljIGNvbXB1dGluZyBpbiBlbmdpbmVlcmluZyBhcHBsaWNhdGlvbnMuIFxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJUaGUgSnVsaWEgcGFja2FnZSBbRGlmZmVyZW50aWFsRXF1YXRpb25zLmpsXShodHRwczovL2RvY3Muc2NpbWwuYWkvRGlmZkVxRG9jcy9zdGFibGUvKSBpcyBvbmUgb2YgdGhlIGJpZ2dlc3Qgc2VsbGluZyBwb2ludHMgb2YgdGhlIGxhbmd1YWdlLiBJdCBvZmZlcnMgYW4gdW5wYXJhbGxlZCByYW5nZSBvZiBzb2x2ZXJzLCBhbGwgdXNpbmcgdGhlIHNhbWUgaW50ZXJmYWNlXltTbyBjaGFuZ2luZyB0aGUgc29sdmVyIGRvZXMgbm90IHJlcXVpcmUgYW55IGNoYW5nZXMgaW4gdGhlIGRlZmluaXRpb24gb2YgdGhlIHByb2JsZW0sIGV2ZW4gd2hlbiBtb3ZpbmcgYmV0d2VlbiBPREVzLCBEQUVzIGFuZCBTREFFcy5dLlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIjIyBFeGFtcGxlOiA0LUVsZW1lbnQgV2luZGtlc3NlbCBNb2RlbFxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJ7ezwgZG93bmxvYWR0aGlzIE9ERXNvbHZlci5pcHluYiBkbmFtZT1PREVzb2x2ZXIgbGFiZWw9XCJEb3dubG9hZCBKdXB5dGVyIE5vdGVib29rXCIgPn19XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlRoZSB3aW5ka2Vzc2VsIG1vZGVsIGlzIGEgY29tbW9uIG1vZGVsIGZvciB0aGUgcHJlc3N1cmUgcmVzcG9uc2Ugb2YgdGhlIHZhc2N1bGFyIHN5c3RlbSAoYmxvb2QgY2lyY3VsYXRpb24pIHRvIGEgcGVyaW9kaWMsIHB1bHNpbmcgZmxvdyB3YXZlZm9ybSBbQFdlc3RlcmhvZjIwMTldLlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJIZXJlIHdlIGFyZSBnb2luZyB0byB3b3JrIHdpdGggdGhlIDQtRWxlbWVudCB3aW5ka2Vzc2VsIG1vZGVsIFtAU3Rlcmdpb3B1bG9zMTk5OV0sIGNvbXByaXNpbmcgYSBmbG93IHNvdXJjZSAodGltZSBkZXBlbmRlbnQgZmxvdyByYXRlKSwgdHdvIHJlc2lzdG9ycyBmb3IgY2hhcmFjdGVyaXN0aWMgUmVzaXN0YW5jZSBvZiB0aGUgbmVhciB2ZXNzZWwgKGFvcnRhKSwgJFJfe2N9JCwgYW5kIHN5c3RlbWljIChwZXJpcGhlcmFsKSByZXNpc3RhbmNlLCAkUl97cH0kLCBhIGNvbXBsaWFuY2UgKGNhcGFjaXRhbmNlKSAkQyQsIHJlcHJlc2VudGluZyB0aGUgYmxvb2Qgc3RvcmFnZSBjYXBhY2l0eSBvZiB0aGUgcGVyaXBoZXJhbCB2ZXNzZWxzLCBhbmQgYW4gaW5kdWN0YW5jZSAkTF9wJCwgcmVwcmVzZW50aW5nIHRoZSBpbmVydGlhIGluIHRoZSBwcm94aW1hbCwgbGFyZ2UgdmVzc2VsLCBlLmcuLCB0aGUgYW9ydGEuXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlRoZSBwcmVzc3VyZXMgaW4gdGhpcyBjaXJjdWl0IC0gJHBfezF9JCBiZWZvcmUsIGFuZCAkcF97Mn0kIGFmdGVyIHRoZSBwcm94aW1hbCBMLVIgZWxlbWVudCAtIGFyZSBkZXNjcmliZWQgYnkgdGhlIHN5c3RlbSBvZiBPREVzOlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIkJFxuIiwKICAgICAgICAiXFxmcmFje2QgcF97MX19e2QgdH0gID0gIC0gXFxmcmFje1Jfe2N9fXtMX3twfX0gcF97MX0gKyBcXGxlZnQoIFxcZnJhY3tSX3tjfX17TF97cH19IC0gXFxmcmFjezF9e1Jfe3B9IEN9IFxccmlnaHQpIHBfezJ9IFxuIiwKICAgICAgICAiKyBSX3tjfSBcXGZyYWN7ZCBJKHQpfXtkIHR9ICsgXFxmcmFje0kodCl9e0N9IFxuIiwKICAgICAgICAiJCQgeyNlcS13azQtMX1cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiJCRcbiIsCiAgICAgICAgIlxcZnJhY3tkIHBfezJ9fXtkIHR9ICA9ICAtIFxcZnJhY3sxfXtSX3twfSBDfSBwX3syfSArIFxcZnJhY3tJKHQpfXtDfSBcbiIsCiAgICAgICAgIiQkIHsjZXEtd2s0LTJ9XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIjwhLS0gU291cmNlOiBmaWxlOi8vL2hvbWUvdGhvci9Eb2N1bWVudHMvUmVzZWFyY2gvU2F4dG9uUGhELzBELU1vZGVsbGluZ0luSnVsaWFfZmlsZXMvaW1hZ2VzL3drNC5kcmF3aW8ucG5nLCBhY2Nlc3NlZDogU3VuIE1hciAgNSAxNjowMTowMSAyMDIzIC0tPlxuIiwKICAgICAgICAiIVs0LUVsZW1lbnQgV2luZGtlc3NlbCBNb2RlbF0oLi9pbWFnZXMvaW1hZ2VzX2Zvcl9PREVzb2x2ZXIucW1kL3drNC5kcmF3aW8uc3ZnKXsjZmlnLTR3a31cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJJbiBvcmRlciB0byBpbXBsZW1lbnQgdGhpcyBtb2RlbCwgd2UgbmVlZCB0byBsb2FkIHRoZSByZXF1aXJlZCBtb2R1bGVzLiBXZSB1c2UgYERpZmZlcmVudGlhbEVxdWF0aW9uc2AsIGBQbG90c2AsIGFuZCBgRm9yd2FyZERpZmZgIGZvciB0aGUgdGltZS1kZXJpdmF0aXZlICRcXGZyYWN7XFxwYXJ0aWFsIEl9e1xccGFydGlhbCB0fSQ6XG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICJmYmY4NDU0OSIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICJ1c2luZyBEaWZmZXJlbnRpYWxFcXVhdGlvbnMsIEZvcndhcmREaWZmLCBQbG90cyIKICAgICAgXSwKICAgICAgImlkIjogIjM1MGFiNDNiIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBlY2hvOiBmYWxzZVxuIiwKICAgICAgICAiI3wgb3V0cHV0OiBmYWxzZVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJwbG90bHlqcygpOyIKICAgICAgXSwKICAgICAgImlkIjogImYzZjQwZDQzIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiVGhlIGlucHV0IHdhdmVmb3JtIGlzIGEgZ2VuZXJpYyBoYWxmLXBlcmlvZCBvZiBhIHNpbmUtd2F2ZSB3aXRoIGEgc3lzdG9saWMgKGVqZWN0aW9uKSB0aW1lIG9mICR0X3tzeXN0fSA9IDAuNCBUJCwgd2l0aCAkVD0xXFwgXFxtYXRocm17c30kIHBlcmlvZC10aW1lICg2MCBiZWF0cyBwZXIgbWludXRlKS4gVGhlIGRpY3JvdGljIG5vdGNoIGlzIG1vZGVsbGVkIGJ5IHJ1bm5pbmcgdGhlIHNpbmUgaW50byB0aGUgbmVnYXRpdmUgZm9yICR0X3tkaWNyfSA9IDAuMDNcXCBcXG1hdGhybXtzfSQ6XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxcYmVnaW57ZXF1YXRpb259XG4iLAogICAgICAgICIgICAgSSA9IFxuIiwKICAgICAgICAiICAgIFxcYmVnaW57Y2FzZXN9XG4iLAogICAgICAgICIgICAgICAgIElfe21pbn0gKyAoSV97bWF4fSAtIElfe21pbn0pICBcXHNpbiBcXGxlZnQoXFxmcmFje1xccGl9e3Rfe3N5c3R9fSB0IFxccmlnaHQpICYgXFx0ZXh0e2lmIH0gdCA8ICh0X3tzeXN0fSArIHRfe2RpY3J9KVxcXFxcbiIsCiAgICAgICAgIiAgICAgICAgSV97bWlufSAmIFxcdGV4dHtlbHNlfSBcbiIsCiAgICAgICAgIiAgICBcXGVuZHtjYXNlc31cbiIsCiAgICAgICAgIlxcZW5ke2VxdWF0aW9ufVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIkluIEp1bGlhLCB0aGlzIGZ1bmN0aW9uIGlzIGltcGxlbWVudGVkIGFzXltOb3RlIHRoYXQgd2UgdXNlIHR5cGUgc3BlY2lmaWNhdGlvbnMgdG8gZGVmaW5lIHRoZSBwYXJhbWV0ZXJzLiBKdWxpYSBkb2VzIHN1ZmZlciBpbiBwZXJmb3JtYW5jZSwgd2hlbiB1bnR5cGVkIGdsb2JhbCB2YXJpYWJsZXMgYXJlIHVzZWQsIHNpbmNlIHRoZXNlIGJyZWFrIHR5cGUgc3RhYmlsaXR5IGluIHRoZSBtdWx0aXBsZSBkaXNwYXRjaC4gTWFraW5nIHRoZXNlIHBhcmFtZXRlciBjb25zdGFudCBmaXhlcyB0aGVpciB0eXBlLiBXZSBzaG91bGQgcmVhbGx5IGJlIHVzaW5nIHRoZXNlIHBhcmFtZXRlcnMgaW4gdGhlIGZ1bmN0aW9uIGRlZmluaXRpb24sIG9yIHVzZSBhIGxhbWJkYSBmdW5jdGlvbi4gQnV0IGEgbGFtYmRhIGZ1bmN0aW9uIGlzIHNsb3dlciB0aGFuIHR5cGVkIHZhcmlhYmxlcy5dOlxuIgogICAgICBdLAogICAgICAiaWQiOiAiOWQ3NzIxODUiCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiI3wgb3V0cHV0OiBmYWxzZVxuIiwKICAgICAgICAiIFxuIiwKICAgICAgICAiIyBtYXggYW5kIG1pbiB2b2x1bWUgZmxvdyBpbiBtbC9zXG4iLAogICAgICAgICJtYXhfaTo6RmxvYXQ2NCA9IDQyNVxuIiwKICAgICAgICAibWluX2k6OkZsb2F0NjQgPSAwLjBcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiIyBwZXJpb2QgdGltZVxuIiwKICAgICAgICAiVDo6RmxvYXQ2NCA9IDEuMFxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIjIFN5c3QuIFRpbWUgaW4gc1xuIiwKICAgICAgICAic3lzdFRpbWU6OkZsb2F0NjQgPSAyIC8gNSAqIFRcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiIyBEaWNyb3RpYyBub3RjaCB0aW1lIGluIHNcbiIsCiAgICAgICAgImRpY3JUaW1lOjpGbG9hdDY0ID0gMC4wM1xuIiwKICAgICAgICAiXG4iLAogICAgICAgICJmdW5jdGlvbiBJKHQpXG4iLAogICAgICAgICIgICAgIyBpbXBsaWNpdCBjb25kaXRpb25hbCB1c2luZyBib29sZWFuIG11bHRpcGxpY2F0b3JcbiIsCiAgICAgICAgIiAgICAjIHNpbmUgd2F2ZWZvcm1cbiIsCiAgICAgICAgIiAgICB0ID0gdCAtIFQgKiAodCDDtyBUKVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIgICAgcmV0dXJuICgobWF4X2kgLSBtaW5faSkgKiBzaW4ocGkgLyBzeXN0VGltZSAqICh0KSlcbiIsCiAgICAgICAgIiAgICAgICAgICAgICogKHQgPCAoc3lzdFRpbWUgKyBkaWNyVGltZSkgKVxuIiwKICAgICAgICAiICAgICAgICAgICAgKyBtaW5faSlcbiIsCiAgICAgICAgImVuZCAiCiAgICAgIF0sCiAgICAgICJpZCI6ICI3MjY3YTFiOCIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIldlIGNhbiBxdWlja2x5IHBsb3QgdGhpcyBmdW5jdGlvbiBpbiBAZmlnLWlnZW4uXG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICI4MzlmYzE4NSIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBsYWJlbDogZmlnLWlnZW5cbiIsCiAgICAgICAgIiN8IGZpZy1jYXA6ICdHZW5lcmljIHdhdmVmb3JtLCByZXByZXNlbnRpbmcgZWplY3Rpb24gb2YgYmxvb2QgZnJvbSBsZWZ0IHZlbnRyaWNsZSBpbiB0aGUgYW9ydGEsIGluY2x1ZGluZyBkaWNyb3RpYyBub3RjaCAoYmFja2Zsb3cgYXQgdmFsdmUgY2xvc3VyZSkuJ1xuIiwKICAgICAgICAiXG4iLAogICAgICAgICJwbG90VGltZSA9IExpblJhbmdlKDAsMSwxMDApXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgInBsb3QocGxvdFRpbWUsIEkuKHBsb3RUaW1lKSxcbiIsCiAgICAgICAgIiAgICAgeGxhYmVsID0gXCJ0IFtzXVwiLCB5bGFiZWwgPSBcIkkgW21sIHM8c3VwPi0xPC9zdXA+XVwiLCBsYWJlbCA9IFwiT3V0Zmxvd1wiKSAiCiAgICAgIF0sCiAgICAgICJpZCI6ICJmaWctaWdlbiIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIlRoZSBkZWZpbml0aW9uIG9mIHRoZSBPREVzIEBlcS13azQtMSBhbmQgQGVxLXdrNC0yIGlzIGRvbmUgYXMgYSBmdW5jdGlvbiB3aXRoIHBhcmFtZXRlcnMgYGRQYCBhbmQgYFBgLCBmb3IgJFxcZnJhY3tkIHBfezEsMn19e2QgdH0kLCBhbmQgJHBfezEsMn0kLCByZXNwZWN0aXZlbHleW2BQYCBpcyBhIHZlY3RvciBvZiB2YWx1ZXMsIGFjdHVhbGx5LCBhcyBpcyBgZFBgLl0gXG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICI5ODgxZDUyNSIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBvdXRwdXQ6IGZhbHNlIFxuIiwKICAgICAgICAiZnVuY3Rpb24gd2s0KGRQLCBQLCBwYXJhbXMsIHQpXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICBSYywgUnAsIEMsIExwID0gcGFyYW1zXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICBkUFsxXSA9IChcbiIsCiAgICAgICAgIiAgICAgICAgLVJjIC8gTHAgKiBQWzFdXG4iLAogICAgICAgICIgICAgICAgICsgKFJjIC8gTHAgLSAxIC8gUnAgLyBDKSAqIFBbMl1cbiIsCiAgICAgICAgIiAgICAgICAgKyBSYyAqIEZvcndhcmREaWZmLmRlcml2YXRpdmUoSSwgdClcbiIsCiAgICAgICAgIiAgICAgICAgKyBJKHQpIC8gQ1xuIiwKICAgICAgICAiICAgICAgICApXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICBkUFsyXSA9IC0xIC8gUnAgLyBDICogUFsyXSArIEkodCkgLyBDXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICByZXR1cm4gZFBbMV0sIGRQWzJdXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgImVuZCIKICAgICAgXSwKICAgICAgImlkIjogIjRkMzY3NWIyIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiV2UgZGVmaW5lIHRoZSBwYXJhbWV0ZXJzLCBpbml0aWFsIGNvbmRpdGlvbnMsIGFuZCB0aW1lIHNwYW4gZm9yIHRoZSBpbnRlZ3JhdGlvbjpcbiIKICAgICAgXSwKICAgICAgImlkIjogIjhiYWYxMDYzIgogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIlJjID0gMC4wM1xuIiwKICAgICAgICAiUnAgPSAxLjBcbiIsCiAgICAgICAgIkMgID0gMi4wXG4iLAogICAgICAgICJMcCA9IDAuMDJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAidHNwYW4gPSAoMCwgMTApXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgInBhcmFtcyA9IFtSYywgUnAsIEMsIExwXVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJQMCA9IHplcm9zKDIpIgogICAgICBdLAogICAgICAiaWQiOiAiM2I5ZjljNGYiLAogICAgICAiZXhlY3V0aW9uX2NvdW50IjogbnVsbCwKICAgICAgIm91dHB1dHMiOiBbXQogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICJBbmQgZGVmaW5lIHRoZSBPREUgcHJvYmxlbSBhbmQgc29sdmUgaXReW1dlIHVzZSB0aGUgRG9ybWFuZC1QcmluY2Ugc29sdmVyIGBEUDVgIGhlcmUsIGJlY2F1c2UgdGhhdCBpcyB0aGUgc2FtZSBhbGdvcml0aG0gdGhhdCBNYXRsYWIncyBgb2RlNDVgIHVzZXMuIERpZmZlcmVudGlhbEVxdWF0aW9ucy5qbCBoYXMgYSBtdWx0aXR1ZGUgb2Ygb3RoZXIgc29sdmVycyB0aGF0IG1heSBwZXJmb3JtIGJldHRlci4gUGxheSBhcm91bmQgd2l0aCB0aGVzZS5dLiBXZSB3aWxsIHRpbWUgdGhlIHJ1biB1c2luZyB0aGUgYEB0aW1lYCBtYWNybzpcbiIKICAgICAgXSwKICAgICAgImlkIjogImUwZTA1NmU2IgogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgInByb2IgPSBPREVQcm9ibGVtKHdrNCwgUDAsIHRzcGFuLCBwYXJhbXMpXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIkB0aW1lIHNvbCA9IHNvbHZlKHByb2IsIERQNSgpLCByZWx0b2w9MWUtOSk7IgogICAgICBdLAogICAgICAiaWQiOiAiYThhMzFjNjkiLAogICAgICAiZXhlY3V0aW9uX2NvdW50IjogbnVsbCwKICAgICAgIm91dHB1dHMiOiBbXQogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICJMb29raW5nIGF0IHRoaXMgcnVuIHRpbWUsIHdlIHNlZSB0aGF0IHRoZSBydW4gaXMgc2xvd2VyIHRoYW4gdGhlIE1hdGxhYiBydW5eW1NlZSBiZWxvdy4gV2hhdCBoYXBwZW5lZCBoZXJlPyBEb2Vzbid0IGV2ZXJ5Ym9keSBzYXkgaG93IG11Y2ggZmFzdGVyIEp1bGlhIGlzIHRoYW4gTWF0bGFiP10uIExvb2tpbmcgYXQgdGhlIGRldGFpbHMgb2YgdGhlIGJlbmNobWFyayB0aW1lcywgd2Ugc2VlIHRoYXQgbW9zdCBvZiB0aGF0IHRpbWUgaGFzIGJlZW4gdXNlZCBvbiBjb21waWxhdGlvbi4gU28gd2hlbiB3ZSByZS1ydW4gdGhlIHNvbHZlciwgaXQgc2hvdWxkIHRha2UgbGVzcyB0aW1lOlxuIgogICAgICBdLAogICAgICAiaWQiOiAiZjc2MTg2ODciCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiQHRpbWUgc29sID0gc29sdmUocHJvYiwgRFA1KCksIHJlbHRvbD0xZS05KTsiCiAgICAgIF0sCiAgICAgICJpZCI6ICJmNDI0ZWFiZiIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIkFuZCBpbmRlZWQsIHRoZSBydW4gdGltZSBpcyBub3cgb25lIG9yZGVyIG9mIG1hZ25pdHVkZSBmYXN0ZXIgdGhhbiB0aGUgTWF0bGFiIHRpbWVzIHNob3duIGluIEBzZWMtb2RlUE0uXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIldlIGNhbiBwbG90IHRoZSBzb2x1dGlvbiBpbiBAZmlnLXdrNC1zb2wgdXNpbmcgdGhlIHNwZWNpYWwgcGxvdCByZWNpcGUgZm9yIE9ERSBzb2x1dGlvbnM6XG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICIzMGZjY2Q3MiIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBsYWJlbDogZmlnLXdrNC1zb2xcbiIsCiAgICAgICAgIiN8IGZpZy1jYXA6IFNvbHV0aW9uIG9mIDQtZWxlbWVudCB3aW5ka2Vzc2VsIG1vZGVsIHVzaW5nIEp1bGlhJ3MgRGlmZmVyZW50aWFsRXF1YXRpb25zLmpsXG4iLAogICAgICAgICJwbG90KHNvbCxcbiIsCiAgICAgICAgIiAgICAgbGFiZWwgPSBbXCJwMVwiIFwicDJcIl0sXG4iLAogICAgICAgICIgICAgIHhsYWJlbCA9IFwidCBbc11cIixcbiIsCiAgICAgICAgIiAgICAgeWxhYmVsID0gXCJwIFttbTxzdWI+SGc8L3N1Yj5dXCIsXG4iLAogICAgICAgICIgICAgIHRzcGFuPSg5LDEwKSkiCiAgICAgIF0sCiAgICAgICJpZCI6ICJmaWctd2s0LXNvbCIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIiMjIyBDb21wYXJpc29uIHRvIFB5dGhvbiBhbmQgTWF0bGFiIHsjc2VjLW9kZVBNfVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJGb3IgdGhvc2UgY29taW5nIGZyb20gUHl0aG9uIG9yIE1hdGxhYiwgbGV0J3MgaGF2ZSBhIGxvb2sgYXQgaG93IHRoaXMgcHJvYmxlbSBjYW4gYmUgc29sdmVkIGluIHRoZXNlIHR3byBsYW5ndWFnZXMgYW5kIGNvbXBhcmUgdG8gdGhlIEp1bGlhIHZlcnNpb24uXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlN3aXRjaCBiZXR3ZWVuIHRoZSBsYW5ndWFnZXMgdXNpbmcgdGhlIHRhYnMgYmVsb3c6XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIjo6OiB7LnBhbmVsLXRhYnNldH1cbiIsCiAgICAgICAgIiMjIyBQeXRob25cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAie3s8IGRvd25sb2FkdGhpcyB3azRfcHl0aG9uLnB5IGRuYW1lPXdrNF9weXRob24gbGFiZWw9XCJEb3dubG9hZCBQeXRob24gQ29kZVwiID59fVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJgYGB7LnB5dGhvbiBpbmNsdWRlPVwid2s0X3B5dGhvbi5weVwifVxuIiwKICAgICAgICAiYGBgXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlJ1bnRpbWUgZm9yIHRoaXMgY29kZSBpcyAodGltZWQgdXNpbmcgYHRpbWUucGVyZi5jb3VudGVyYCBpbiBQeXRob24pOlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICI8IS0tIGBgYHB5dGhvbiAtLT5cbiIsCiAgICAgICAgIjwhLS0gVGltZSBlbGFwc2VkOiAwLjc4NzIgc2Vjb25kcyAtLT5cbiIsCiAgICAgICAgIjwhLS0gYGBgIC0tPlxuIgogICAgICBdLAogICAgICAiaWQiOiAiN2YwNGMwNzciCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiI3wgZWNobzogZmFsc2VcbiIsCiAgICAgICAgInJ1bihgcHl0aG9uIC4vd2s0X3B5dGhvbi5weWApOyIKICAgICAgXSwKICAgICAgImlkIjogIjI4ZDI0ZDM0IiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiIyMjIE1BVExBQlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJ7ezwgZG93bmxvYWR0aGlzIHdrNF9tYXRsYWIubSBkbmFtZT13azRfbWF0bGFiIGxhYmVsPVwiRG93bmxvYWQgTWF0bGFiIENvZGVcIiA+fX1cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiYGBgey5tYXRsYWIgaW5jbHVkZT1cIndrNF9tYXRsYWIubVwifVxuIiwKICAgICAgICAiYGBgXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlJ1bnRpbWUgZm9yIHRoaXMgY29kZSBpcyAodGltZWQgdXNpbmcgYHRpY2AgYHRvY2AgaW4gTWF0bGFiKV5bU2FtZSBjb2RlIGluIE9jdGF2ZSwgdGhlIGZyZWUgb3Blbi1zb3VyY2UgdmVyc2lvbiBvZiBNYXRsYWIgcnVucyBpbiAzIHNlY29uZHMuIEN1cnJlbnQgdmVyc2lvbnMgb2YgTWF0bGFiIGhhdmUgaW1wcm92ZWQgcnVudGltZSBieSBwYXJ0aWFsIGp1c3QtaW4tdGltZSBjb21waWxhdGlvbi4gTm90ZSB0aGF0IHRoZSBmaXJzdCBydW4gaW4gTWF0bGFiIGFsc28gdGFrZXMgYW4gb3JkZXIgb2YgbWFnbml0dWRlIGxvbmdlciwgd2hpY2ggaXMgbW9zdCBsaWtlbHkgZHVlIHRvIE1hdGxhYiBvcHRpbWlzaW5nIHRoZSBzb2x2ZXIgdG8gdGhlIHByb2JsZW0uXSwgd2hpY2ggaXMgYSBiaXQgbW9yZSB0aGFuIGFuIG9yZGVyIG9mIG1hZ25pdHVkZSBzbG93ZXIgdGhhbiBKdWxpYTpcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiPCEtLSBgYGBvY3RhdmUgLS0+XG4iLAogICAgICAgICI8IS0tIEVsYXBzZWQgdGltZSBpcyAwLjAxODE3MiBzZWNvbmRzLiAtLT5cbiIsCiAgICAgICAgIjwhLS0gYGBgIC0tPlxuIgogICAgICBdLAogICAgICAiaWQiOiAiZmRhYTk2ODMiCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiI3wgZWNobzogZmFsc2VcbiIsCiAgICAgICAgInJ1bihgbWF0bGFiIC1ub2p2bSAtYmF0Y2ggXCJydW4oJy4vd2s0X21hdGxhYi5tJyk7IGV4aXQ7XCJgKTsiCiAgICAgIF0sCiAgICAgICJpZCI6ICIyMGM3MjQyNCIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIjo6OlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJTbyBpbiB0aGlzIGNhc2UsIEp1bGlhIGlzIG9uZSBvcmRlciBvZiBtYWdpdHVkZSBmYXN0ZXIgdGhhbiBNYXRsYWIgYW5kIGFyb3VuZCA1MDB4IGZhc3RlciB0aGFuIFB5dGhvbl5bSSBoYXZlIHRyaWVkIHVzaW5nIFB5UHkgYW5kIEN5dGhvbiBpbiBvdGhlciBjYXNlcyBhbmQgZm91bmQgdGhhdCB0aGV5IHNwZWVkIHVwIFB5dGhvbiBjb25zaWRlcmFibHkuIFVuZm9ydHVuYXRlbHkgdGhpcyB3YXMgbm90IHRoZSBjYXNlIHdoZW4gdXNpbmcgU2NpUHkgYW5kIE51bXB5LCB3aGljaCBtYWRlIHRoZSBjb21waWxlZCBQeXRob24gdmVyc2lvbiBvbmUgb3JkZXIgb2YgbWFnbml0dWRlICoqc2xvd2VyKiogdGhhbiBpbnRlcnByZXRlZC4gVGhlcmUgc2VlbXMgdG8gYmUgYSBwcm9ibGVtIHdpdGggQy1jYWxscyBmcm9tIFB5UHkuXSBzb2x2aW5nIE9ERXMuXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlBlcnNvbmFsbHksIEkgZmluZCB0aGUgTWF0bGFiIGNvZGUgYW5kLCBpbiBwYXJ0aWN1bGFyLCB0aGUgSnVsaWEgY29kZSBlYXNpZXIgdG8gcmVhZC5cbiIKICAgICAgXSwKICAgICAgImlkIjogIjEzZjM5NWZjIgogICAgfQogIF0sCiAgIm1ldGFkYXRhIjogewogICAgImtlcm5lbHNwZWMiOiB7CiAgICAgICJuYW1lIjogImp1bGlhLTEuOSIsCiAgICAgICJsYW5ndWFnZSI6ICJqdWxpYSIsCiAgICAgICJkaXNwbGF5X25hbWUiOiAiSnVsaWEgMS45LjAtcmMxIgogICAgfQogIH0sCiAgIm5iZm9ybWF0IjogNCwKICAibmJmb3JtYXRfbWlub3IiOiA1Cn0=').then(res => res.blob()).then(blob => {
+<p>The Julia package <a href="https://docs.sciml.ai/DiffEqDocs/stable/">DifferentialEquations.jl</a> is one of the biggest selling points of the language. It offers an unparalled range of solvers, all using the same interface<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<section id="example-4-element-windkessel-model" class="level2">
+<h2>Example: 4-Element Windkessel Model</h2>
+<p><a href="#dnldts6045" onclick="fetch('data:text/plain;base64,ewogICJjZWxscyI6IFsKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjIFNvbHZpbmcgT0RFcyBhbmQgT0RFIHN5c3RlbXNcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiU29sdmluZyBPcmRpbmFyeSBEaWZmZXJlbnRpYWwgRXF1YXRpb25zIGlzIG9uZSBvZiB0aGUgbW9zdCBjb21tb24gdXNlIGNhc2VzIGZvciBzY2llbnRpZmljIGNvbXB1dGluZyBpbiBlbmdpbmVlcmluZyBhcHBsaWNhdGlvbnMuIFxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJUaGUgSnVsaWEgcGFja2FnZSBbRGlmZmVyZW50aWFsRXF1YXRpb25zLmpsXShodHRwczovL2RvY3Muc2NpbWwuYWkvRGlmZkVxRG9jcy9zdGFibGUvKSBpcyBvbmUgb2YgdGhlIGJpZ2dlc3Qgc2VsbGluZyBwb2ludHMgb2YgdGhlIGxhbmd1YWdlLiBJdCBvZmZlcnMgYW4gdW5wYXJhbGxlZCByYW5nZSBvZiBzb2x2ZXJzLCBhbGwgdXNpbmcgdGhlIHNhbWUgaW50ZXJmYWNlXltTbyBjaGFuZ2luZyB0aGUgc29sdmVyIGRvZXMgbm90IHJlcXVpcmUgYW55IGNoYW5nZXMgaW4gdGhlIGRlZmluaXRpb24gb2YgdGhlIHByb2JsZW0sIGV2ZW4gd2hlbiBtb3ZpbmcgYmV0d2VlbiBPREVzLCBEQUVzIGFuZCBTREFFcy5dLlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIjIyBFeGFtcGxlOiA0LUVsZW1lbnQgV2luZGtlc3NlbCBNb2RlbFxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJ7ezwgZG93bmxvYWR0aGlzIE9ERXNvbHZlci5pcHluYiBkbmFtZT1PREVzb2x2ZXIgbGFiZWw9XCJEb3dubG9hZCBKdXB5dGVyIE5vdGVib29rXCIgPn19XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlRoZSB3aW5ka2Vzc2VsIG1vZGVsIGlzIGEgY29tbW9uIG1vZGVsIGZvciB0aGUgcHJlc3N1cmUgcmVzcG9uc2Ugb2YgdGhlIHZhc2N1bGFyIHN5c3RlbSAoYmxvb2QgY2lyY3VsYXRpb24pIHRvIGEgcGVyaW9kaWMsIHB1bHNpbmcgZmxvdyB3YXZlZm9ybSBbQFdlc3RlcmhvZjIwMTldLlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJIZXJlIHdlIGFyZSBnb2luZyB0byB3b3JrIHdpdGggdGhlIDQtRWxlbWVudCB3aW5ka2Vzc2VsIG1vZGVsIFtAU3Rlcmdpb3B1bG9zMTk5OV0sIGNvbXByaXNpbmcgYSBmbG93IHNvdXJjZSAodGltZSBkZXBlbmRlbnQgZmxvdyByYXRlKSwgdHdvIHJlc2lzdG9ycyBmb3IgY2hhcmFjdGVyaXN0aWMgUmVzaXN0YW5jZSBvZiB0aGUgbmVhciB2ZXNzZWwgKGFvcnRhKSwgJFJfe2N9JCwgYW5kIHN5c3RlbWljIChwZXJpcGhlcmFsKSByZXNpc3RhbmNlLCAkUl97cH0kLCBhIGNvbXBsaWFuY2UgKGNhcGFjaXRhbmNlKSAkQyQsIHJlcHJlc2VudGluZyB0aGUgYmxvb2Qgc3RvcmFnZSBjYXBhY2l0eSBvZiB0aGUgcGVyaXBoZXJhbCB2ZXNzZWxzLCBhbmQgYW4gaW5kdWN0YW5jZSAkTF9wJCwgcmVwcmVzZW50aW5nIHRoZSBpbmVydGlhIGluIHRoZSBwcm94aW1hbCwgbGFyZ2UgdmVzc2VsLCBlLmcuLCB0aGUgYW9ydGEuXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlRoZSBwcmVzc3VyZXMgaW4gdGhpcyBjaXJjdWl0IC0gJHBfezF9JCBiZWZvcmUsIGFuZCAkcF97Mn0kIGFmdGVyIHRoZSBwcm94aW1hbCBMLVIgZWxlbWVudCAtIGFyZSBkZXNjcmliZWQgYnkgdGhlIHN5c3RlbSBvZiBPREVzOlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIkJFxuIiwKICAgICAgICAiXFxmcmFje2QgcF97MX19e2QgdH0gID0gIC0gXFxmcmFje1Jfe2N9fXtMX3twfX0gcF97MX0gKyBcXGxlZnQoIFxcZnJhY3tSX3tjfX17TF97cH19IC0gXFxmcmFjezF9e1Jfe3B9IEN9IFxccmlnaHQpIHBfezJ9IFxuIiwKICAgICAgICAiKyBSX3tjfSBcXGZyYWN7ZCBJKHQpfXtkIHR9ICsgXFxmcmFje0kodCl9e0N9IFxuIiwKICAgICAgICAiJCQgeyNlcS13azQtMX1cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiJCRcbiIsCiAgICAgICAgIlxcZnJhY3tkIHBfezJ9fXtkIHR9ICA9ICAtIFxcZnJhY3sxfXtSX3twfSBDfSBwX3syfSArIFxcZnJhY3tJKHQpfXtDfSBcbiIsCiAgICAgICAgIiQkIHsjZXEtd2s0LTJ9XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIjwhLS0gU291cmNlOiBmaWxlOi8vL2hvbWUvdGhvci9Eb2N1bWVudHMvUmVzZWFyY2gvU2F4dG9uUGhELzBELU1vZGVsbGluZ0luSnVsaWFfZmlsZXMvaW1hZ2VzL3drNC5kcmF3aW8ucG5nLCBhY2Nlc3NlZDogU3VuIE1hciAgNSAxNjowMTowMSAyMDIzIC0tPlxuIiwKICAgICAgICAiIVs0LUVsZW1lbnQgV2luZGtlc3NlbCBNb2RlbF0oLi9pbWFnZXMvaW1hZ2VzX2Zvcl9PREVzb2x2ZXIucW1kL3drNC5kcmF3aW8uc3ZnKXsjZmlnLTR3a31cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJJbiBvcmRlciB0byBpbXBsZW1lbnQgdGhpcyBtb2RlbCwgd2UgbmVlZCB0byBsb2FkIHRoZSByZXF1aXJlZCBtb2R1bGVzLiBXZSB1c2UgYERpZmZlcmVudGlhbEVxdWF0aW9uc2AsIGBQbG90c2AsIGFuZCBgRm9yd2FyZERpZmZgIGZvciB0aGUgdGltZS1kZXJpdmF0aXZlICRcXGZyYWN7XFxwYXJ0aWFsIEl9e1xccGFydGlhbCB0fSQ6XG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICIxMzRkODYxNSIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICJ1c2luZyBEaWZmZXJlbnRpYWxFcXVhdGlvbnMsIEZvcndhcmREaWZmLCBQbG90cyIKICAgICAgXSwKICAgICAgImlkIjogIjRjNDY2N2VmIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBlY2hvOiBmYWxzZVxuIiwKICAgICAgICAiI3wgb3V0cHV0OiBmYWxzZVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJwbG90bHlqcygpOyIKICAgICAgXSwKICAgICAgImlkIjogIjY0ZWExOTdhIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiVGhlIGlucHV0IHdhdmVmb3JtIGlzIGEgZ2VuZXJpYyBoYWxmLXBlcmlvZCBvZiBhIHNpbmUtd2F2ZSB3aXRoIGEgc3lzdG9saWMgKGVqZWN0aW9uKSB0aW1lIG9mICR0X3tzeXN0fSA9IDAuNCBUJCwgd2l0aCAkVD0xXFwgXFxtYXRocm17c30kIHBlcmlvZC10aW1lICg2MCBiZWF0cyBwZXIgbWludXRlKS4gVGhlIGRpY3JvdGljIG5vdGNoIGlzIG1vZGVsbGVkIGJ5IHJ1bm5pbmcgdGhlIHNpbmUgaW50byB0aGUgbmVnYXRpdmUgZm9yICR0X3tkaWNyfSA9IDAuMDNcXCBcXG1hdGhybXtzfSQ6XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxcYmVnaW57ZXF1YXRpb259XG4iLAogICAgICAgICIgICAgSSA9IFxuIiwKICAgICAgICAiICAgIFxcYmVnaW57Y2FzZXN9XG4iLAogICAgICAgICIgICAgICAgIElfe21pbn0gKyAoSV97bWF4fSAtIElfe21pbn0pICBcXHNpbiBcXGxlZnQoXFxmcmFje1xccGl9e3Rfe3N5c3R9fSB0IFxccmlnaHQpICYgXFx0ZXh0e2lmIH0gdCA8ICh0X3tzeXN0fSArIHRfe2RpY3J9KVxcXFxcbiIsCiAgICAgICAgIiAgICAgICAgSV97bWlufSAmIFxcdGV4dHtlbHNlfSBcbiIsCiAgICAgICAgIiAgICBcXGVuZHtjYXNlc31cbiIsCiAgICAgICAgIlxcZW5ke2VxdWF0aW9ufVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIkluIEp1bGlhLCB0aGlzIGZ1bmN0aW9uIGlzIGltcGxlbWVudGVkIGFzXltOb3RlIHRoYXQgd2UgdXNlIHR5cGUgc3BlY2lmaWNhdGlvbnMgdG8gZGVmaW5lIHRoZSBwYXJhbWV0ZXJzLiBKdWxpYSBkb2VzIHN1ZmZlciBpbiBwZXJmb3JtYW5jZSwgd2hlbiB1bnR5cGVkIGdsb2JhbCB2YXJpYWJsZXMgYXJlIHVzZWQsIHNpbmNlIHRoZXNlIGJyZWFrIHR5cGUgc3RhYmlsaXR5IGluIHRoZSBtdWx0aXBsZSBkaXNwYXRjaC4gTWFraW5nIHRoZXNlIHBhcmFtZXRlciBjb25zdGFudCBmaXhlcyB0aGVpciB0eXBlLiBXZSBzaG91bGQgcmVhbGx5IGJlIHVzaW5nIHRoZXNlIHBhcmFtZXRlcnMgaW4gdGhlIGZ1bmN0aW9uIGRlZmluaXRpb24sIG9yIHVzZSBhIGxhbWJkYSBmdW5jdGlvbi4gQnV0IGEgbGFtYmRhIGZ1bmN0aW9uIGlzIHNsb3dlciB0aGFuIHR5cGVkIHZhcmlhYmxlcy5dOlxuIgogICAgICBdLAogICAgICAiaWQiOiAiNzQ1NDY3MmYiCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiI3wgb3V0cHV0OiBmYWxzZVxuIiwKICAgICAgICAiIFxuIiwKICAgICAgICAiIyBtYXggYW5kIG1pbiB2b2x1bWUgZmxvdyBpbiBtbC9zXG4iLAogICAgICAgICJtYXhfaTo6RmxvYXQ2NCA9IDQyNVxuIiwKICAgICAgICAibWluX2k6OkZsb2F0NjQgPSAwLjBcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiIyBwZXJpb2QgdGltZVxuIiwKICAgICAgICAiVDo6RmxvYXQ2NCA9IDEuMFxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIjIFN5c3QuIFRpbWUgaW4gc1xuIiwKICAgICAgICAic3lzdFRpbWU6OkZsb2F0NjQgPSAyIC8gNSAqIFRcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiIyBEaWNyb3RpYyBub3RjaCB0aW1lIGluIHNcbiIsCiAgICAgICAgImRpY3JUaW1lOjpGbG9hdDY0ID0gMC4wM1xuIiwKICAgICAgICAiXG4iLAogICAgICAgICJmdW5jdGlvbiBJKHQpXG4iLAogICAgICAgICIgICAgIyBpbXBsaWNpdCBjb25kaXRpb25hbCB1c2luZyBib29sZWFuIG11bHRpcGxpY2F0b3JcbiIsCiAgICAgICAgIiAgICAjIHNpbmUgd2F2ZWZvcm1cbiIsCiAgICAgICAgIiAgICB0ID0gdCAtIFQgKiAodCDDtyBUKVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICIgICAgcmV0dXJuICgobWF4X2kgLSBtaW5faSkgKiBzaW4ocGkgLyBzeXN0VGltZSAqICh0KSlcbiIsCiAgICAgICAgIiAgICAgICAgICAgICogKHQgPCAoc3lzdFRpbWUgKyBkaWNyVGltZSkgKVxuIiwKICAgICAgICAiICAgICAgICAgICAgKyBtaW5faSlcbiIsCiAgICAgICAgImVuZCAiCiAgICAgIF0sCiAgICAgICJpZCI6ICIzODVhNGJmNiIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIldlIGNhbiBxdWlja2x5IHBsb3QgdGhpcyBmdW5jdGlvbiBpbiBAZmlnLWlnZW4uXG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICI5MzQ5YjlmMyIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBsYWJlbDogZmlnLWlnZW5cbiIsCiAgICAgICAgIiN8IGZpZy1jYXA6ICdHZW5lcmljIHdhdmVmb3JtLCByZXByZXNlbnRpbmcgZWplY3Rpb24gb2YgYmxvb2QgZnJvbSBsZWZ0IHZlbnRyaWNsZSBpbiB0aGUgYW9ydGEsIGluY2x1ZGluZyBkaWNyb3RpYyBub3RjaCAoYmFja2Zsb3cgYXQgdmFsdmUgY2xvc3VyZSkuJ1xuIiwKICAgICAgICAiXG4iLAogICAgICAgICJwbG90VGltZSA9IExpblJhbmdlKDAsMSwxMDApXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgInBsb3QocGxvdFRpbWUsIEkuKHBsb3RUaW1lKSxcbiIsCiAgICAgICAgIiAgICAgeGxhYmVsID0gXCJ0IFtzXVwiLCB5bGFiZWwgPSBcIkkgW21sIHM8c3VwPi0xPC9zdXA+XVwiLCBsYWJlbCA9IFwiT3V0Zmxvd1wiKSAiCiAgICAgIF0sCiAgICAgICJpZCI6ICJmaWctaWdlbiIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIlRoZSBkZWZpbml0aW9uIG9mIHRoZSBPREVzIEBlcS13azQtMSBhbmQgQGVxLXdrNC0yIGlzIGRvbmUgYXMgYSBmdW5jdGlvbiB3aXRoIHBhcmFtZXRlcnMgYGRQYCBhbmQgYFBgLCBmb3IgJFxcZnJhY3tkIHBfezEsMn19e2QgdH0kLCBhbmQgJHBfezEsMn0kLCByZXNwZWN0aXZlbHleW2BQYCBpcyBhIHZlY3RvciBvZiB2YWx1ZXMsIGFjdHVhbGx5LCBhcyBpcyBgZFBgLl0gXG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICI1YTk4MDYxNiIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBvdXRwdXQ6IGZhbHNlIFxuIiwKICAgICAgICAiZnVuY3Rpb24gd2s0KGRQLCBQLCBwYXJhbXMsIHQpXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICBSYywgUnAsIEMsIExwID0gcGFyYW1zXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICBkUFsxXSA9IChcbiIsCiAgICAgICAgIiAgICAgICAgLVJjIC8gTHAgKiBQWzFdXG4iLAogICAgICAgICIgICAgICAgICsgKFJjIC8gTHAgLSAxIC8gUnAgLyBDKSAqIFBbMl1cbiIsCiAgICAgICAgIiAgICAgICAgKyBSYyAqIEZvcndhcmREaWZmLmRlcml2YXRpdmUoSSwgdClcbiIsCiAgICAgICAgIiAgICAgICAgKyBJKHQpIC8gQ1xuIiwKICAgICAgICAiICAgICAgICApXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICBkUFsyXSA9IC0xIC8gUnAgLyBDICogUFsyXSArIEkodCkgLyBDXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIiAgICByZXR1cm4gZFBbMV0sIGRQWzJdXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgImVuZCIKICAgICAgXSwKICAgICAgImlkIjogIjc3YzJjMGEwIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiV2UgZGVmaW5lIHRoZSBwYXJhbWV0ZXJzLCBpbml0aWFsIGNvbmRpdGlvbnMsIGFuZCB0aW1lIHNwYW4gZm9yIHRoZSBpbnRlZ3JhdGlvbjpcbiIKICAgICAgXSwKICAgICAgImlkIjogIjA4MTE1MjRlIgogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIlJjID0gMC4wM1xuIiwKICAgICAgICAiUnAgPSAxLjBcbiIsCiAgICAgICAgIkMgID0gMi4wXG4iLAogICAgICAgICJMcCA9IDAuMDJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAidHNwYW4gPSAoMCwgMTApXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgInBhcmFtcyA9IFtSYywgUnAsIEMsIExwXVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJQMCA9IHplcm9zKDIpIgogICAgICBdLAogICAgICAiaWQiOiAiODUzMjEzNTMiLAogICAgICAiZXhlY3V0aW9uX2NvdW50IjogbnVsbCwKICAgICAgIm91dHB1dHMiOiBbXQogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICJBbmQgZGVmaW5lIHRoZSBPREUgcHJvYmxlbSBhbmQgc29sdmUgaXReW1dlIHVzZSB0aGUgRG9ybWFuZC1QcmluY2Ugc29sdmVyIGBEUDVgIGhlcmUsIGJlY2F1c2UgdGhhdCBpcyB0aGUgc2FtZSBhbGdvcml0aG0gdGhhdCBNYXRsYWIncyBgb2RlNDVgIHVzZXMuIERpZmZlcmVudGlhbEVxdWF0aW9ucy5qbCBoYXMgYSBtdWx0aXR1ZGUgb2Ygb3RoZXIgc29sdmVycyB0aGF0IG1heSBwZXJmb3JtIGJldHRlci4gUGxheSBhcm91bmQgd2l0aCB0aGVzZS5dLiBXZSB3aWxsIHRpbWUgdGhlIHJ1biB1c2luZyB0aGUgYEB0aW1lYCBtYWNybzpcbiIKICAgICAgXSwKICAgICAgImlkIjogImNmMGVjOTNiIgogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJjb2RlIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgInByb2IgPSBPREVQcm9ibGVtKHdrNCwgUDAsIHRzcGFuLCBwYXJhbXMpXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIkB0aW1lIHNvbCA9IHNvbHZlKHByb2IsIERQNSgpLCByZWx0b2w9MWUtOSk7IgogICAgICBdLAogICAgICAiaWQiOiAiM2U3YmRiYTgiLAogICAgICAiZXhlY3V0aW9uX2NvdW50IjogbnVsbCwKICAgICAgIm91dHB1dHMiOiBbXQogICAgfSwKICAgIHsKICAgICAgImNlbGxfdHlwZSI6ICJtYXJrZG93biIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICJMb29raW5nIGF0IHRoaXMgcnVuIHRpbWUsIHdlIHNlZSB0aGF0IHRoZSBydW4gaXMgc2xvd2VyIHRoYW4gdGhlIE1hdGxhYiBydW5eW1NlZSBiZWxvdy4gV2hhdCBoYXBwZW5lZCBoZXJlPyBEb2Vzbid0IGV2ZXJ5Ym9keSBzYXkgaG93IG11Y2ggZmFzdGVyIEp1bGlhIGlzIHRoYW4gTWF0bGFiP10uIExvb2tpbmcgYXQgdGhlIGRldGFpbHMgb2YgdGhlIGJlbmNobWFyayB0aW1lcywgd2Ugc2VlIHRoYXQgbW9zdCBvZiB0aGF0IHRpbWUgaGFzIGJlZW4gdXNlZCBvbiBjb21waWxhdGlvbi4gU28gd2hlbiB3ZSByZS1ydW4gdGhlIHNvbHZlciwgaXQgc2hvdWxkIHRha2UgbGVzcyB0aW1lOlxuIgogICAgICBdLAogICAgICAiaWQiOiAiNmMwZDRiY2UiCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiQHRpbWUgc29sID0gc29sdmUocHJvYiwgRFA1KCksIHJlbHRvbD0xZS05KTsiCiAgICAgIF0sCiAgICAgICJpZCI6ICI1ZjJiYmM1OSIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIkFuZCBpbmRlZWQsIHRoZSBydW4gdGltZSBpcyBub3cgb25lIG9yZGVyIG9mIG1hZ25pdHVkZSBmYXN0ZXIgdGhhbiB0aGUgTWF0bGFiIHRpbWVzIHNob3duIGluIEBzZWMtb2RlUE0uXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIldlIGNhbiBwbG90IHRoZSBzb2x1dGlvbiBpbiBAZmlnLXdrNC1zb2wgdXNpbmcgdGhlIHNwZWNpYWwgcGxvdCByZWNpcGUgZm9yIE9ERSBzb2x1dGlvbnM6XG4iCiAgICAgIF0sCiAgICAgICJpZCI6ICI3MjllZDczZSIKICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAiY29kZSIsCiAgICAgICJtZXRhZGF0YSI6IHt9LAogICAgICAic291cmNlIjogWwogICAgICAgICIjfCBsYWJlbDogZmlnLXdrNC1zb2xcbiIsCiAgICAgICAgIiN8IGZpZy1jYXA6IFNvbHV0aW9uIG9mIDQtZWxlbWVudCB3aW5ka2Vzc2VsIG1vZGVsIHVzaW5nIEp1bGlhJ3MgRGlmZmVyZW50aWFsRXF1YXRpb25zLmpsXG4iLAogICAgICAgICJwbG90KHNvbCxcbiIsCiAgICAgICAgIiAgICAgbGFiZWwgPSBbXCJwMVwiIFwicDJcIl0sXG4iLAogICAgICAgICIgICAgIHhsYWJlbCA9IFwidCBbc11cIixcbiIsCiAgICAgICAgIiAgICAgeWxhYmVsID0gXCJwIFttbTxzdWI+SGc8L3N1Yj5dXCIsXG4iLAogICAgICAgICIgICAgIHRzcGFuPSg5LDEwKSkiCiAgICAgIF0sCiAgICAgICJpZCI6ICJmaWctd2s0LXNvbCIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIiMjIyBDb21wYXJpc29uIHRvIFB5dGhvbiBhbmQgTWF0bGFiIHsjc2VjLW9kZVBNfVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJGb3IgdGhvc2UgY29taW5nIGZyb20gUHl0aG9uIG9yIE1hdGxhYiwgbGV0J3MgaGF2ZSBhIGxvb2sgYXQgaG93IHRoaXMgcHJvYmxlbSBjYW4gYmUgc29sdmVkIGluIHRoZXNlIHR3byBsYW5ndWFnZXMgYW5kIGNvbXBhcmUgdG8gdGhlIEp1bGlhIHZlcnNpb24uXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlN3aXRjaCBiZXR3ZWVuIHRoZSBsYW5ndWFnZXMgdXNpbmcgdGhlIHRhYnMgYmVsb3c6XG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIjo6OiB7LnBhbmVsLXRhYnNldH1cbiIsCiAgICAgICAgIiMjIyBQeXRob25cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAie3s8IGRvd25sb2FkdGhpcyB3azRfcHl0aG9uLnB5IGRuYW1lPXdrNF9weXRob24gbGFiZWw9XCJEb3dubG9hZCBQeXRob24gQ29kZVwiID59fVxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJgYGB7LnB5dGhvbiBpbmNsdWRlPVwid2s0X3B5dGhvbi5weVwifVxuIiwKICAgICAgICAiYGBgXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlJ1bnRpbWUgZm9yIHRoaXMgY29kZSBpcyAodGltZWQgdXNpbmcgYHRpbWUucGVyZi5jb3VudGVyYCBpbiBQeXRob24pOlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICI8IS0tIGBgYHB5dGhvbiAtLT5cbiIsCiAgICAgICAgIjwhLS0gVGltZSBlbGFwc2VkOiAwLjc4NzIgc2Vjb25kcyAtLT5cbiIsCiAgICAgICAgIjwhLS0gYGBgIC0tPlxuIgogICAgICBdLAogICAgICAiaWQiOiAiZmQ4YWRhZDciCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiI3wgZWNobzogZmFsc2VcbiIsCiAgICAgICAgInJ1bihgcHl0aG9uIC4vd2s0X3B5dGhvbi5weWApOyIKICAgICAgXSwKICAgICAgImlkIjogIjBkNDMxZjgwIiwKICAgICAgImV4ZWN1dGlvbl9jb3VudCI6IG51bGwsCiAgICAgICJvdXRwdXRzIjogW10KICAgIH0sCiAgICB7CiAgICAgICJjZWxsX3R5cGUiOiAibWFya2Rvd24iLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiIyMjIE1BVExBQlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJ7ezwgZG93bmxvYWR0aGlzIHdrNF9tYXRsYWIubSBkbmFtZT13azRfbWF0bGFiIGxhYmVsPVwiRG93bmxvYWQgTWF0bGFiIENvZGVcIiA+fX1cbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiYGBgey5tYXRsYWIgaW5jbHVkZT1cIndrNF9tYXRsYWIubVwifVxuIiwKICAgICAgICAiYGBgXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlJ1bnRpbWUgZm9yIHRoaXMgY29kZSBpcyAodGltZWQgdXNpbmcgYHRpY2AgYHRvY2AgaW4gTWF0bGFiKV5bU2FtZSBjb2RlIGluIE9jdGF2ZSwgdGhlIGZyZWUgb3Blbi1zb3VyY2UgdmVyc2lvbiBvZiBNYXRsYWIgcnVucyBpbiAzIHNlY29uZHMuIEN1cnJlbnQgdmVyc2lvbnMgb2YgTWF0bGFiIGhhdmUgaW1wcm92ZWQgcnVudGltZSBieSBwYXJ0aWFsIGp1c3QtaW4tdGltZSBjb21waWxhdGlvbi4gTm90ZSB0aGF0IHRoZSBmaXJzdCBydW4gaW4gTWF0bGFiIGFsc28gdGFrZXMgYW4gb3JkZXIgb2YgbWFnbml0dWRlIGxvbmdlciwgd2hpY2ggaXMgbW9zdCBsaWtlbHkgZHVlIHRvIE1hdGxhYiBvcHRpbWlzaW5nIHRoZSBzb2x2ZXIgdG8gdGhlIHByb2JsZW0uXSwgd2hpY2ggaXMgYSBiaXQgbW9yZSB0aGFuIGFuIG9yZGVyIG9mIG1hZ25pdHVkZSBzbG93ZXIgdGhhbiBKdWxpYTpcbiIsCiAgICAgICAgIlxuIiwKICAgICAgICAiPCEtLSBgYGBvY3RhdmUgLS0+XG4iLAogICAgICAgICI8IS0tIEVsYXBzZWQgdGltZSBpcyAwLjAxODE3MiBzZWNvbmRzLiAtLT5cbiIsCiAgICAgICAgIjwhLS0gYGBgIC0tPlxuIgogICAgICBdLAogICAgICAiaWQiOiAiZTMzMjRiNWEiCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogImNvZGUiLAogICAgICAibWV0YWRhdGEiOiB7fSwKICAgICAgInNvdXJjZSI6IFsKICAgICAgICAiI3wgZWNobzogZmFsc2VcbiIsCiAgICAgICAgInJ1bihgbWF0bGFiIC1ub2p2bSAtYmF0Y2ggXCJydW4oJy4vd2s0X21hdGxhYi5tJyk7IGV4aXQ7XCJgKTsiCiAgICAgIF0sCiAgICAgICJpZCI6ICJmNDY1ZGM4NCIsCiAgICAgICJleGVjdXRpb25fY291bnQiOiBudWxsLAogICAgICAib3V0cHV0cyI6IFtdCiAgICB9LAogICAgewogICAgICAiY2VsbF90eXBlIjogIm1hcmtkb3duIiwKICAgICAgIm1ldGFkYXRhIjoge30sCiAgICAgICJzb3VyY2UiOiBbCiAgICAgICAgIjo6OlxuIiwKICAgICAgICAiXG4iLAogICAgICAgICJTbyBpbiB0aGlzIGNhc2UsIEp1bGlhIGlzIG9uZSBvcmRlciBvZiBtYWdpdHVkZSBmYXN0ZXIgdGhhbiBNYXRsYWIgYW5kIGFyb3VuZCA1MDB4IGZhc3RlciB0aGFuIFB5dGhvbl5bSSBoYXZlIHRyaWVkIHVzaW5nIFB5UHkgYW5kIEN5dGhvbiBpbiBvdGhlciBjYXNlcyBhbmQgZm91bmQgdGhhdCB0aGV5IHNwZWVkIHVwIFB5dGhvbiBjb25zaWRlcmFibHkuIFVuZm9ydHVuYXRlbHkgdGhpcyB3YXMgbm90IHRoZSBjYXNlIHdoZW4gdXNpbmcgU2NpUHkgYW5kIE51bXB5LCB3aGljaCBtYWRlIHRoZSBjb21waWxlZCBQeXRob24gdmVyc2lvbiBvbmUgb3JkZXIgb2YgbWFnbml0dWRlICoqc2xvd2VyKiogdGhhbiBpbnRlcnByZXRlZC4gVGhlcmUgc2VlbXMgdG8gYmUgYSBwcm9ibGVtIHdpdGggQy1jYWxscyBmcm9tIFB5UHkuXSBzb2x2aW5nIE9ERXMuXG4iLAogICAgICAgICJcbiIsCiAgICAgICAgIlBlcnNvbmFsbHksIEkgZmluZCB0aGUgTWF0bGFiIGNvZGUgYW5kLCBpbiBwYXJ0aWN1bGFyLCB0aGUgSnVsaWEgY29kZSBlYXNpZXIgdG8gcmVhZC5cbiIKICAgICAgXSwKICAgICAgImlkIjogIjJlYTdiNWNmIgogICAgfQogIF0sCiAgIm1ldGFkYXRhIjogewogICAgImtlcm5lbHNwZWMiOiB7CiAgICAgICJuYW1lIjogImp1bGlhLTEuOSIsCiAgICAgICJsYW5ndWFnZSI6ICJqdWxpYSIsCiAgICAgICJkaXNwbGF5X25hbWUiOiAiSnVsaWEgMS45LjAtcmMxIgogICAgfQogIH0sCiAgIm5iZm9ybWF0IjogNCwKICAibmJmb3JtYXRfbWlub3IiOiA1Cn0=').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -322,31 +272,27 @@ div.csl-indent {
       a.download = 'ODEsolver.ipynb'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts57202"><i class="bi bi-download"></i> Download Jupyter Notebook </button></a></p>
-<p>The windkessel model is a common model for the pressure response of the vascular system (blood circulation) to a periodic, pulsing flow waveform <span class="citation" data-cites="Westerhof2019">(<a href="references.html#ref-Westerhof2019" role="doc-biblioref">Westerhof et al. 2019</a>)</span>.</p>
-<div class="no-row-height column-margin column-container"><div id="ref-Westerhof2019" class="csl-entry" role="listitem">
-Westerhof, Nicolaas, Nikolaos Stergiopulos, Mark I. M. Noble, and Berend E. Westerhof. 2019. <em>Snapshots of <span>Hemodynamics</span>: <span>An Aid</span> for <span>Clinical Research</span> and <span>Graduate Education</span></em>. <span>Cham</span>: <span>Springer International Publishing</span>. <a href="https://doi.org/10.1007/978-3-319-91932-4">https://doi.org/10.1007/978-3-319-91932-4</a>.
-</div><div id="ref-Stergiopulos1999" class="csl-entry" role="listitem">
-Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Total Arterial Inertance as the Fourth Element of the Windkessel Model.”</span> <em>American Journal of Physiology-Heart and Circulatory Physiology</em> 276 (1): H81–88. <a href="https://doi.org/10.1152/ajpheart.1999.276.1.H81">https://doi.org/10.1152/ajpheart.1999.276.1.H81</a>.
-</div></div><p>Here we are going to work with the 4-Element windkessel model <span class="citation" data-cites="Stergiopulos1999">(<a href="references.html#ref-Stergiopulos1999" role="doc-biblioref">Stergiopulos, Westerhof, and Westerhof 1999</a>)</span>, comprising a flow source (time dependent flow rate), two resistors for characteristic Resistance of the near vessel (aorta), <span class="math inline">\(R_{c}\)</span>, and systemic (peripheral) resistance, <span class="math inline">\(R_{p}\)</span>, a compliance (capacitance) <span class="math inline">\(C\)</span>, representing the blood storage capacity of the peripheral vessels, and an inductance <span class="math inline">\(L_p\)</span>, representing the inertia in the proximal, large vessel, e.g., the aorta.</p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts6045"><i class="bi bi-download"></i> Download Jupyter Notebook </button></a></p>
+<p>The windkessel model is a common model for the pressure response of the vascular system (blood circulation) to a periodic, pulsing flow waveform <span class="citation" data-cites="Westerhof2019">(<a href="#ref-Westerhof2019" role="doc-biblioref">Westerhof et al. 2019</a>)</span>.</p>
+<p>Here we are going to work with the 4-Element windkessel model <span class="citation" data-cites="Stergiopulos1999">(<a href="#ref-Stergiopulos1999" role="doc-biblioref">Stergiopulos, Westerhof, and Westerhof 1999</a>)</span>, comprising a flow source (time dependent flow rate), two resistors for characteristic Resistance of the near vessel (aorta), <span class="math inline">\(R_{c}\)</span>, and systemic (peripheral) resistance, <span class="math inline">\(R_{p}\)</span>, a compliance (capacitance) <span class="math inline">\(C\)</span>, representing the blood storage capacity of the peripheral vessels, and an inductance <span class="math inline">\(L_p\)</span>, representing the inertia in the proximal, large vessel, e.g., the aorta.</p>
 <p>The pressures in this circuit - <span class="math inline">\(p_{1}\)</span> before, and <span class="math inline">\(p_{2}\)</span> after the proximal L-R element - are described by the system of ODEs:</p>
 <p><span id="eq-wk4-1"><span class="math display">\[
 \frac{d p_{1}}{d t}  =  - \frac{R_{c}}{L_{p}} p_{1} + \left( \frac{R_{c}}{L_{p}} - \frac{1}{R_{p} C} \right) p_{2}
 + R_{c} \frac{d I(t)}{d t} + \frac{I(t)}{C}
-\tag{7.1}\]</span></span></p>
+\tag{1}\]</span></span></p>
 <p><span id="eq-wk4-2"><span class="math display">\[
 \frac{d p_{2}}{d t}  =  - \frac{1}{R_{p} C} p_{2} + \frac{I(t)}{C}
-\tag{7.2}\]</span></span></p>
+\tag{2}\]</span></span></p>
 <!-- Source: file:///home/thor/Documents/Research/SaxtonPhD/0D-ModellingInJulia_files/images/wk4.drawio.png, accessed: Sun Mar  5 16:01:01 2023 -->
-<div id="fig-4wk" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
-<p><img src="./images/images_for_ODEsolver.qmd/wk4.drawio.svg" class="quarto-discovered-preview-image img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption margin-caption">Figure&nbsp;7.1: 4-Element Windkessel Model</figcaption><p></p>
+<div id="fig-4wk" class="quarto-figure quarto-figure-center margin-caption">
+<figure>
+<p><img src="./images/images_for_ODEsolver.qmd/wk4.drawio.svg" class="quarto-discovered-preview-image margin-caption img-fluid" /></p>
+<p><figcaption>Figure 1: 4-Element Windkessel Model</figcaption></p>
 </figure>
 </div>
 <p>In order to implement this model, we need to load the required modules. We use <code>DifferentialEquations</code>, <code>Plots</code>, and <code>ForwardDiff</code> for the time-derivative <span class="math inline">\(\frac{\partial I}{\partial t}\)</span>:</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DifferentialEquations</span>, <span class="bu">ForwardDiff</span>, <span class="bu">Plots</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DifferentialEquations</span>, <span class="bu">ForwardDiff</span>, <span class="bu">Plots</span></span></code></pre></div>
 </div>
 <p>The input waveform is a generic half-period of a sine-wave with a systolic (ejection) time of <span class="math inline">\(t_{syst} = 0.4 T\)</span>, with <span class="math inline">\(T=1\ \mathrm{s}\)</span> period-time (60 beats per minute). The dicrotic notch is modelled by running the sine into the negative for <span class="math inline">\(t_{dicr} = 0.03\ \mathrm{s}\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
@@ -356,9 +302,9 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
         I_{min} &amp; \text{else}
     \end{cases}
 \end{equation}\]</span></p>
-<div class="page-columns page-full"><p>In Julia, this function is implemented as<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;Note that we use type specifications to define the parameters. Julia does suffer in performance, when untyped global variables are used, since these break type stability in the multiple dispatch. Making these parameter constant fixes their type. We should really be using these parameters in the function definition, or use a lambda function. But a lambda function is slower than typed variables.</p></li></div></div>
+<p>In Julia, this function is implemented as<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># max and min volume flow in ml/s</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># max and min volume flow in ml/s</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>max_i<span class="op">::</span><span class="dt">Float64 </span><span class="op">=</span> <span class="fl">425</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>min_i<span class="op">::</span><span class="dt">Float64 </span><span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -379,16 +325,16 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((max_i <span class="op">-</span> min_i) <span class="op">*</span> <span class="fu">sin</span>(<span class="cn">pi</span> <span class="op">/</span> systTime <span class="op">*</span> (t))</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="op">*</span> (t <span class="op">&lt;</span> (systTime <span class="op">+</span> dicrTime) )</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> min_i)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span> </span></code></pre></div>
 </div>
-<p>We can quickly plot this function in <a href="#fig-igen">Figure&nbsp;<span>7.2</span></a>.</p>
-<div class="cell page-columns page-full" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plotTime <span class="op">=</span> <span class="fu">LinRange</span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">100</span>)</span>
+<p>We can quickly plot this function in <a href="#fig-igen">Figure 2</a>.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode" id="cb3"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plotTime <span class="op">=</span> <span class="fu">LinRange</span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">100</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plotTime, <span class="fu">I</span>.(plotTime),</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     xlabel <span class="op">=</span> <span class="st">"t [s]"</span>, ylabel <span class="op">=</span> <span class="st">"I [ml s&lt;sup&gt;-1&lt;/sup&gt;]"</span>, label <span class="op">=</span> <span class="st">"Outflow"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-igen" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     xlabel <span class="op">=</span> <span class="st">&quot;t [s]&quot;</span>, ylabel <span class="op">=</span> <span class="st">&quot;I [ml s&lt;sup&gt;-1&lt;/sup&gt;]&quot;</span>, label <span class="op">=</span> <span class="st">&quot;Outflow&quot;</span>) </span></code></pre></div>
+<div id="fig-igen" class="quarto-figure quarto-figure-center margin-caption">
+<figure>
     <div id="4a3bdf51-1f06-47e7-80e2-bd5f9a8ef1e2" style="width:672px;height:480px;"></div>
     <script>
         requirejs.config({
@@ -768,13 +714,13 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 );
     });
     </script>
-<p></p><figcaption class="figure-caption margin-caption">Figure&nbsp;7.2: Generic waveform, representing ejection of blood from left ventricle in the aorta, including dicrotic notch (backflow at valve closure).</figcaption><p></p>
+<p><figcaption>Figure 2: Generic waveform, representing ejection of blood from left ventricle in the aorta, including dicrotic notch (backflow at valve closure).</figcaption></p>
 </figure>
 </div>
 </div>
-<div class="page-columns page-full"><p>The definition of the ODEs <a href="#eq-wk4-1">Equation&nbsp;<span>7.1</span></a> and <a href="#eq-wk4-2">Equation&nbsp;<span>7.2</span></a> is done as a function with parameters <code>dP</code> and <code>P</code>, for <span class="math inline">\(\frac{d p_{1,2}}{d t}\)</span>, and <span class="math inline">\(p_{1,2}\)</span>, respectively<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p><div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup>&nbsp;<code>P</code> is a vector of values, actually, as is <code>dP</code>.</p></li></div></div>
+<p>The definition of the ODEs <a href="#eq-wk4-1">Equation 1</a> and <a href="#eq-wk4-2">Equation 2</a> is done as a function with parameters <code>dP</code> and <code>P</code>, for <span class="math inline">\(\frac{d p_{1,2}}{d t}\)</span>, and <span class="math inline">\(p_{1,2}\)</span>, respectively<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">wk4</span>(dP, P, params, t)</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">wk4</span>(dP, P, params, t)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    Rc, Rp, C, Lp <span class="op">=</span> params</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -789,11 +735,11 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dP[<span class="fl">1</span>], dP[<span class="fl">2</span>]</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
 </div>
 <p>We define the parameters, initial conditions, and time span for the integration:</p>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Rc <span class="op">=</span> <span class="fl">0.03</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Rc <span class="op">=</span> <span class="fl">0.03</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Rp <span class="op">=</span> <span class="fl">1.0</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>C  <span class="op">=</span> <span class="fl">2.0</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>Lp <span class="op">=</span> <span class="fl">0.02</span></span>
@@ -802,39 +748,39 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> [Rc, Rp, C, Lp]</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>P0 <span class="op">=</span> <span class="fu">zeros</span>(<span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>P0 <span class="op">=</span> <span class="fu">zeros</span>(<span class="fl">2</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display margin-caption" data-execution_count="7">
 <pre><code>2-element Vector{Float64}:
  0.0
  0.0</code></pre>
 </div>
 </div>
-<div class="page-columns page-full"><p>And define the ODE problem and solve it<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. We will time the run using the <code>@time</code> macro:</p><div class="no-row-height column-margin column-container"><li id="fn4"><p><sup>4</sup>&nbsp;We use the Dormand-Prince solver <code>DP5</code> here, because that is the same algorithm that Matlab’s <code>ode45</code> uses. DifferentialEquations.jl has a multitude of other solvers that may perform better. Play around with these.</p></li></div></div>
+<p>And define the ODE problem and solve it<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. We will time the run using the <code>@time</code> macro:</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="fu">ODEProblem</span>(wk4, P0, tspan, params)</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="fu">ODEProblem</span>(wk4, P0, tspan, params)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> sol <span class="op">=</span> <span class="fu">solve</span>(prob, <span class="fu">DP5</span>(), reltol<span class="op">=</span><span class="fl">1e-9</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> sol <span class="op">=</span> <span class="fu">solve</span>(prob, <span class="fu">DP5</span>(), reltol<span class="op">=</span><span class="fl">1e-9</span>);</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  7.504954 seconds (10.95 M allocations: 793.162 MiB, 12.12% gc time, 99.98% compilation time)</code></pre>
 </div>
 </div>
-<div class="page-columns page-full"><p>Looking at this run time, we see that the run is slower than the Matlab run<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Looking at the details of the benchmark times, we see that most of that time has been used on compilation. So when we re-run the solver, it should take less time:</p><div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;See below. What happened here? Doesn’t everybody say how much faster Julia is than Matlab?</p></li></div></div>
+<p>Looking at this run time, we see that the run is slower than the Matlab run<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Looking at the details of the benchmark times, we see that most of that time has been used on compilation. So when we re-run the solver, it should take less time:</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> sol <span class="op">=</span> <span class="fu">solve</span>(prob, <span class="fu">DP5</span>(), reltol<span class="op">=</span><span class="fl">1e-9</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> sol <span class="op">=</span> <span class="fu">solve</span>(prob, <span class="fu">DP5</span>(), reltol<span class="op">=</span><span class="fl">1e-9</span>);</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  0.001586 seconds (2.95 k allocations: 252.766 KiB)</code></pre>
 </div>
 </div>
-<p>And indeed, the run time is now one order of magnitude faster than the Matlab times shown in <a href="#sec-odePM"><span>Section&nbsp;7.1.1</span></a>.</p>
-<p>We can plot the solution in <a href="#fig-wk4-sol">Figure&nbsp;<span>7.3</span></a> using the special plot recipe for ODE solutions:</p>
-<div class="cell page-columns page-full" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sol,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     label <span class="op">=</span> [<span class="st">"p1"</span> <span class="st">"p2"</span>],</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     xlabel <span class="op">=</span> <span class="st">"t [s]"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     ylabel <span class="op">=</span> <span class="st">"p [mm&lt;sub&gt;Hg&lt;/sub&gt;]"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     tspan<span class="op">=</span>(<span class="fl">9</span>,<span class="fl">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-wk4-sol" class="quarto-figure quarto-figure-center anchored page-columns page-full">
-<figure class="figure page-columns page-full">
+<p>And indeed, the run time is now one order of magnitude faster than the Matlab times shown in <a href="#sec-odePM">Section 1.1</a>.</p>
+<p>We can plot the solution in <a href="#fig-wk4-sol">Figure 3</a> using the special plot recipe for ODE solutions:</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode" id="cb11"><pre class="sourceCode julia cell-code"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sol,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     label <span class="op">=</span> [<span class="st">&quot;p1&quot;</span> <span class="st">&quot;p2&quot;</span>],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     xlabel <span class="op">=</span> <span class="st">&quot;t [s]&quot;</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     ylabel <span class="op">=</span> <span class="st">&quot;p [mm&lt;sub&gt;Hg&lt;/sub&gt;]&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     tspan<span class="op">=</span>(<span class="fl">9</span>,<span class="fl">10</span>))</span></code></pre></div>
+<div id="fig-wk4-sol" class="quarto-figure quarto-figure-center margin-caption">
+<figure>
     <div id="7625b264-289d-40c5-936e-1ce77afaa18f" style="width:672px;height:480px;"></div>
     <script>
         requirejs.config({
@@ -20357,19 +20303,19 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 );
     });
     </script>
-<p></p><figcaption class="figure-caption margin-caption">Figure&nbsp;7.3: Solution of 4-element windkessel model using Julia’s DifferentialEquations.jl</figcaption><p></p>
+<p><figcaption>Figure 3: Solution of 4-element windkessel model using Julia’s DifferentialEquations.jl</figcaption></p>
 </figure>
 </div>
 </div>
-<section id="sec-odePM" class="level3 page-columns page-full" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="sec-odePM"><span class="header-section-number">7.1.1</span> Comparison to Python and Matlab</h3>
+<section id="sec-odePM" class="level3">
+<h3>Comparison to Python and Matlab</h3>
 <p>For those coming from Python or Matlab, let’s have a look at how this problem can be solved in these two languages and compare to the Julia version.</p>
 <p>Switch between the languages using the tabs below:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">MATLAB</a></li></ul>
-<div class="tab-content page-columns page-full">
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">MATLAB</a></li></ul>
+<div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p><a href="#dnldts19139" onclick="fetch('data:application/x-python;base64,aW1wb3J0IHNjaXB5IGFzIHNwCmZyb20gc2NpcHkgaW1wb3J0IGludGVncmF0ZQpmcm9tIHNjaXB5Lm1pc2MgaW1wb3J0IGRlcml2YXRpdmUKCmltcG9ydCBudW1weSBhcyBucAoKaW1wb3J0IHRpbWUKCmRlZiB3azQodCwgeSwgSSwgUmMsIFJwLCBDLCBMcCwgZHQpOgoKICAgIGRwMWR0ID0gKAogICAgICAgIC1SYyAvIExwICogeVswXQogICAgICAgICsgKFJjIC8gTHAgLSAxIC8gUnAgLyBDKSAqIHlbMV0KICAgICAgICArIFJjICogZGVyaXZhdGl2ZShJLCB0LCBkeD1kdCkKICAgICAgICArIEkodCkgLyBDCiAgICApCgogICAgZHAyZHQgPSAtMSAvIFJwIC8gQyAqIHlbMV0gKyBJKHQpIC8gQwoKICAgIHJldHVybiBbZHAxZHQsIGRwMmR0XQoKdGltZV9zdGFydCA9IDAKdGltZV9lbmQgPSAxMAoKUmMgPSAwLjIKUnAgPSAxLjAKQyA9IDEuMApMcCA9IDFlLTIKCmR0ID0gMWUtNgoKeTAgPSBucC56ZXJvcygyKQoKIyBHZW5lcmljIElucHV0IFdhdmVmb3JtCiMgbWF4IHZvbHVtZSBmbG93IGluIG1sL3MKbWF4X2kgPSA0MjUKCiMgbWluIHZvbHVtZSBmbG93IGluIG1eMy9zCm1pbl9pID0gMC4wCgojIFBlcmlvZCB0aW1lIGluIHMKVCA9IDAuOQoKIyBTeXN0LiBUaW1lIGluIHMKc3lzdFRpbWUgPSAyIC8gNSAqIFQKCiMgRGljcm90aWMgbm90Y2ggdGltZQpkaWNyVGltZSA9IDAuMDMKCmRlZiBJKHQpOgogICAgIyBpbXBsaWNpdCBjb25kaXRpb25hbCB1c2luZyBib29sZWFuIG11bHRpcGxpY2F0b3IKICAgICMgc2luZSB3YXZlZm9ybQogICAgSSA9ICgKICAgICAgICAobWF4X2kgLSBtaW5faSkgKiBucC5zaW4obnAucGkgLyBzeXN0VGltZSAqICh0ICUgVCkpCiAgICAgICAgKih0ICUgVCA8IChzeXN0VGltZSArIGRpY3JUaW1lKSkgKyBtaW5faQogICAgKQoKICAgIHJldHVybiBJCgojIEZpcnN0IHJ1bgp0aWMgPSB0aW1lLnBlcmZfY291bnRlcigpCgpzb2wgPSBzcC5pbnRlZ3JhdGUuc29sdmVfaXZwKAogICAgbGFtYmRhIHQsIHk6IHdrNCh0LCB5LCBJLCBSYywgUnAsIEMsIExwLCBkdCksCiAgICAodGltZV9zdGFydCwgdGltZV9lbmQpLAogICAgeTAsCiAgICBtZXRob2Q9IlJLNDUiLAogICAgcnRvbD0xZS05LAogICAgdmVjdG9yaXplZD1UcnVlLCkKCnRvYyA9IHRpbWUucGVyZl9jb3VudGVyKCkKCnByaW50KGYiRmlyc3QgcnVuOlxuRWxhcHNlZCB0aW1lIGlzIHt0b2MgLSB0aWM6MC40Zn0gc2Vjb25kcyIpCgojIFNlY29uZCBydW4KdGljID0gdGltZS5wZXJmX2NvdW50ZXIoKQoKc29sID0gc3AuaW50ZWdyYXRlLnNvbHZlX2l2cCgKICAgIGxhbWJkYSB0LCB5OiB3azQodCwgeSwgSSwgUmMsIFJwLCBDLCBMcCwgZHQpLAogICAgKHRpbWVfc3RhcnQsIHRpbWVfZW5kKSwKICAgIHkwLAogICAgbWV0aG9kPSJSSzQ1IiwKICAgIHJ0b2w9MWUtOSwKICAgIHZlY3Rvcml6ZWQ9VHJ1ZSwpCgp0b2MgPSB0aW1lLnBlcmZfY291bnRlcigpCgpwcmludChmIlxuU2Vjb25kIHJ1bjpcbkVsYXBzZWQgdGltZSBpcyB7dG9jIC0gdGljOjAuNGZ9IHNlY29uZHMiKQo=').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts60068" onclick="fetch('data:application/x-python;base64,aW1wb3J0IHNjaXB5IGFzIHNwCmZyb20gc2NpcHkgaW1wb3J0IGludGVncmF0ZQpmcm9tIHNjaXB5Lm1pc2MgaW1wb3J0IGRlcml2YXRpdmUKCmltcG9ydCBudW1weSBhcyBucAoKaW1wb3J0IHRpbWUKCmRlZiB3azQodCwgeSwgSSwgUmMsIFJwLCBDLCBMcCwgZHQpOgoKICAgIGRwMWR0ID0gKAogICAgICAgIC1SYyAvIExwICogeVswXQogICAgICAgICsgKFJjIC8gTHAgLSAxIC8gUnAgLyBDKSAqIHlbMV0KICAgICAgICArIFJjICogZGVyaXZhdGl2ZShJLCB0LCBkeD1kdCkKICAgICAgICArIEkodCkgLyBDCiAgICApCgogICAgZHAyZHQgPSAtMSAvIFJwIC8gQyAqIHlbMV0gKyBJKHQpIC8gQwoKICAgIHJldHVybiBbZHAxZHQsIGRwMmR0XQoKdGltZV9zdGFydCA9IDAKdGltZV9lbmQgPSAxMAoKUmMgPSAwLjIKUnAgPSAxLjAKQyA9IDEuMApMcCA9IDFlLTIKCmR0ID0gMWUtNgoKeTAgPSBucC56ZXJvcygyKQoKIyBHZW5lcmljIElucHV0IFdhdmVmb3JtCiMgbWF4IHZvbHVtZSBmbG93IGluIG1sL3MKbWF4X2kgPSA0MjUKCiMgbWluIHZvbHVtZSBmbG93IGluIG1eMy9zCm1pbl9pID0gMC4wCgojIFBlcmlvZCB0aW1lIGluIHMKVCA9IDAuOQoKIyBTeXN0LiBUaW1lIGluIHMKc3lzdFRpbWUgPSAyIC8gNSAqIFQKCiMgRGljcm90aWMgbm90Y2ggdGltZQpkaWNyVGltZSA9IDAuMDMKCmRlZiBJKHQpOgogICAgIyBpbXBsaWNpdCBjb25kaXRpb25hbCB1c2luZyBib29sZWFuIG11bHRpcGxpY2F0b3IKICAgICMgc2luZSB3YXZlZm9ybQogICAgSSA9ICgKICAgICAgICAobWF4X2kgLSBtaW5faSkgKiBucC5zaW4obnAucGkgLyBzeXN0VGltZSAqICh0ICUgVCkpCiAgICAgICAgKih0ICUgVCA8IChzeXN0VGltZSArIGRpY3JUaW1lKSkgKyBtaW5faQogICAgKQoKICAgIHJldHVybiBJCgojIEZpcnN0IHJ1bgp0aWMgPSB0aW1lLnBlcmZfY291bnRlcigpCgpzb2wgPSBzcC5pbnRlZ3JhdGUuc29sdmVfaXZwKAogICAgbGFtYmRhIHQsIHk6IHdrNCh0LCB5LCBJLCBSYywgUnAsIEMsIExwLCBkdCksCiAgICAodGltZV9zdGFydCwgdGltZV9lbmQpLAogICAgeTAsCiAgICBtZXRob2Q9IlJLNDUiLAogICAgcnRvbD0xZS05LAogICAgdmVjdG9yaXplZD1UcnVlLCkKCnRvYyA9IHRpbWUucGVyZl9jb3VudGVyKCkKCnByaW50KGYiRmlyc3QgcnVuOlxuRWxhcHNlZCB0aW1lIGlzIHt0b2MgLSB0aWM6MC40Zn0gc2Vjb25kcyIpCgojIFNlY29uZCBydW4KdGljID0gdGltZS5wZXJmX2NvdW50ZXIoKQoKc29sID0gc3AuaW50ZWdyYXRlLnNvbHZlX2l2cCgKICAgIGxhbWJkYSB0LCB5OiB3azQodCwgeSwgSSwgUmMsIFJwLCBDLCBMcCwgZHQpLAogICAgKHRpbWVfc3RhcnQsIHRpbWVfZW5kKSwKICAgIHkwLAogICAgbWV0aG9kPSJSSzQ1IiwKICAgIHJ0b2w9MWUtOSwKICAgIHZlY3Rvcml6ZWQ9VHJ1ZSwpCgp0b2MgPSB0aW1lLnBlcmZfY291bnRlcigpCgpwcmludChmIlxuU2Vjb25kIHJ1bjpcbkVsYXBzZWQgdGltZSBpcyB7dG9jIC0gdGljOjAuNGZ9IHNlY29uZHMiKQo=').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -20377,8 +20323,8 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
       a.download = 'wk4_python.py'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts19139"><i class="bi bi-download"></i> Download Python Code </button></a></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
+        });"><button class="btn btn-default downloadthis  " id="dnldts60068"><i class="bi bi-download"></i> Download Python Code </button></a></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> integrate</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.misc <span class="im">import</span> derivative</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -20444,13 +20390,13 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 <span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> t, y: wk4(t, y, I, Rc, Rp, C, Lp, dt),</span>
 <span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>    (time_start, time_end),</span>
 <span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>    y0,</span>
-<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"RK45"</span>,</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">&quot;RK45&quot;</span>,</span>
 <span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>    rtol<span class="op">=</span><span class="fl">1e-9</span>,</span>
 <span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>    vectorized<span class="op">=</span><span class="va">True</span>,)</span>
 <span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>toc <span class="op">=</span> time.perf_counter()</span>
 <span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First run:</span><span class="ch">\n</span><span class="ss">Elapsed time is </span><span class="sc">{</span>toc <span class="op">-</span> tic<span class="sc">:0.4f}</span><span class="ss"> seconds"</span>)</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;First run:</span><span class="ch">\n</span><span class="ss">Elapsed time is </span><span class="sc">{</span>toc <span class="op">-</span> tic<span class="sc">:0.4f}</span><span class="ss"> seconds&quot;</span>)</span>
 <span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Second run</span></span>
 <span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>tic <span class="op">=</span> time.perf_counter()</span>
@@ -20459,13 +20405,13 @@ Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Tot
 <span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> t, y: wk4(t, y, I, Rc, Rp, C, Lp, dt),</span>
 <span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>    (time_start, time_end),</span>
 <span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>    y0,</span>
-<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"RK45"</span>,</span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">&quot;RK45&quot;</span>,</span>
 <span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>    rtol<span class="op">=</span><span class="fl">1e-9</span>,</span>
 <span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>    vectorized<span class="op">=</span><span class="va">True</span>,)</span>
 <span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>toc <span class="op">=</span> time.perf_counter()</span>
 <span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Second run:</span><span class="ch">\n</span><span class="ss">Elapsed time is </span><span class="sc">{</span>toc <span class="op">-</span> tic<span class="sc">:0.4f}</span><span class="ss"> seconds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Second run:</span><span class="ch">\n</span><span class="ss">Elapsed time is </span><span class="sc">{</span>toc <span class="op">-</span> tic<span class="sc">:0.4f}</span><span class="ss"> seconds&quot;</span>)</span></code></pre></div>
 <p>Runtime for this code is (timed using <code>time.perf.counter</code> in Python):</p>
 <!-- ```python -->
 <!-- Time elapsed: 0.7872 seconds -->
@@ -20480,8 +20426,8 @@ Elapsed time is 0.7548 seconds</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-1-2" class="tab-pane page-columns page-full" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<p><a href="#dnldts41556" onclick="fetch('data:text/plain;base64,dHNwYW4gPSBbMCwgMTBdOwoKUmMgPSAwLjAzOwpScCA9IDEuMDsKQyA9IDIuMDsKTHAgPSAxZS0yOwoKUDAgPSBbMCwgMF07CgpvcHRpb25zICAgICAgICA9IG9kZXNldCgnUmVsdG9sJywxZS05KTsKCiUgUnVuIG9uY2UgdG8gYWxsb3cgTWF0bGFiIHRvIG9wdGltaXNlCmZwcmludGYoIkZpcnN0IHJ1bjpcbiIpCnRpYwpbdCwgUF0gPSBvZGU0NShAKHQsUCkgd2s0KHQsUCxSYyxScCxDLExwKSwgdHNwYW4sIFAwLCBvcHRpb25zKTsKdG9jCgolIFRpbWVkIHJ1bgpmcHJpbnRmKCJcblNlY29uZCBydW46XG4iKQp0aWMKW3QsIFBdID0gb2RlNDUoQCh0LFApIHdrNCh0LFAsUmMsUnAsQyxMcCksIHRzcGFuLCBQMCwgb3B0aW9ucyk7CnRvYwoKCgpmdW5jdGlvbiBkUCA9IHdrNCh0LFAsUmMsUnAsQyxMcCkKCmRQICAgID0gemVyb3MoMiwxKTsKCmRQKDEpID0gLVJjIC8gTHAgKiBQKDEpIC4uLgogICAgKyAoUmMgLyBMcCAtIDEgLyBScCAvIEMpICogUCgyKSAuLi4KICAgICsgUmMgKiBkaWR0KHQpICsgaSh0KSAvIEM7CgpkUCgyKSA9IC0xIC8gUnAgLyBDICogUCgyKSArIGkodCkgLyBDOwoKZW5kCgpmdW5jdGlvbiBpID0gaSh0KQoKbWF4X2kgPSA0MjU7Cm1pbl9pID0gMC4wOwoKVCA9IDAuOTsKCnN5c3RUaW1lID0gMiAvIDUgKiBUOwoKZGljclRpbWUgPSAwLjAzOwoKaSA9ICgobWF4X2kgLSBtaW5faSkgKiBzaW4ocGkgLyBzeXN0VGltZSAqIChtb2QodCxUKSkpIC4uLgogICAgKihtb2QodCxUKSA8IChzeXN0VGltZSArIGRpY3JUaW1lKSkgLi4uCiAgICArIG1pbl9pKTsKCmVuZAoKZnVuY3Rpb24gZGlkdCA9IGRpZHQodCkKZHQgPSAxZS0zOwpkaWR0ID0gKGkodCtkdCkgLSBpKHQtZHQpKSAvICgyICogZHQpOwplbmQK').then(res => res.blob()).then(blob => {
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><a href="#dnldts35720" onclick="fetch('data:text/plain;base64,dHNwYW4gPSBbMCwgMTBdOwoKUmMgPSAwLjAzOwpScCA9IDEuMDsKQyA9IDIuMDsKTHAgPSAxZS0yOwoKUDAgPSBbMCwgMF07CgpvcHRpb25zICAgICAgICA9IG9kZXNldCgnUmVsdG9sJywxZS05KTsKCiUgUnVuIG9uY2UgdG8gYWxsb3cgTWF0bGFiIHRvIG9wdGltaXNlCmZwcmludGYoIkZpcnN0IHJ1bjpcbiIpCnRpYwpbdCwgUF0gPSBvZGU0NShAKHQsUCkgd2s0KHQsUCxSYyxScCxDLExwKSwgdHNwYW4sIFAwLCBvcHRpb25zKTsKdG9jCgolIFRpbWVkIHJ1bgpmcHJpbnRmKCJcblNlY29uZCBydW46XG4iKQp0aWMKW3QsIFBdID0gb2RlNDUoQCh0LFApIHdrNCh0LFAsUmMsUnAsQyxMcCksIHRzcGFuLCBQMCwgb3B0aW9ucyk7CnRvYwoKCgpmdW5jdGlvbiBkUCA9IHdrNCh0LFAsUmMsUnAsQyxMcCkKCmRQICAgID0gemVyb3MoMiwxKTsKCmRQKDEpID0gLVJjIC8gTHAgKiBQKDEpIC4uLgogICAgKyAoUmMgLyBMcCAtIDEgLyBScCAvIEMpICogUCgyKSAuLi4KICAgICsgUmMgKiBkaWR0KHQpICsgaSh0KSAvIEM7CgpkUCgyKSA9IC0xIC8gUnAgLyBDICogUCgyKSArIGkodCkgLyBDOwoKZW5kCgpmdW5jdGlvbiBpID0gaSh0KQoKbWF4X2kgPSA0MjU7Cm1pbl9pID0gMC4wOwoKVCA9IDAuOTsKCnN5c3RUaW1lID0gMiAvIDUgKiBUOwoKZGljclRpbWUgPSAwLjAzOwoKaSA9ICgobWF4X2kgLSBtaW5faSkgKiBzaW4ocGkgLyBzeXN0VGltZSAqIChtb2QodCxUKSkpIC4uLgogICAgKihtb2QodCxUKSA8IChzeXN0VGltZSArIGRpY3JUaW1lKSkgLi4uCiAgICArIG1pbl9pKTsKCmVuZAoKZnVuY3Rpb24gZGlkdCA9IGRpZHQodCkKZHQgPSAxZS0zOwpkaWR0ID0gKGkodCtkdCkgLSBpKHQtZHQpKSAvICgyICogZHQpOwplbmQK').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -20489,8 +20435,8 @@ Elapsed time is 0.7548 seconds</code></pre>
       a.download = 'wk4_matlab.m'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts41556"><i class="bi bi-download"></i> Download Matlab Code </button></a></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode matlab code-with-copy"><code class="sourceCode matlab"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">tspan</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">,</span> <span class="fl">10</span>]<span class="op">;</span></span>
+        });"><button class="btn btn-default downloadthis  " id="dnldts35720"><i class="bi bi-download"></i> Download Matlab Code </button></a></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="va">tspan</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">,</span> <span class="fl">10</span>]<span class="op">;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="va">Rc</span> <span class="op">=</span> <span class="fl">0.03</span><span class="op">;</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="va">Rp</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">;</span></span>
@@ -20499,16 +20445,16 @@ Elapsed time is 0.7548 seconds</code></pre>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="va">P0</span> <span class="op">=</span> [<span class="fl">0</span><span class="op">,</span> <span class="fl">0</span>]<span class="op">;</span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="va">options</span>        <span class="op">=</span> <span class="va">odeset</span>(<span class="ss">'Reltol'</span><span class="op">,</span><span class="fl">1e-9</span>)<span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="va">options</span>        <span class="op">=</span> <span class="va">odeset</span>(<span class="ss">&#39;Reltol&#39;</span><span class="op">,</span><span class="fl">1e-9</span>)<span class="op">;</span></span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">% Run once to allow Matlab to optimise</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="va">fprintf</span>(<span class="st">"First run:\n"</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="va">fprintf</span>(<span class="st">&quot;First run:\n&quot;</span>)</span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="va">tic</span></span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>[<span class="va">t</span><span class="op">,</span> <span class="va">P</span>] <span class="op">=</span> <span class="va">ode45</span>(<span class="op">@</span>(<span class="va">t</span><span class="op">,</span><span class="va">P</span>) <span class="va">wk4</span>(<span class="va">t</span><span class="op">,</span><span class="va">P</span><span class="op">,</span><span class="va">Rc</span><span class="op">,</span><span class="va">Rp</span><span class="op">,</span><span class="va">C</span><span class="op">,</span><span class="va">Lp</span>)<span class="op">,</span> <span class="va">tspan</span><span class="op">,</span> <span class="va">P0</span><span class="op">,</span> <span class="va">options</span>)<span class="op">;</span></span>
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="va">toc</span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">% Timed run</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="va">fprintf</span>(<span class="st">"\nSecond run:\n"</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="va">fprintf</span>(<span class="st">&quot;\nSecond run:\n&quot;</span>)</span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="va">tic</span></span>
 <span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>[<span class="va">t</span><span class="op">,</span> <span class="va">P</span>] <span class="op">=</span> <span class="va">ode45</span>(<span class="op">@</span>(<span class="va">t</span><span class="op">,</span><span class="va">P</span>) <span class="va">wk4</span>(<span class="va">t</span><span class="op">,</span><span class="va">P</span><span class="op">,</span><span class="va">Rc</span><span class="op">,</span><span class="va">Rp</span><span class="op">,</span><span class="va">C</span><span class="op">,</span><span class="va">Lp</span>)<span class="op">,</span> <span class="va">tspan</span><span class="op">,</span> <span class="va">P0</span><span class="op">,</span> <span class="va">options</span>)<span class="op">;</span></span>
 <span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="va">toc</span></span>
@@ -20547,8 +20493,8 @@ Elapsed time is 0.7548 seconds</code></pre>
 <span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">didt</span> <span class="op">=</span> <span class="va">didt</span>(<span class="va">t</span>)</span>
 <span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="va">dt</span> <span class="op">=</span> <span class="fl">1e-3</span><span class="op">;</span></span>
 <span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="va">didt</span> <span class="op">=</span> (<span class="va">i</span>(<span class="va">t</span><span class="op">+</span><span class="va">dt</span>) <span class="op">-</span> <span class="va">i</span>(<span class="va">t</span><span class="op">-</span><span class="va">dt</span>)) <span class="op">/</span> (<span class="fl">2</span> <span class="op">*</span> <span class="va">dt</span>)<span class="op">;</span></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="page-columns page-full"><p>Runtime for this code is (timed using <code>tic</code> <code>toc</code> in Matlab)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, which is a bit more than an order of magnitude slower than Julia:</p><div class="no-row-height column-margin column-container"><li id="fn6"><p><sup>6</sup>&nbsp;Same code in Octave, the free open-source version of Matlab runs in 3 seconds. Current versions of Matlab have improved runtime by partial just-in-time compilation. Note that the first run in Matlab also takes an order of magnitude longer, which is most likely due to Matlab optimising the solver to the problem.</p></li></div></div>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<p>Runtime for this code is (timed using <code>tic</code> <code>toc</code> in Matlab)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, which is a bit more than an order of magnitude slower than Julia:</p>
 <!-- ```octave -->
 <!-- Elapsed time is 0.018172 seconds. -->
 <!-- ``` -->
@@ -20566,17 +20512,39 @@ Elapsed time is 0.045684 seconds.</code></pre>
 </div>
 </div>
 </div>
-<div class="page-columns page-full"><p>So in this case, Julia is one order of magitude faster than Matlab and around 500x faster than Python<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> solving ODEs.</p><div class="no-row-height column-margin column-container"><li id="fn7"><p><sup>7</sup>&nbsp;I have tried using PyPy and Cython in other cases and found that they speed up Python considerably. Unfortunately this was not the case when using SciPy and Numpy, which made the compiled Python version one order of magnitude <strong>slower</strong> than interpreted. There seems to be a problem with C-calls from PyPy.</p></li></div></div>
+<p>So in this case, Julia is one order of magitude faster than Matlab and around 500x faster than Python<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> solving ODEs.</p>
 <p>Personally, I find the Matlab code and, in particular, the Julia code easier to read.</p>
-
-
-
+<div id="quarto-navigation-envelope" class="hidden">
+<p><span class="hidden" data-render-id="quarto-int-sidebar-title">Julia for Engineering Students</span> <span class="hidden" data-render-id="quarto-int-navbar-title">Julia for Engineering Students</span> <span class="hidden" data-render-id="quarto-int-prev">Some Clever Tricks in Julia</span> <span class="hidden" data-render-id="quarto-int-sidebar:quarto-sidebar-section-1">Home</span> <span class="hidden" data-render-id="quarto-int-sidebar:/intro.html">Introduction</span> <span class="hidden" data-render-id="quarto-int-sidebar:/juliaFeatures.html">Julia Features for Scientic Computing</span> <span class="hidden" data-render-id="quarto-int-sidebar:quarto-sidebar-section-2">Basics</span> <span class="hidden" data-render-id="quarto-int-sidebar:/juliaBasics.html">Julia Basics</span> <span class="hidden" data-render-id="quarto-int-sidebar:/installingJulia.html">Installing Julia</span> <span class="hidden" data-render-id="quarto-int-sidebar:/basicSyntax.html">Basic Julia Syntax</span> <span class="hidden" data-render-id="quarto-int-sidebar:/comparisonMatlab.html">Comparison to Matlab</span> <span class="hidden" data-render-id="quarto-int-sidebar:/tricks.html">Some Clever Tricks in Julia</span> <span class="hidden" data-render-id="quarto-int-sidebar:quarto-sidebar-section-3">Examples</span> <span class="hidden" data-render-id="quarto-int-sidebar:/ODEsolver.html">Solving ODEs and ODE systems</span></p>
+</div>
+<div id="quarto-meta-markdown" class="hidden">
+<p><span class="hidden" data-render-id="quarto-twittercardtitle"></span> <span class="hidden" data-render-id="quarto-ogcardtitle"></span> <span class="hidden" data-render-id="quarto-metasitename">Julia for Engineering Students</span> <span class="hidden" data-render-id="quarto-twittercarddesc"></span> <span class="hidden" data-render-id="quarto-ogcardddesc"></span></p>
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Stergiopulos1999" class="csl-entry" role="listitem">
+Stergiopulos, Nikos, Berend E. Westerhof, and Nico Westerhof. 1999. <span>“Total Arterial Inertance as the Fourth Element of the Windkessel Model.”</span> <em>American Journal of Physiology-Heart and Circulatory Physiology</em> 276 (1): H81–88. <a href="https://doi.org/10.1152/ajpheart.1999.276.1.H81">https://doi.org/10.1152/ajpheart.1999.276.1.H81</a>.
+</div>
+<div id="ref-Westerhof2019" class="csl-entry" role="listitem">
+Westerhof, Nicolaas, Nikolaos Stergiopulos, Mark I. M. Noble, and Berend E. Westerhof. 2019. <em>Snapshots of <span>Hemodynamics</span>: <span>An Aid</span> for <span>Clinical Research</span> and <span>Graduate Education</span></em>. <span>Cham</span>: <span>Springer International Publishing</span>. <a href="https://doi.org/10.1007/978-3-319-91932-4">https://doi.org/10.1007/978-3-319-91932-4</a>.
+</div>
+</div>
 </section>
 </section>
-
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>So changing the solver does not require any changes in the definition of the problem, even when moving between ODEs, DAEs and SDAEs.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Note that we use type specifications to define the parameters. Julia does suffer in performance, when untyped global variables are used, since these break type stability in the multiple dispatch. Making these parameter constant fixes their type. We should really be using these parameters in the function definition, or use a lambda function. But a lambda function is slower than typed variables.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><code>P</code> is a vector of values, actually, as is <code>dP</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>We use the Dormand-Prince solver <code>DP5</code> here, because that is the same algorithm that Matlab’s <code>ode45</code> uses. DifferentialEquations.jl has a multitude of other solvers that may perform better. Play around with these.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>See below. What happened here? Doesn’t everybody say how much faster Julia is than Matlab?<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Same code in Octave, the free open-source version of Matlab runs in 3 seconds. Current versions of Matlab have improved runtime by partial just-in-time compilation. Note that the first run in Matlab also takes an order of magnitude longer, which is most likely due to Matlab optimising the solver to the problem.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>I have tried using PyPy and Cython in other cases and found that they speed up Python considerably. Unfortunately this was not the case when using SciPy and Numpy, which made the compiled Python version one order of magnitude <strong>slower</strong> than interpreted. There seems to be a problem with C-calls from PyPy.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 </main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+<script id = "quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -20924,20 +20892,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="./examples.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Examples</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
+</body>
 
-
-</body></html>
+</html>

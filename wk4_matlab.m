@@ -10,9 +10,13 @@ P0 = [0, 0];
 options        = odeset('Reltol',1e-9);
 
 % Run once to allow Matlab to optimise
+fprintf("First run:\n")
+tic
 [t, P] = ode45(@(t,P) wk4(t,P,Rc,Rp,C,Lp), tspan, P0, options);
+toc
 
 % Timed run
+fprintf("\nSecond run:\n")
 tic
 [t, P] = ode45(@(t,P) wk4(t,P,Rc,Rp,C,Lp), tspan, P0, options);
 toc

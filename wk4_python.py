@@ -57,6 +57,7 @@ def I(t):
 
     return I
 
+# First run
 tic = time.perf_counter()
 
 sol = sp.integrate.solve_ivp(
@@ -69,4 +70,19 @@ sol = sp.integrate.solve_ivp(
 
 toc = time.perf_counter()
 
-print(f"Elapsed time is {toc - tic:0.4f} seconds")
+print(f"First run:\nElapsed time is {toc - tic:0.4f} seconds")
+
+# Second run
+tic = time.perf_counter()
+
+sol = sp.integrate.solve_ivp(
+    lambda t, y: wk4(t, y, I, Rc, Rp, C, Lp, dt),
+    (time_start, time_end),
+    y0,
+    method="RK45",
+    rtol=1e-9,
+    vectorized=True,)
+
+toc = time.perf_counter()
+
+print(f"\nSecond run:\nElapsed time is {toc - tic:0.4f} seconds")

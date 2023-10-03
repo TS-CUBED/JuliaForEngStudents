@@ -190,7 +190,7 @@ run(`python ./wk4_python.py`);
 ```{.matlab include="wk4_matlab.m"}
 ```
 
-Runtime for this code is (timed using `tic` `toc` in Matlab)^[Same code in Octave, the free open-source version of Matlab runs in 3 seconds. Current versions of Matlab have improved runtime by partial just-in-time compilation. Note that the first run in Matlab is also slightly longer with 0.035 seconds, which is most likely due to Matlab optimising the solver to the problem.], which is a bit more than an order of magnitude slower than Julia:
+Runtime for this code is (timed using `tic` `toc` in Matlab)^[Same code in Octave, the free open-source version of Matlab runs in 3 seconds. Current versions of Matlab have improved runtime by partial just-in-time compilation. Note that the first run in Matlab also takes an order of magnitude longer, which is most likely due to Matlab optimising the solver to the problem.], which is a bit more than an order of magnitude slower than Julia:
 
 <!-- ```octave -->
 <!-- Elapsed time is 0.018172 seconds. -->
