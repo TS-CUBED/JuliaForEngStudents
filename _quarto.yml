@@ -67,6 +67,8 @@ format:
     documentclass: scrreprt
   epub:
     html-math-method: mathml
+  # wordcount-html: default
+  # wordcount-pdf: default
 
 noteout:
   nb-format: ipynb
